@@ -29,13 +29,13 @@ def menu_gerenciamento():
             opcao = 0
 
         #a partir daqui o programa verifica qual numero foi escolhido   
-        from conexaobd import executar    
+        from conexaobd import executar  #importa a função de execução da conexaobd
         match opcao:
             case 1:
                 nome_completo = input("Digite seu nome completo:")
             titulo_eleitor = int(input("Digite o número do título:"))
             cpf = input("Digite seu CPF:")
-            prefixo_cpf = cpf[:4]
+            prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
             mesario = input("Mesário s/n:").lower()
             if mesario == "s":
                 mesario = 1
@@ -44,11 +44,13 @@ def menu_gerenciamento():
             valores = (nome_completo,titulo_eleitor,cpf, prefixo_cpf)
             comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
             executar(comando,valores)
-            print("Cadastrado.")                  #validção do cpf.
-                cont=0                                      #assegura que o cpf tem todos os 11 dígitos, os quais devem ser apenas números.
-                while cont!=11:                             #obs:o cont=0 dentro do while serve para reiniciar a contagem de dígitos após uma tentativa de digitação.
-                    cont=0                                  #esta primeira parte verifica se há 11 dígitos, sendo eles apenas números reais.
-                    for k in range (len(cpf)):
+            print("Cadastrado.")   
+           # ==== VALIDAÇÃO DO CPF ====
+                cont=0                             
+                while cont!=11:                             
+                    cont=0 
+                     # aqui ele verifica se todos os caracteres são números, 11 dígitos
+                    for k in range (len(cpf)): 
                         if cpf[k]>="0" and cpf[k]<="9":
                             cont+=1
                     if len(cpf) != 11 and cont != 11:
@@ -85,8 +87,8 @@ def menu_gerenciamento():
                                 if first_verify>=10:
                                     first_verify=0
 
-                           
-                            soma2=0
+                            #Cálculo do segundo dígito verificador
+                            soma2=0                                            
                             multiplicacao2=11
                             for i in range(9):
                                 soma2+=int(cpf[i])*multiplicacao2
@@ -100,8 +102,8 @@ def menu_gerenciamento():
                                 second_verify=11-resto2
                                 if second_verify>=10:
                                     second_verify=0
-
-                            if first_verify == int(cpf[9]) and second_verify == int(cpf[10]):
+                             #Validação final
+                            if first_verify == int(cpf[9]) and second_verify == int(cpf[10]):   
                                 print("CPF válido!")
                         
                             else:
@@ -112,6 +114,7 @@ def menu_gerenciamento():
 
 
                 mesario=input("Mesário s/n:")
+           # ==== INSERÇÃO NO BANCO ====
                 comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
                 valores=(nome_completo,titulo_eleitor,cpf,mesario)
                 executar(comando,valores)
@@ -125,9 +128,7 @@ def menu_gerenciamento():
             case 5:
                 print("Remocao de eleitor ainda nao foi feita.")
             case 6:
-
-    
-    
+         # ==== CADASTRO DE CANDIDATO ==== 
                 nome_completo_candidato=input("Digite seu nome completo:")
                 numero_candidato=int(input("Seu número para votação:"))
                 id_partido=int(input("Informe o ID do partido:"""))
