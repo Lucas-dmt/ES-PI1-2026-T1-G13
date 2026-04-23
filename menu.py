@@ -1,4 +1,4 @@
- PEDRO
+ 
 def menu_gerenciamento(): 
     """
     gerenciamento de eleitores e candidatos
@@ -11,7 +11,7 @@ def menu_gerenciamento():
     while opcao !=11: #menu continua abrindo enquanto o usuario nao escolher a opcao de voltar
         print("\n=== MENU GERENCIAMENTO ===")
         print("1 - Cadastrar eleitor")
- main
+ 
         print("2 - Listar eleitores")
         print("3 - Buscar eleitor")
         print("4 - Editar eleitor")
@@ -22,7 +22,7 @@ def menu_gerenciamento():
         print("9 - Editar candidato")
         print("10 - Remover candidato")
         print("11 - Voltar")
-PEDRO
+
         try: #tenta transformar o que o usuario digitou em numero
             opcao = int(input("Escolha uma opcao: "))
         except ValueError: #se o usuario digitar letra ou algo invalido, a opcao vira 0 (ValueError)
@@ -127,14 +127,14 @@ PEDRO
             case 6:
 
     
-    main
+    
                 nome_completo_candidato=input("Digite seu nome completo:")
                 numero_candidato=int(input("Seu número para votação:"))
                 id_partido=int(input("Informe o ID do partido:"""))
                 comando="INSERT INTO candidatos (nome_completo_candidato,numero_candidato,id_partido) VALUES (%s, %s, %s)"
                 valores=(nome_completo_candidato,numero_candidato,id_partido)
                 executar(comando,valores)
- PEDRO
+ 
                 print("Cadastrado com sucesso!")
             case 7:
                 print("Listagem de candidatos ainda nao foi feita.")
