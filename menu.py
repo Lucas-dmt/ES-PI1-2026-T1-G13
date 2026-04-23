@@ -1,3 +1,4 @@
+ PEDRO
 def menu_gerenciamento(): 
     """
     gerenciamento de eleitores e candidatos
@@ -10,6 +11,7 @@ def menu_gerenciamento():
     while opcao !=11: #menu continua abrindo enquanto o usuario nao escolher a opcao de voltar
         print("\n=== MENU GERENCIAMENTO ===")
         print("1 - Cadastrar eleitor")
+ main
         print("2 - Listar eleitores")
         print("3 - Buscar eleitor")
         print("4 - Editar eleitor")
@@ -20,6 +22,7 @@ def menu_gerenciamento():
         print("9 - Editar candidato")
         print("10 - Remover candidato")
         print("11 - Voltar")
+PEDRO
         try: #tenta transformar o que o usuario digitou em numero
             opcao = int(input("Escolha uma opcao: "))
         except ValueError: #se o usuario digitar letra ou algo invalido, a opcao vira 0 (ValueError)
@@ -29,9 +32,19 @@ def menu_gerenciamento():
         from conexaobd import executar    
         match opcao:
             case 1:
-                nome_completo=input("Digite seu nome completo:")
-                titulo_eleitor=input("Título de eleitor:")
-                cpf=input("CPF:")                           #validção do cpf.
+                nome_completo = input("Digite seu nome completo:")
+            titulo_eleitor = int(input("Digite o número do título:"))
+            cpf = input("Digite seu CPF:")
+            prefixo_cpf = cpf[:4]
+            mesario = input("Mesário s/n:").lower()
+            if mesario == "s":
+                mesario = 1
+            else:
+                mesario = 0
+            valores = (nome_completo,titulo_eleitor,cpf, prefixo_cpf)
+            comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            executar(comando,valores)
+            print("Cadastrado.")                  #validção do cpf.
                 cont=0                                      #assegura que o cpf tem todos os 11 dígitos, os quais devem ser apenas números.
                 while cont!=11:                             #obs:o cont=0 dentro do while serve para reiniciar a contagem de dígitos após uma tentativa de digitação.
                     cont=0                                  #esta primeira parte verifica se há 11 dígitos, sendo eles apenas números reais.
@@ -112,12 +125,16 @@ def menu_gerenciamento():
             case 5:
                 print("Remocao de eleitor ainda nao foi feita.")
             case 6:
+
+    
+    main
                 nome_completo_candidato=input("Digite seu nome completo:")
                 numero_candidato=int(input("Seu número para votação:"))
                 id_partido=int(input("Informe o ID do partido:"""))
                 comando="INSERT INTO candidatos (nome_completo_candidato,numero_candidato,id_partido) VALUES (%s, %s, %s)"
                 valores=(nome_completo_candidato,numero_candidato,id_partido)
                 executar(comando,valores)
+ PEDRO
                 print("Cadastrado com sucesso!")
             case 7:
                 print("Listagem de candidatos ainda nao foi feita.")
@@ -143,10 +160,13 @@ def menu_abrir_votacao():
     opcao = 0
     while opcao != 3:
         print("\n=== ABRIR SISTEMA DE VOTACAO ===")
+
+ main
         print("1 - Identificar mesario")
         print("2 - Realizar zerezima")
         print("3 - Voltar")
         try:
+ PEDRO
             opcao = int(input("Escolha uma opcao: "))
         except ValueError:
             opcao = 0
@@ -286,3 +306,8 @@ def menu_principal():
             case _:
                 print("Opcao invalida.")
 menu_principal()
+
+         
+
+
+
