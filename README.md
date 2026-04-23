@@ -4,7 +4,7 @@ Projeto integrador I da disciplina de Engenharia de Software da PUC Campinas. O 
 # Integrantes
 - Gustavo Martins Missawa
 - Lucas da Mata Prado
-- Pedro Businari Kamamoto
+- Pedro Businari Kawamoto
 - Victor de Almeida Marucci
 # Tecnologias Utilizadas
 - Python 3.x

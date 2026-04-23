@@ -92,7 +92,10 @@ def abrir_votacao():
                 print("Zerezima ainda nao foi feita")
             case 3:
                 print("voltando ao menu de votação...")
+<<<<<<< HEAD
                 
 
+=======
+>>>>>>> fd328fd79644136de621054d933e452dcda86dbb
 
 
