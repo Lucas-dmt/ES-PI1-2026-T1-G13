@@ -67,5 +67,30 @@ def menu_gerenciamento():
             print("Voltando ao menu principal...")
         case _:
             print("Opcao invalida.")
+def abrir_votacao():
+    """
+    menu de abrir votação, realiza zerezima e identifica o mesario
+    args:
+        none
+    returns:
+          none
+    """
+    opcao = 0
+    while opcao != 3:
+        print("\n === SISTEMA DE VOTAÇÃO ===")
+        print("1 - Identificar mesario")
+        print("2 - Realizar zerezima")
+        print("3 - Voltar")
+        try:
+            opcao = input("Escolha uma opção:")
+        except ValueError:
+            opcao = 0
+        match opcao:
+            case 1:
+                print("A identificação de mesario ainda nao foi feita.")
+            case 2:
+                print("Zerezima ainda nao foi feita")
+            case 3:
+                print("voltando ao menu de votação...")
 
 
