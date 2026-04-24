@@ -27,3 +27,4 @@ def executar(comando,valores):
     cursor.execute=(comando,valores) #executa o comando SQL usando os valores informados
     conexao.commit() #salva as alterações no banco de dados
     cursor.close() #fecha o cursor após executar as operações no banco
+
