@@ -33,41 +33,46 @@ def menu_gerenciamento():
         match opcao:
             case 1:
                 nome_completo = input("Digite seu nome completo:")
-            titulo_eleitor = int(input("Digite o número do título:"))
-            cpf = input("Digite seu CPF:")
-            prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
-            mesario = input("Mesário s/n:").lower()
-            if mesario == "s":
-                mesario = 1
-            else:
-                mesario = 0
-            valores = (nome_completo,titulo_eleitor,cpf, prefixo_cpf)
-            comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            executar(comando,valores)
-            print("Cadastrado.")   
-           # ==== VALIDAÇÃO DO CPF ====
-                cont=0                             
-                while cont!=11:                             
-                    cont=0 
-                     # aqui ele verifica se todos os caracteres são números, 11 dígitos
-                    for k in range (len(cpf)): 
-                        if cpf[k]>="0" and cpf[k]<="9":
-                            cont+=1
-                    if len(cpf) != 11 and cont != 11:
-                        print("o cpf precisa ter 11 dígitos e apenas números reais")
-                        cpf=input("CPF:")
-                    elif len(cpf) != 11 or cont != 11:
-                        if len(cpf) != 11:
-                            print("o cpf precisa ter 11 dígitos")
-                        else:
-                            print("utilize apenas números reais")
-                        cpf=input("CPF:")
-                        cont = 0 
-                    else:                                                       #a partir desse "else", acontece a verificação matemática.
-                        iguais=0                                                #em primeiro lugar, verifica-se se o cpf não possui todos os dígitos iguais.
-                        for k in range (len(cpf)):                              #em segundo lugar, é verificado o primeiro dígito de verificação.
-                            if cpf[k] == cpf[0]:                                #em terceiro lugar, é verificado o segundo dígito de verificação.
-                                iguais+=1                                       #depois, os dígitos verificadores são comparados e então validados.
+                titulo_eleitor = int(input("Digite o número do título:"))
+                cpf = input("Digite seu CPF:")
+                prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
+                mesario = input("Mesário s/n:").lower()
+                if mesario == "s":
+                    mesario = 1
+                else:
+                    mesario = 0
+                valores = (nome_completo,titulo_eleitor,cpf, prefixo_cpf)
+                comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                executar(comando,valores)
+                print("Cadastrado.")   
+            # ==== VALIDAÇÃO DO CPF ====
+                cont = 0                             
+                while cont != 11:                             
+                    cont = 0 
+                    # aqui ele verifica se todos os caracteres são números, 11 dígitos
+                    for k in range(len(cpf)): 
+                        if cpf[k] >= "0" and cpf[k] <= "9":
+                            cont += 1
+                           
+                    if len(cpf) != 11 and cont < len(cpf):
+                        print("O cpf preicsa ter 11 dígitos e conter apenas números reais")
+                        cpf = input("CPF:")
+                        cont = 0
+
+                    elif len(cpf) != 11:
+                        print("O cpf precisa ter 11 dígitos")
+                        cpf = input("CPF:")
+                        cont = 0
+
+                    elif cont != 11:
+                        print("Utilize apenas números reais")
+                        cpf = input("CPF:")
+                        cont = 0
+                    else:                                                       # a partir desse "else", acontece a verificação matemática.
+                        iguais=0                                                # em primeiro lugar, verifica-se se o cpf não possui todos os dígitos iguais.
+                        for k in range (len(cpf)):                              # em segundo lugar, é verificado o primeiro dígito de verificação.
+                            if cpf[k] == cpf[0]:                                # em terceiro lugar, é verificado o segundo dígito de verificação.
+                                iguais+=1                                       # depois, os dígitos verificadores são comparados e então validados.
                         if iguais == 11:
                             print("CPF inválido: números repetidos")
                             cpf = input("CPF:")
@@ -76,8 +81,8 @@ def menu_gerenciamento():
                             soma1=0
                             multiplicacao1=10
                             for i in range(9):
-                                soma1+=int(cpf[i])*multiplicacao1               #nesta linha, a string cpf é convertida em número inteiro,
-                                i+=1                                            #para que possa ser multiplicada como um número.
+                                soma1+=int(cpf[i])*multiplicacao1               # nesta linha, a string "cpf" é convertida em número inteiro,
+                                i+=1                                            # para que possa ser multiplicada como um número.
                                 multiplicacao1-=1
                             resto1=soma1%11
                             if resto1<2:
@@ -113,7 +118,6 @@ def menu_gerenciamento():
 
 
 
-                mesario=input("Mesário s/n:")
            # ==== INSERÇÃO NO BANCO ====
                 comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
                 valores=(nome_completo,titulo_eleitor,cpf,mesario)
@@ -162,12 +166,12 @@ def menu_abrir_votacao():
     while opcao != 3:
         print("\n=== ABRIR SISTEMA DE VOTACAO ===")
 
- main
+
         print("1 - Identificar mesario")
         print("2 - Realizar zerezima")
         print("3 - Voltar")
         try:
- PEDRO
+
             opcao = int(input("Escolha uma opcao: "))
         except ValueError:
             opcao = 0
