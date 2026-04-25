@@ -3,17 +3,26 @@ import string
 
 eleitores = []
 
+# ==== GERAR CHAVE: ====
+import time
+import random
+
 def gerar_chave():
+    print("\nCadastro de título e CPF registrado ")
+    print("Estamos gerando sua chave...")
+
+    time.sleep(5)
+
     chave = f"{random.randint(0, 999999):06}"
+
+    print(f"Sua chave é: {chave}")
+
     return chave
 
-print(gerar_chave())
 
-def gerar_titulo():
-    titulo = f"{random.randint(0, 999999999999):012}"
-     return gerar_titulo()
+gerar_chave()
+=============================
 
-print(gerar_titulo())
 
 def buscar_eleitor(titulo):
     for eleitor in eleitores:
@@ -47,7 +56,7 @@ else:
 def cadastrar():
     titulo = input("Digite o título (12 números): ")
 
-    if len(titulo) != 12 or titulo != gerar_titulo()
+    if len(titulo) != 12:
         print("Título inválido ")
         return
 
@@ -77,7 +86,6 @@ def votar():
         novo cadastro = input("Título não encontrado. Deseja cadastrar? (s/n): ").lower()
         if opcao == "s":
         nome = input("Digite seu nome: ")
-        idade = int(input("Digite sua Idade: "))
         estado = input("Digite o estado em letra Maiuscula(ex: SP, RJ): ").upper()
         cpf = input("insira seu CPF: ")
         
@@ -91,11 +99,6 @@ def votar():
              print("Estado incorreto.Digite a sigla ")
           elif estado == "0":
              print("Estado nao inserido")
-
-        
-          if idade < 16:
-             print("Não pode tirar título (menor de 16)")
-              return
 
           if cpf == "0":
               print("Cpf nao inserido")
