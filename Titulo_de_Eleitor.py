@@ -4,11 +4,16 @@ import string
 eleitores = []
 
 def gerar_chave():
-    caracteres = string.ascii_letters + string.digits
-    chave = ""
-    for i in range(6):
-        chave += random.choice(caracteres)
+    chave = f"{random.randint(0, 999999):06}"
     return chave
+
+print(gerar_chave())
+
+def gerar_titulo():
+    titulo = f"{random.randint(0, 999999999999):012}"
+     return gerar_titulo()
+
+print(gerar_titulo())
 
 def buscar_eleitor(titulo):
     for eleitor in eleitores:
@@ -42,23 +47,23 @@ else:
 def cadastrar():
     titulo = input("Digite o título (12 números): ")
 
-    if len(titulo) != 12 or not titulo.isdigit():
-        print("Título inválido ❌")
+    if len(titulo) != 12 or titulo != gerar_titulo()
+        print("Título inválido ")
         return
 
     eleitor_existente = buscar_eleitor(titulo)
 
     if eleitor_existente:
-        print("Título já cadastrado ✅")
+        print("Título já cadastrado ")
         print("Chave:", eleitor_existente[1])
-        print("Já votou:", "Sim✅" if eleitor_existente[2] else "Não❌")
+        print("Já votou:", "Sim" if eleitor_existente[2] else "Não")
         return
 
     chave = gerar_chave()
     novo = [titulo, chave, False]
     eleitores.append(novo)
 
-    print("Eleitor cadastrado com sucesso ✅")
+    print("Eleitor cadastrado com sucesso ")
     print("Sua chave é:", chave)
 
 
@@ -69,19 +74,48 @@ def votar():
     eleitor = buscar_eleitor(titulo)
 
     if not eleitor:
-        print("Eleitor não cadastrado ❌")
-        return
+        novo cadastro = input("Título não encontrado. Deseja cadastrar? (s/n): ").lower()
+        if opcao == "s":
+        nome = input("Digite seu nome: ")
+        idade = int(input("Digite sua Idade: "))
+        estado = input("Digite o estado em letra Maiuscula(ex: SP, RJ): ").upper()
+        cpf = input("insira seu CPF: ")
+        
+ estados_validos = [
+    "AC","AL","AP","AM","BA","CE","DF","ES","GO",
+    "MA","MT","MS","MG","PA","PB","PR","PE","PI",
+    "RJ","RN","RS","RO","RR","SC","SP","SE","TO"
+]
+
+          if estado not in estados_validos:
+             print("Estado incorreto.Digite a sigla ")
+          elif estado == "0":
+             print("Estado nao inserido")
+
+        
+          if idade < 16:
+             print("Não pode tirar título (menor de 16)")
+              return
+
+          if cpf == "0":
+              print("Cpf nao inserido")
+          elif cpf == cpf
+              print("Cpf ja esta cadastrado")
+         if opcao == "n":
+             break 
+
+menu_principal()
 
     if eleitor[1] != chave:
-        print("Chave incorreta ❌")
+        print("Chave incorreta")
         return
 
     if eleitor[2]:
-        print("Você já votou ❌")
+        print("Você já votou ")
         return
 
     eleitor[2] = True
-    print("Voto registrado com sucesso ✅")
+    print("Voto registrado com sucesso")
 
 
 def consultar():
@@ -93,8 +127,8 @@ def consultar():
         print("\nDados do eleitor:")
         print("Título:", eleitor[0])
         print("Chave:", eleitor[1])
-        print("Já votou:", "Sim✅" if eleitor[2] else "Não❌")
+        print("Já votou:", "Sim" if eleitor[2] else "Não")
     else:
-        print("Eleitor não encontrado ❌")
+        print("Eleitor não encontrado")
 
 
