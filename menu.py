@@ -126,7 +126,18 @@ def menu_gerenciamento():
             case 2:
                 print("Listagem de eleitores ainda nao foi feita.")
             case 3:
-                print("Busca de eleitor ainda nao foi feita.")
+                from conexaobd import buscar
+                cpf_inserido = input("Digite o seu CPF:")
+                comando = "SELECT * FROM eleitores WHERE cpf_cifrado = %s"
+                valores = (cpf_inserido,)
+                eleitor = buscar(comando, valores)
+                if eleitor:
+                    print("\n--- ELEITOR ENCONTRADO ---")
+                    print(f"Nome: {eleitor[1]}")
+                    print(f"Título de Eleitor: {eleitor[2]}")
+                    print(f"CPF: {eleitor[3]}")
+                else:
+                    print("\n[!] Erro: Eleitor não cadastrado.")
             case 4:
                 print("Edicao de eleitor ainda nao foi feita.")
             case 5:
@@ -144,7 +155,21 @@ def menu_gerenciamento():
             case 7:
                 print("Listagem de candidatos ainda nao foi feita.")
             case 8:
-                print("Busca de candidato ainda nao foi feita.")
+                from conexaobd import buscar
+                numero_candidatoB = int(input("Digite o número do candidato:"))
+                comando = """
+                 SELECT c.candidato, p.partido, p.sigla
+                 FROM candidatos c
+                 JOIN partidos p ON c.id_partido = p.id_partido
+                 WHERE c.numero_votacao = %s
+                """
+                valores = (numero_candidatoB,)
+                resultado = buscar(comando, valores)
+                if resultado:
+                    print("\n--- INFORMAÇÕES DO CANDIDATO ---")
+                    print(f"Nome: {resultado[0]}")
+                    print(f"Partido: {resultado[1]}")
+                    print(f"Sigla: {resultado[2]}")
             case 9:
                 print("Edicao de candidatos ainda nao foi feita.")
             case 10:
