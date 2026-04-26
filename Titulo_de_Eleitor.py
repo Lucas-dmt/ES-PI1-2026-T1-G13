@@ -59,54 +59,7 @@ def cadastrar():
         print("Voltando...")
         return menu_gerenciamento()
 
-cont = 0                             
-   while cont != 11:                             
-    cont = 0 
-    for k in range(len(cpf)): 
-     if cpf[k] >= "0" and cpf[k] <= "9":
-    cont += 1
-    if len(titulo_eleitor) != 12:
-        print("Título inválido ")
-        return
-    if cont < len(titulo_eleitor):
-        print("O Titulo preicsa ter 12 dígitos e conter apenas números reais")
-        return titulo_eleitor
 
-    if len(titulo_eleitor) != 12 and cont < len(titulo-eleitor):
-        print("O titulo precisa ter 12 dígitos e conter apenas números reais")
-        titulo_eleitor = input("Titulo:") 
-        cont = 0
-
-    elif len(titulo_eleitor) != 12:
-        print("O Titulo precisa ter 12 dígitos")
-        titulo_eleitor= input("Titulo:")
-        cont = 0
-
-    elif cont != 12:
-         print("Utilize apenas números reais")
-         titulo_eleitor = input("Titulo:")
-         cont = 0
-
-                                   
-    novo = [titulo, chave, False]
-    eleitores.append(novo)
-
-    print("Eleitor cadastrado com sucesso ")
-    print("Sua chave é:", chave)
-
-
-def votar():
-    titulo = input("Digite o título: ")
-    chave = input("Digite a chave: ")
-
-    eleitor = buscar_eleitor(titulo)
-
-    if not eleitor:
-        novo cadastro = input("Título não encontrado. Deseja cadastrar? (s/n): ").lower()
-        if opcao == "s":
-        nome = input("Digite seu nome: ")
-        estado = input("Digite o estado em letra Maiuscula(ex: SP, RJ): ").upper()
-        cpf = input("insira seu CPF: ")
      
 
 menu_principal()
@@ -128,11 +81,6 @@ def consultar():
 
     eleitor = buscar_eleitor(titulo)
 
-    if eleitor:
-        print("\nDados do eleitor:")
-        print("Título:", eleitor[0])
-        print("Chave:", eleitor[1])
-        print("Já votou:", "Sim" if eleitor[2] else "Não")
     else:
         print("Eleitor não encontrado")
 
@@ -225,14 +173,127 @@ cpf_valido = True
                                 cpf = input("CPF: ")
                                 cont = 0
 
-if cpf_valido and titulo_valido:
-  
-    import time
-    import random
 
-def gerar_chave():
-    print("\nCadastro de título e CPF registrado")
-    print("Estamos gerando sua chave...")
+==============================Codigo da validacao====
+
+
+
+titulo_valido = False
+
+while not titulo_valido:
+
+    titulo_eleitor = input("Título de eleitor: ")
+
+    if len(titulo_eleitor) != 12:
+        print("Título inválido: precisa ter 12 dígitos")
+
+    else:
+
+        titulo_valido = True
+
+        for c in titulo_eleitor:
+            if c < "0" or c > "9":
+                titulo_valido = False
+
+        if not titulo_valido:
+            print("Título inválido: só pode conter números")
+
+        else:
+
+            numero = titulo_eleitor[:8]
+            uf = titulo_eleitor[8:10]
+            digitos = titulo_eleitor[10:12]
+
+            pesos1 = [2, 3, 4, 5, 6, 7, 8, 9]
+
+            soma = 0
+            for i in range(8):
+                soma += int(numero[i]) * pesos1[i]
+
+            resto = soma % 11
+            dv1 = 0 if resto == 10 else resto
+
+            soma2 = (int(uf[0]) * 7) + (int(uf[1]) * 8) + (dv1 * 9)
+
+            resto2 = soma2 % 11
+            dv2 = 0 if resto2 == 10 else resto2
+
+            if digitos == str(dv1) + str(dv2):
+                print("Título válido")
+                titulo_valido = True
+            else:
+                print("Título inválido: dígitos não conferem")
+                titulo_valido = False
+                
+# ========================= # VALIDAÇÃO DO CPF # =========================
+
+cpf_valido = False
+
+while not cpf_valido:
+
+    cpf = input("CPF: ")
+
+    cont = 0
+
+    for k in cpf:
+        if "0" <= k <= "9":
+            cont += 1
+
+    if len(cpf) != 11:
+        print("O CPF precisa ter 11 dígitos")
+
+    elif cont != 11:
+        print("Utilize apenas números")
+
+    else:
+
+        iguais = 0
+        for k in cpf:
+            if k == cpf[0]:
+                iguais += 1
+
+        if iguais == 11:
+            print("CPF inválido: números repetidos")
+
+        else:
+
+            soma1 = 0
+            peso = 10
+
+            for i in range(9):
+                soma1 += int(cpf[i]) * peso
+                peso -= 1
+
+            resto1 = soma1 % 11
+            prim_verificacao = 0 if resto1 < 2 else 11 - resto1
+
+            soma2 = 0
+            peso = 11
+
+            for i in range(9):
+                soma2 += int(cpf[i]) * peso
+                peso -= 1
+
+            soma2 += prim_verificacao * 2
+
+            resto2 = soma2 % 11
+            sec_verificacao = 0 if resto2 < 2 else 11 - resto2
+
+            if prim_verificacao == int(cpf[9]) and sec_verificacao == int(cpf[10]):
+                print("CPF válido!")
+                cpf_valido = True
+            else:
+                print("CPF inválido: dígitos não conferem")
+
+
+# ========================= # GERAÇÃO DE CHAVE # =========================
+import time
+import random
+
+if cpf_valido:
+
+    print("\nCadastro registrado com sucesso!")
+    print("Gerando chave...")
 
     time.sleep(5)
 
@@ -240,28 +301,78 @@ def gerar_chave():
 
     print(f"Sua chave é: {chave}")
 
-    return chave
-
-
-def escolher():
-    x = int(input("\nDigite 2 para ir no menu de votação ou 11 para voltar ao gerenciamento: "))
+    def escolher():
+    x = int(input("\nDigite 2 para votação ou 11 para gerenciamento: "))
 
     if x == 2:
-        print("Indo para o menu de votação... ")
 
-    elif x == 11:
-        print("Voltando ao gerenciamento...")
 
-    else:
-        print("Resposta inválida ")
-        x = int(input("\nDigite 2 para ir no menu de votação ou 11 para voltar ao gerenciamento: "))
-    
 
-gerar_chave()
-escolher()
 
-else:
-    print("\nCadastro inválido")
+
+
+
+
+
+
+
+
+
+
+==============CORREÇÃO==========
+
+def apenas_numeros(texto):
+    for c in texto:
+        if c < "0" or c > "9":
+            return False
+    return True
+
+
+def todos_iguais(texto):
+    return all(c == texto[0] for c in texto)
+
+
+def sequencia_crescente(texto):
+    for i in range(len(texto) - 1):
+        if int(texto[i]) + 1 != int(texto[i + 1]):
+            return False
+    return True
+
+
+titulo_valido = False
+
+while not titulo_valido:
+    titulo = input("Digite o número do título de eleitor (12 dígitos): ")
+
+    # 1. tamanho
+    if len(titulo) != 12:
+        print("Erro: precisa ter exatamente 12 dígitos.\n")
+        continue
+
+    # 2. apenas números (sem isdigit)
+    if not apenas_numeros(titulo):
+        print("Erro: o título deve conter apenas números.\n")
+        continue
+
+    # 3. não pode ser tudo igual (ex: 111111111111)
+    if todos_iguais(titulo):
+        print("Erro: número inválido (todos os dígitos são iguais).\n")
+        continue
+
+    # 4. não pode ser sequência óbvia (123456789012)
+    if sequencia_crescente(titulo):
+        print("Erro: número inválido (sequência crescente).\n")
+        continue
+
+    # 5. regra extra simples (UF do título: posições 9 e 10)
+    uf = int(titulo[8:10])
+    if uf < 1 or uf > 28:
+        print("Erro: código de estado inválido no título.\n")
+        continue
+
+    # se passou em tudo
+    titulo_valido = True
+    print("\nTítulo válido! Cadastro confirmado.")
 
 
 
