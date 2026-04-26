@@ -54,25 +54,40 @@ else:
 
 def cadastrar():
    titulo_eleitor = int(input("Digite o número do título com 12 numeros:"))
+    print("Digite 11 para voltar ao gerenciamento")
     if titulo_eleitor == "11":
-            print("Voltando...")
-            return
+        print("Voltando...")
+        return menu_gerenciamento()
+
+cont = 0                             
+   while cont != 11:                             
+    cont = 0 
+    for k in range(len(cpf)): 
+     if cpf[k] >= "0" and cpf[k] <= "9":
+    cont += 1
     if len(titulo_eleitor) != 12:
         print("Título inválido ")
         return
-    if cont < len(cpf):
+    if cont < len(titulo_eleitor):
         print("O Titulo preicsa ter 12 dígitos e conter apenas números reais")
-        titulo_eleitor = int(input("Digite o número do título de Eleitor:"))
+        return titulo_eleitor
+
+    if len(titulo_eleitor) != 12 and cont < len(titulo-eleitor):
+        print("O titulo precisa ter 12 dígitos e conter apenas números reais")
+        titulo_eleitor = input("Titulo:") 
+        cont = 0
+
+    elif len(titulo_eleitor) != 12:
+        print("O Titulo precisa ter 12 dígitos")
+        titulo_eleitor= input("Titulo:")
+        cont = 0
+
+    elif cont != 12:
+         print("Utilize apenas números reais")
+         titulo_eleitor = input("Titulo:")
+         cont = 0
+
                                    
-    eleitor_existente = buscar_eleitor(titulo)
-
-    if eleitor_existente:
-        print("Título já cadastrado ")
-        print("Chave:", eleitor_existente[1])
-        print("Já votou:", "Sim" if eleitor_existente[2] else "Não")
-        return
-
-    chave = gerar_chave()
     novo = [titulo, chave, False]
     eleitores.append(novo)
 
@@ -146,9 +161,14 @@ def consultar():
                 else:
                     print("\n[!] Erro: Eleitor não encontrado.")
 
-if titulo_eleitor == "11":
-            print("Voltando...")
-            return
+
+
+print("Digite 11 para voltar ao gerenciamento")
+    if titulo_eleitor == "11":
+        print("Voltando...")
+        return menu_gerenciamento()
+
+
 
 VALIDAR TITULO DE ELEITOR
 
