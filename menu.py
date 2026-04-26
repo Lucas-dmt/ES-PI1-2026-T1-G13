@@ -140,7 +140,7 @@ while not titulo_valido:
 
             resto2 = soma2 % 11
             dv2 = 0 if resto2 == 10 else resto2
-
+             #============= VALIDAÇÃO FINAL =========
             if digitos == str(dv1) + str(dv2):
                 print("Título válido")
                 titulo_valido = True
