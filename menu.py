@@ -45,8 +45,106 @@ def menu_gerenciamento():
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 executar(comando,valores)
                 print("Cadastrado.")   
+             
+       #=============== VALIDAÇÃO DO TITULO DE ELEITOR ========== 
+ def apenas_numeros(texto):
+    for c in texto:
+        if c < "0" or c > "9":
+            return False
+    return True
+
+
+def todos_iguais(texto):
+    return all(c == texto[0] for c in texto)
+
+
+def sequencia_crescente(texto):
+    for i in range(len(texto) - 1):
+        if int(texto[i]) + 1 != int(texto[i + 1]):
+            return False
+    return True
+
+
+titulo_valido = False
+
+while not titulo_valido:
+    titulo = input("Digite o número do título de eleitor (12 dígitos): ")
+
+    # 1. tamanho
+    if len(titulo) != 12:
+        print("Erro: precisa ter exatamente 12 dígitos.\n")
+        continue
+
+    # 2. apenas números 
+    if not apenas_numeros(titulo):
+        print("Erro: o título deve conter apenas números.\n")
+        continue
+
+    # 3. não pode ser tudo igual (ex: 111111111111)
+    if todos_iguais(titulo):
+        print("Erro: número inválido (todos os dígitos são iguais).\n")
+        continue
+
+    # 4. não pode ser sequência óbvia (123456789012)
+    if sequencia_crescente(titulo):
+        print("Erro: número inválido (sequência crescente).\n")
+        continue
+
+    # 5. UF do título: posições 9 e 10
+    uf = int(titulo[8:10])
+    if uf < 1 or uf > 28:
+        print("Erro: código de estado inválido no título.\n")
+        continue
+
+    # se passou em tudo
+    if titulo_valido = True
+    print("\nTítulo válido com sucesso!")
+    print(cpf)
+
+    else:
+
+        titulo_valido = True
+
+        for c in titulo_eleitor:
+            if c < "0" or c > "9":
+                titulo_valido = False
+
+        if not titulo_valido:
+            print("Título inválido: só pode conter números")
+
+        else:
+
+            numero = titulo_eleitor[:8]
+            uf = titulo_eleitor[8:10]
+            digitos = titulo_eleitor[10:12]
+
+            pesos1 = [2, 3, 4, 5, 6, 7, 8, 9]
+
+            soma = 0
+            for i in range(8):
+                soma += int(numero[i]) * pesos1[i]
+
+            resto = soma % 11
+            dv1 = 0 if resto == 10 else resto
+
+            soma2 = (int(uf[0]) * 7) + (int(uf[1]) * 8) + (dv1 * 9)
+
+            resto2 = soma2 % 11
+            dv2 = 0 if resto2 == 10 else resto2
+
+            if digitos == str(dv1) + str(dv2):
+                print("Título válido")
+                titulo_valido = True
+            else:
+                print("Título inválido: dígitos não conferem")
+                titulo_valido = False
+
+
+
+             
             # ==== VALIDAÇÃO DO CPF ====
-                cont = 0                             
+                cont = 0   
+                cpf_valido = True
                 while cont != 11:                             
                     cont = 0 
                     # aqui ele verifica se todos os caracteres são números, 11 dígitos
@@ -117,6 +215,10 @@ def menu_gerenciamento():
                                 cont = 0
 
 
+
+
+
+             
 
            # ==== INSERÇÃO NO BANCO ====
                 comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
