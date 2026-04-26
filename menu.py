@@ -45,8 +45,6 @@ def menu_gerenciamento():
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 executar(comando,valores)
                 print("Cadastrado.")   
-
-gerar_chave()
              
        #=============== VALIDAÇÃO DO TITULO DE ELEITOR ========== 
 def campo_vazio(texto):
@@ -261,6 +259,7 @@ def gerar_chave():
 
     return chave
 
+gerar_chave()
 
            # ==== INSERÇÃO NO BANCO ====
                 comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
