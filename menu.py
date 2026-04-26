@@ -33,7 +33,7 @@ def menu_gerenciamento():
         match opcao:
             case 1:
                 nome_completo = input("Digite seu nome completo:")
-                titulo_eleitor = int(input("Digite o número do título:"))
+                titulo_eleitor = int(input("Digite o número do título de eleitor:"))
                 cpf = input("Digite seu CPF:")
                 prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
                 mesario = input("Mesário s/n:").lower()
