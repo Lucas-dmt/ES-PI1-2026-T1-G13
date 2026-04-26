@@ -261,8 +261,6 @@ def gerar_chave():
 
     return chave
 
-gerar_chave()
-
 
            # ==== INSERÇÃO NO BANCO ====
                 comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
