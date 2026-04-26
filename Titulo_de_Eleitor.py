@@ -16,19 +16,18 @@ def gerar_chave():
     chave = f"{random.randint(0, 999999):06}"
 
     print(f"Sua chave é: {chave}")
-
+    x = int(input("Digite 2 para ir no menu de votacao ou 11 para voltar ao gerenciamento:"))
+    if x == 2: 
+    menu_votacao()
+    elif x == 11:
+    print("Voltando...")
+    return
+    
     return chave
 
 
 gerar_chave()
 =============================
-
-
-def buscar_eleitor(titulo):
-    for eleitor in eleitores:
-        if eleitor[0] == titulo:
-            return eleitor
-    return None
 
 nums = [int(n) for n in titulo]
 
@@ -54,12 +53,17 @@ else:
     return nums[10] == divisao1 and nums[11] == divisao2
 
 def cadastrar():
-    titulo = input("Digite o título (12 números): ")
-
-    if len(titulo) != 12:
+   titulo_eleitor = int(input("Digite o número do título com 12 numeros:"))
+    if titulo_eleitor == "11":
+            print("Voltando...")
+            return
+    if len(titulo_eleitor) != 12:
         print("Título inválido ")
         return
-
+    if cont < len(cpf):
+        print("O Titulo preicsa ter 12 dígitos e conter apenas números reais")
+        titulo_eleitor = int(input("Digite o número do título de Eleitor:"))
+                                   
     eleitor_existente = buscar_eleitor(titulo)
 
     if eleitor_existente:
@@ -134,4 +138,31 @@ def consultar():
     else:
         print("Eleitor não encontrado")
 
+        print("\n--- ELEITOR ENCONTRADO ---")
+                    print(f"Nome: {eleitor[1]}")
+                    print(f"Título de Eleitor: {eleitor[2]}")
+                    print(f"CPF: {eleitor[3]}")
+                    print("Já votou:", "Sim" if eleitor[2] else "Não")
+                else:
+                    print("\n[!] Erro: Eleitor não encontrado.")
 
+if titulo_eleitor == "11":
+            print("Voltando...")
+            return
+
+VALIDAR TITULO DE ELEITOR
+
+if len(cpf) != 11 and cont < len(cpf):
+                        print("O cpf preicsa ter 11 dígitos e conter apenas números reais")
+                        cpf = input("CPF:")
+                        cont = 0
+
+                    elif len(cpf) != 11:
+                        print("O cpf precisa ter 11 dígitos")
+                        cpf = input("CPF:")
+                        cont = 0
+
+                    elif cont != 11:
+                        print("Utilize apenas números reais")
+                        cpf = input("CPF:")
+                        cont = 0
