@@ -45,6 +45,8 @@ def menu_gerenciamento():
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 executar(comando,valores)
                 print("Cadastrado.")   
+
+gerar_chave()
              
        #=============== VALIDAÇÃO DO TITULO DE ELEITOR ========== 
 def campo_vazio(texto):
@@ -233,23 +235,31 @@ import time
 import random
 
 def gerar_chave():
-    print("\nCadastro de título e CPF registrado ")
+    print("\nCadastro de título e CPF registrado")
     print("Estamos gerando sua chave...")
 
-    time.sleep(5) # tempo de 5 segundos para gerar a chave 
+    time.sleep(5)
 
-    chave = f"{random.randint(0, 999999):06}" # gera uma chave aleatoria de 6 digitos inteiros
+    chave = f"{random.randint(0, 999999):06}"
+    print("Sua chave é:", chave)
 
-    print(f"Sua chave é: {chave}")
-    x = int(input("Digite 2 para ir no menu de votacao ou 11 para voltar ao gerenciamento:"))
-    if x == 2: 
-    menu_votacao()
-    elif x == 11:
-    print("Voltando...")
-    menu_gerenciamento()
-    
+    x = 0
+
+    while x != 2 and x != 11:
+        x = int(input("\nDigite 2 para votação ou 11 para gerenciamento: "))
+
+        if x == 2:
+            print("Indo para votação...")
+            menu_votacao()
+
+        elif x == 11:
+            print("Voltando ao gerenciamento...")
+            menu_gerenciamento()
+
+        else:
+            print("Opção inválida\n")
+
     return chave
-
 
 gerar_chave()
 
