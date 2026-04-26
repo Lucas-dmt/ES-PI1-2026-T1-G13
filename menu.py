@@ -47,6 +47,9 @@ def menu_gerenciamento():
                 print("Cadastrado.")   
              
        #=============== VALIDAÇÃO DO TITULO DE ELEITOR ========== 
+def campo_vazio(texto):
+    return texto == ""
+
  def apenas_numeros(texto):
     for c in texto:
         if c < "0" or c > "9":
@@ -71,32 +74,36 @@ while not titulo_valido:
     titulo = input("Digite o número do título de eleitor (12 dígitos): ")
 
     # 1. tamanho
-    if len(titulo) != 12:
+    if len(titulo_eleitor) != 12:
         print("Erro: precisa ter exatamente 12 dígitos.\n")
         continue
 
     # 2. apenas números 
-    if not apenas_numeros(titulo):
+    if not apenas_numeros(titulo_eleitor):
         print("Erro: o título deve conter apenas números.\n")
         continue
 
     # 3. não pode ser tudo igual (ex: 111111111111)
-    if todos_iguais(titulo):
+    if todos_iguais(titulo_eleitor):
         print("Erro: número inválido (todos os dígitos são iguais).\n")
         continue
 
     # 4. não pode ser sequência óbvia (123456789012)
-    if sequencia_crescente(titulo):
+    if sequencia_crescente(titulo_eleitor):
         print("Erro: número inválido (sequência crescente).\n")
         continue
 
     # 5. UF do título: posições 9 e 10
-    uf = int(titulo[8:10])
+    uf = int(titulo_eleitor[8:10])
     if uf < 1 or uf > 28:
         print("Erro: código de estado inválido no título.\n")
         continue
-
-    # se passou em tudo
+    #6. não pode ter campo vazio
+    if campo_vazio(titulo_eleitor):
+            print("Erro: o título não pode estar vazio.\n")
+            continue
+ 
+    # Verifica se o campo foi validado
     if titulo_valido = True
     print("\nTítulo válido com sucesso!")
     print(cpf)
@@ -114,10 +121,11 @@ while not titulo_valido:
 
         else:
 
-            numero = titulo_eleitor[:8]
-            uf = titulo_eleitor[8:10]
-            digitos = titulo_eleitor[10:12]
+            numero = titulo_eleitor[:8] # 8 primeiros digitos
+            uf = titulo_eleitor[8:10] # codigo do estado com 2 digitos
+            digitos = titulo_eleitor[10:12] #ultimos 2 digitos (verificadores)
 
+             #============ CALCULO DO PRIMEIRO DIGITO ========
             pesos1 = [2, 3, 4, 5, 6, 7, 8, 9]
 
             soma = 0
@@ -127,6 +135,7 @@ while not titulo_valido:
             resto = soma % 11
             dv1 = 0 if resto == 10 else resto
 
+             #============ CALCULO DO SEGUNDO DIGITO ========
             soma2 = (int(uf[0]) * 7) + (int(uf[1]) * 8) + (dv1 * 9)
 
             resto2 = soma2 % 11
@@ -139,10 +148,10 @@ while not titulo_valido:
                 print("Título inválido: dígitos não conferem")
                 titulo_valido = False
 
-
-
-             
             # ==== VALIDAÇÃO DO CPF ====
+             def campo_vazio(texto):
+            return texto  == ""
+
                 cont = 0   
                 cpf_valido = True
                 while cont != 11:                             
@@ -166,6 +175,11 @@ while not titulo_valido:
                         print("Utilize apenas números reais")
                         cpf = input("CPF:")
                         cont = 0
+
+                    elif campo_vazio(cpf):
+                        print("Erro: o título não pode estar vazio.\n")
+                        cpf = input("CPF:")
+                        count = 0
                     else:                                                       # a partir desse "else", acontece a verificação matemática.
                         iguais=0                                                # em primeiro lugar, verifica-se se o cpf não possui todos os dígitos iguais.
                         for k in range (len(cpf)):                              # em segundo lugar, é verificado o primeiro dígito de verificação.
@@ -214,11 +228,31 @@ while not titulo_valido:
                                 cpf = input("CPF: ")
                                 cont = 0
 
+# ==== GERAR CHAVE: ====
+import time
+import random
+
+def gerar_chave():
+    print("\nCadastro de título e CPF registrado ")
+    print("Estamos gerando sua chave...")
+
+    time.sleep(5) # tempo de 5 segundos para gerar a chave 
+
+    chave = f"{random.randint(0, 999999):06}" # gera uma chave aleatoria de 6 digitos inteiros
+
+    print(f"Sua chave é: {chave}")
+    x = int(input("Digite 2 para ir no menu de votacao ou 11 para voltar ao gerenciamento:"))
+    if x == 2: 
+    menu_votacao()
+    elif x == 11:
+    print("Voltando...")
+    menu_gerenciamento()
+    
+    return chave
 
 
+gerar_chave()
 
-
-             
 
            # ==== INSERÇÃO NO BANCO ====
                 comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
