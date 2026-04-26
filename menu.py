@@ -162,7 +162,7 @@ while not titulo_valido:
                             cont += 1
                            
                     if len(cpf) != 11 and cont < len(cpf):
-                        print("O cpf preicsa ter 11 dígitos e conter apenas números reais")
+                        print("O cpf prescisa ter 11 dígitos e conter apenas números reais")
                         cpf = input("CPF:")
                         cont = 0
 
@@ -177,7 +177,7 @@ while not titulo_valido:
                         cont = 0
 
                     elif campo_vazio(cpf):
-                        print("Erro: o título não pode estar vazio.\n")
+                        print("O cpf não pode estar vazio.\n")
                         cpf = input("CPF:")
                         count = 0
                     else:                                                       # a partir desse "else", acontece a verificação matemática.
