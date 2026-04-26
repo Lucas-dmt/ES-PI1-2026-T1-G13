@@ -36,15 +36,12 @@ def menu_gerenciamento():
                 titulo_eleitor = int(input("Digite o número do título:"))
                 cpf = input("Digite seu CPF:")
                 prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
+             # ==== MESÁRIO ====
                 mesario = input("Mesário s/n:").lower()
                 if mesario == "s":
                     mesario = 1
                 else:
                     mesario = 0
-                valores = (nome_completo,titulo_eleitor,cpf, prefixo_cpf)
-                comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                executar(comando,valores)
-                print("Cadastrado.")   
             # ==== VALIDAÇÃO DO CPF ====
                 cont = 0                             
                 while cont != 11:                             
@@ -115,17 +112,15 @@ def menu_gerenciamento():
                                 print("CPF inválido: erro nos dígitos verificadores.")
                                 cpf = input("CPF: ")
                                 cont = 0
-
-
-
-           # ==== INSERÇÃO NO BANCO ====
-                comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
-                valores=(nome_completo,titulo_eleitor,cpf,mesario)
+                             # A partir daqui até o print, o CPF é validado antes de ser salvado
+                              valores = (nome_completo,titulo_eleito, prefixo_cpf, cpf_cifrado, mesario, chave, 0)
+                comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 executar(comando,valores)
-                print("Cadastrado com sucesso!")
+                print("Cadastrado.")   
             case 2:
                 print("Listagem de eleitores ainda nao foi feita.")
             case 3:
+             # ==== BUSCAR ELEITOR ====
                 from conexaobd import buscar
                 cpf_inserido = input("Digite o seu CPF:")
                 comando = "SELECT * FROM eleitores WHERE cpf_cifrado = %s"
@@ -145,17 +140,18 @@ def menu_gerenciamento():
                 print("Remocao de eleitor ainda nao foi feita.")
             case 6:
          # ==== CADASTRO DE CANDIDATO ==== 
-                nome_completo_candidato=input("Digite seu nome completo:")
-                numero_candidato=int(input("Seu número para votação:"))
-                id_partido=int(input("Informe o ID do partido:"""))
-                comando="INSERT INTO candidatos (nome_completo_candidato,numero_candidato,id_partido) VALUES (%s, %s, %s)"
-                valores=(nome_completo_candidato,numero_candidato,id_partido)
+                nome_completo_candidato = input("Digite seu nome completo:")
+                numero_candidato = int(input("Seu número para votação:"))
+                id_partido = int(input("Informe o ID do partido:"""))
+                comando = "INSERT INTO candidatos (candidato ,numero_votacao ,id_partido) VALUES (%s, %s, %s)"
+                valores = (nome_completo_candidato,numero_candidato,id_partido)
                 executar(comando,valores)
  
                 print("Cadastrado com sucesso!")
             case 7:
                 print("Listagem de candidatos ainda nao foi feita.")
             case 8:
+             # ==== BUSCA DE CANDIDATO ====
                 from conexaobd import buscar
                 numero_candidatoB = int(input("Digite o número do candidato:"))
                 comando = """
