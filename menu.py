@@ -136,6 +136,7 @@ def menu_gerenciamento():
                     print(f"Nome: {eleitor[1]}")
                     print(f"Título de Eleitor: {eleitor[2]}")
                     print(f"CPF: {eleitor[3]}")
+                    print("Já votou:", "Sim" if eleitor[2] else "Não")
                 else:
                     print("\n[!] Erro: Eleitor não cadastrado.")
             case 4:
