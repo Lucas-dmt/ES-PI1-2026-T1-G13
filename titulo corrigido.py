@@ -1,7 +1,14 @@
 titulo_eleitor = input("Digite o número do título:")
 
 def campo_vazio(texto):
-    return texto == ""
+    if texto == "":
+        return True
+
+    for c in texto:
+        if c != " ":
+            return False
+
+    return True
 
 def apenas_numeros(texto):
     for c in texto:
@@ -25,35 +32,35 @@ titulo_valido = False
 
 while not titulo_valido:
 
+    if not apenas_numeros(titulo_eleitor):
+        print("Erro: o título deve conter apenas números e sem espaço.\n")
+        titulo_eleitor = input("Digite novamente o Titulo: ")
+        continue
+
+    if campo_vazio(titulo_eleitor):
+        print("Erro: o campo não pode ser vazio\n")
+        titulo_eleitor = input("Digite novamente o Titulo: ")
+        continue
+
     if len(titulo_eleitor) != 12:
         print("Erro: precisa ter exatamente 12 dígitos.\n")
-        titulo_eleitor = input("Digite novamente: ")
-        continue
-
-    if not apenas_numeros(titulo_eleitor):
-        print("Erro: apenas números.\n")
-        titulo_eleitor = input("Digite novamente: ")
-        continue
-
-    if todos_iguais(titulo_eleitor):
-        print("Erro: números iguais.\n")
-        titulo_eleitor = input("Digite novamente: ")
+        titulo_eleitor = input("Digite novamente o Titulo: ")
         continue
 
     if sequencia_crescente(titulo_eleitor):
         print("Erro: sequência inválida.\n")
-        titulo_eleitor = input("Digite novamente: ")
+        titulo_eleitor = input("Digite novamente o Titulo: ")
         continue
 
     uf = int(titulo_eleitor[8:10])
     if uf < 1 or uf > 28:
         print("Erro: UF inválida.\n")
-        titulo_eleitor = input("Digite novamente: ")
+        titulo_eleitor = input("Digite novamente o Titulo: ")
         continue
 
     if campo_vazio(titulo_eleitor):
         print("Erro: vazio.\n")
-        titulo_eleitor = input("Digite novamente: ")
+        titulo_eleitor = input("Digite novamente o Titulo: ")
         continue
 
     numero = titulo_eleitor[:8]
