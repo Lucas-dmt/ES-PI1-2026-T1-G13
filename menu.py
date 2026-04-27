@@ -71,7 +71,6 @@ def sequencia_crescente(texto):
 titulo_valido = False
 
 while not titulo_valido:
-    titulo = input("Digite o número do título de eleitor (12 dígitos): ")
 
     # 1. tamanho
     if len(titulo_eleitor) != 12:
