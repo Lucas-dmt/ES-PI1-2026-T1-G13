@@ -1,5 +1,5 @@
 titulo_eleitor = input("Digite o número do título:")
-
+cpf = input("Digite seu CPF:")
 def campo_vazio(texto):
     if texto == "":
         return True
