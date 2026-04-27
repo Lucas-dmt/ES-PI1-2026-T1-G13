@@ -4,9 +4,20 @@ def testar_conexao():
         conexao = mysql.connector.connect(
             host="localhost", #sua hospedagem de rede (localhost ou 127.0.0.1 por padrão)
             user="root", #seu usuario no mysql server (root é o padrão por maquina, se nunca utilizou mysql server antes, deixe do jeito que está)
+<<<<<<< HEAD
             password="ademir", #sua senha
             database="lad_py", #não alterar, nome da database de banco.sql
             auth_plugin='mysql_native_password'
+=======
+<<<<<<< Updated upstream
+            password="senha", #sua senha
+            database="lad_py" #não alterar, nome da database de banco.sql
+=======
+            password="ademir", #sua senha
+            database="lad_py", #não alterar, nome da database de banco.sql
+            auth_plugin='mysql_native_password'
+>>>>>>> Stashed changes
+>>>>>>> 9c03b792a51508816cc5f8c800143ce1206a222b
         )
         if conexao.is_connected():
             print("Conexao com o banco realizada com sucesso.")
@@ -22,11 +33,15 @@ def executar(comando,valores):
             host="localhost", 
             user="root", 
             password="ademir", 
+<<<<<<< HEAD
             database="lad_py",
+=======
+            database="lad_py" ,
+>>>>>>> 9c03b792a51508816cc5f8c800143ce1206a222b
             auth_plugin='mysql_native_password'
         )
     cursor=conexao.cursor() #cria um cursor para executar comandos SQL no banco
-    cursor.execute=(comando,valores) #executa o comando SQL usando os valores informados
+    cursor.execute(comando,valores) #executa o comando SQL usando os valores informados
     conexao.commit() #salva as alterações no banco de dados
     cursor.close() #fecha o cursor após executar as operações no banco
 

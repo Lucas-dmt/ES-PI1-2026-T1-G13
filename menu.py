@@ -114,10 +114,26 @@ def menu_gerenciamento():
                                 print("CPF inválido: erro nos dígitos verificadores.")
                                 cpf = input("CPF: ")
                                 cont = 0
+<<<<<<< HEAD
                             chave = gerar_chave()
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 valores = (nome_completo,titulo_eleitor, prefixo_cpf, mesario, chave, 0)
+=======
+<<<<<<< Updated upstream
+
+
+
+           # ==== INSERÇÃO NO BANCO ====
+                comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
+                valores=(nome_completo,titulo_eleitor,cpf,mesario)
+=======
+                            chave = gerar_chave()
+                             # A partir daqui até o print, o CPF é validado antes de ser salvado
+                comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf, mesario, chave, 0)
+>>>>>>> Stashed changes
+>>>>>>> 9c03b792a51508816cc5f8c800143ce1206a222b
                 executar(comando,valores)
                 print("Cadastrado.")   
             case 2:
