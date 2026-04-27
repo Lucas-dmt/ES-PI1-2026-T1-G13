@@ -36,6 +36,60 @@ def menu_gerenciamento():
             case 1:
                 nome_completo = input("Digite seu nome completo:")
                 titulo_eleitor = int(input("Digite o número do título:"))
+                #==== VALIDAÇÃO DO TÍTULO ====
+                def campo_vazio(texto):
+                    if texto == "":
+                        return True
+                    for c in texto:
+                        if c != " ":
+                            return False
+                    return True
+                def apenas_numeros(texto):
+                    for c in texto:
+                        if c < "0" or c > "9":
+                            return False
+                    return True
+                def todos_iguais(texto):
+                    if texto == "":
+                        return False
+                    return all(c == texto[0] for c in texto)
+                def sequencia_crescente(texto):
+                    for i in range(len(texto) - 1):
+                        if int(texto[i]) + 1 != int(texto[i + 1]):
+                            return False
+                    return True
+                titulo_valido = False
+                while not titulo_valido:
+                    titulo_eleitor = input("Digite o Título de Eleitor:")
+                    if campo_vazio(titulo_eleitor):
+                        print("Erro: campo vazio.\n")
+                    elif not apenas_numeros(titulo_eleitor):
+                        print("Erro: o título deve conter apenas números e sem espaço.\n")
+                    elif len(titulo_eleitor) != 12:
+                        print("Erro: precisa ter exatamente 12 dígitos.\n")
+                    elif sequencia_crescente(titulo_eleitor):
+                        print("Erro: sequência inválida.\n")
+                    else:
+                        uf = int(titulo_eleitor[8:10])
+                        if uf < 1 or uf > 28:
+                            print("Erro: UF inválida.\n")
+                        else:
+                            numero = titulo_eleitor[:8]
+                            digitos = titulo_eleitor[10:12]
+                            pesos1 = [2, 3, 4, 5, 6, 7, 8, 9]
+                            soma = 0
+                            for i in range(8):
+                                soma += int(numero[i]) * pesos1[i]
+                            resto = soma % 11
+                            dv1 = 0 if resto == 10 else resto
+                            soma2 = (int(titulo_eleitor[8]) * 7) + (int(titulo_eleitor[9]) * 8) + (dv1 * 9)
+                            resto2 = soma2 % 11
+                            dv2 = 0 if resto2 == 10 else resto2
+                            if digitos == str(dv1) + str(dv2):
+                                print("Título válido")
+                                titulo_valido = True
+                            else:
+                                print("Título inválido: dígitos não conferem")
                 cpf = input("Digite seu CPF:")
                 prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
              # ==== MESÁRIO ====
@@ -114,26 +168,17 @@ def menu_gerenciamento():
                                 print("CPF inválido: erro nos dígitos verificadores.")
                                 cpf = input("CPF: ")
                                 cont = 0
-<<<<<<< HEAD
                             chave = gerar_chave()
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 valores = (nome_completo,titulo_eleitor, prefixo_cpf, mesario, chave, 0)
-=======
-<<<<<<< Updated upstream
-
-
-
            # ==== INSERÇÃO NO BANCO ====
                 comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
                 valores=(nome_completo,titulo_eleitor,cpf,mesario)
-=======
-                            chave = gerar_chave()
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf, mesario, chave, 0)
->>>>>>> Stashed changes
->>>>>>> 9c03b792a51508816cc5f8c800143ce1206a222b
+
                 executar(comando,valores)
                 print("Cadastrado.")   
             case 2:
