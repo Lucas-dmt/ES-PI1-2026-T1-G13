@@ -115,12 +115,19 @@ def menu_gerenciamento():
                                 print("CPF inválido: erro nos dígitos verificadores.")
                                 cpf = input("CPF: ")
                                 cont = 0
+<<<<<<< Updated upstream
 
 
 
            # ==== INSERÇÃO NO BANCO ====
                 comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
                 valores=(nome_completo,titulo_eleitor,cpf,mesario)
+=======
+                            chave = gerar_chave()
+                             # A partir daqui até o print, o CPF é validado antes de ser salvado
+                comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf, mesario, chave, 0)
+>>>>>>> Stashed changes
                 executar(comando,valores)
                 print("Cadastrado com sucesso!")
             case 2:
@@ -128,7 +135,7 @@ def menu_gerenciamento():
             case 3:
                 from conexaobd import buscar
                 cpf_inserido = input("Digite o seu CPF:")
-                comando = "SELECT * FROM eleitores WHERE cpf_cifrado = %s"
+                comando = "SELECT * FROM eleitores WHERE cpf = %s"
                 valores = (cpf_inserido,)
                 eleitor = buscar(comando, valores)
                 if eleitor:
