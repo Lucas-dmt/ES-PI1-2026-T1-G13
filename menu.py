@@ -152,8 +152,7 @@ while not titulo_valido:
              def campo_vazio(texto):
             return texto  == ""
 
-                cont = 0   
-                cpf_valido = True
+                cont = 0  
                 while cont != 11:                             
                     cont = 0 
                     # aqui ele verifica se todos os caracteres são números, 11 dígitos
