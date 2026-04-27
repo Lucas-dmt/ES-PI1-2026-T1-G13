@@ -1,4 +1,6 @@
- 
+import random
+def gerar_chave():
+    return f"{random.randint(0,999999):06}"
 def menu_gerenciamento(): 
     """
     gerenciamento de eleitores e candidatos
@@ -112,9 +114,10 @@ def menu_gerenciamento():
                                 print("CPF inválido: erro nos dígitos verificadores.")
                                 cpf = input("CPF: ")
                                 cont = 0
+                            chave = gerar_chave()
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
-                              valores = (nome_completo,titulo_eleito, prefixo_cpf, cpf_cifrado, mesario, chave, 0)
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                valores = (nome_completo,titulo_eleitor, prefixo_cpf, mesario, chave, 0)
                 executar(comando,valores)
                 print("Cadastrado.")   
             case 2:
@@ -131,6 +134,7 @@ def menu_gerenciamento():
                     print(f"Nome: {eleitor[1]}")
                     print(f"Título de Eleitor: {eleitor[2]}")
                     print(f"CPF: {eleitor[3]}")
+                    print("Já votou:", "Sim" if eleitor[2] else "Não")
                 else:
                     print("\n[!] Erro: Eleitor não cadastrado.")
             case 4:
@@ -334,6 +338,5 @@ def menu_principal():
 menu_principal()
 
          
-
 
 
