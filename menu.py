@@ -126,7 +126,7 @@ def menu_gerenciamento():
              # ==== BUSCAR ELEITOR ====
                 from conexaobd import buscar
                 cpf_inserido = input("Digite o seu CPF:")
-                comando = "SELECT * FROM eleitores WHERE cpf_cifrado = %s"
+                comando = "SELECT * FROM eleitores WHERE cpf = %s"
                 valores = (cpf_inserido,)
                 eleitor = buscar(comando, valores)
                 if eleitor:
