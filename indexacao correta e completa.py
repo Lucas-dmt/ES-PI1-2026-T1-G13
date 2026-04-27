@@ -37,15 +37,6 @@ def menu_gerenciamento():
             case 1:
                 nome_completo = input("Digite seu nome completo:")
                 titulo_eleitor = int(input("Digite o número do título:"))
-                cpf = input("Digite seu CPF:")
-                prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
-             # ==== MESÁRIO ====
-                mesario = input("Mesário s/n:").lower()
-                if mesario == "s":
-                    mesario = 1
-                else:
-                    mesario = 0
-#========== VALIDAÇÃO DO TITULO DE ELEITOR ========== 
 def campo_vazio(texto):
     return texto == ""
 
@@ -145,6 +136,15 @@ while not titulo_valido:
             else:
                 print("Título inválido: dígitos não conferem")
                 titulo_valido = False
+                cpf = input("Digite seu CPF:")
+                prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
+             # ==== MESÁRIO ====
+                mesario = input("Mesário s/n:").lower()
+                if mesario == "s":
+                    mesario = 1
+                else:
+                    mesario = 0
+
         # ======= VALIDAÇÃO DO CPF ======
              def campo_vazio(texto):
             return texto  == ""
