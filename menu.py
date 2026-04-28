@@ -1,6 +1,6 @@
-import random
-def gerar_chave():
-    return f"{random.randint(0,999999):06}"
+from conexaobd import executar  #importa a função de execução da conexaobd
+from conexaobd import buscar
+from chave import gerar_chave
 def menu_gerenciamento(): 
     """
     gerenciamento de eleitores e candidatos
@@ -13,7 +13,6 @@ def menu_gerenciamento():
     while opcao !=11: #menu continua abrindo enquanto o usuario nao escolher a opcao de voltar
         print("\n=== MENU GERENCIAMENTO ===")
         print("1 - Cadastrar eleitor")
- 
         print("2 - Listar eleitores")
         print("3 - Buscar eleitor")
         print("4 - Editar eleitor")
@@ -24,19 +23,17 @@ def menu_gerenciamento():
         print("9 - Editar candidato")
         print("10 - Remover candidato")
         print("11 - Voltar")
-
         try: #tenta transformar o que o usuario digitou em numero
             opcao = int(input("Escolha uma opcao: "))
         except ValueError: #se o usuario digitar letra ou algo invalido, a opcao vira 0 (ValueError)
             opcao = 0
-
         #a partir daqui o programa verifica qual numero foi escolhido   
-        from conexaobd import executar  #importa a função de execução da conexaobd
         match opcao:
             case 1:
                 nome_completo = input("Digite seu nome completo:")
-                titulo_eleitor = int(input("Digite o número do título:"))
+                titulo_eleitor = input("Digite o Título de Eleitor:")
                 #==== VALIDAÇÃO DO TÍTULO ====
+                # Função que verifica se o campo está vazio ou só tem espaço
                 def campo_vazio(texto):
                     if texto == "":
                         return True
@@ -44,32 +41,43 @@ def menu_gerenciamento():
                         if c != " ":
                             return False
                     return True
+                # Função que verifica se todos os caracteres são números
                 def apenas_numeros(texto):
                     for c in texto:
                         if c < "0" or c > "9":
                             return False
                     return True
+                # Função que verifica se todos os dígitos são iguais (ex: 111111111111)
                 def todos_iguais(texto):
                     if texto == "":
                         return False
                     return all(c == texto[0] for c in texto)
+                # Função que verifica se é uma sequência crescente (ex: 123456...)  
                 def sequencia_crescente(texto):
                     for i in range(len(texto) - 1):
                         if int(texto[i]) + 1 != int(texto[i + 1]):
                             return False
                     return True
+                # Variável de controle do loop
                 titulo_valido = False
+                # Loop que só para quando o título for válido
                 while not titulo_valido:
+                    # Entrada do usuário
                     titulo_eleitor = input("Digite o Título de Eleitor:")
+                    # Verifica se está vazio
                     if campo_vazio(titulo_eleitor):
                         print("Erro: campo vazio.\n")
+                    # Verifica se só tem números
                     elif not apenas_numeros(titulo_eleitor):
                         print("Erro: o título deve conter apenas números e sem espaço.\n")
+                    # Verifica tamanho correto (12 dígitos)
                     elif len(titulo_eleitor) != 12:
                         print("Erro: precisa ter exatamente 12 dígitos.\n")
+                     # Verifica sequência crescente inválida
                     elif sequencia_crescente(titulo_eleitor):
                         print("Erro: sequência inválida.\n")
                     else:
+                        # Extrai UF (posição 8 e 9 do número)
                         uf = int(titulo_eleitor[8:10])
                         if uf < 1 or uf > 28:
                             print("Erro: UF inválida.\n")
@@ -144,7 +152,6 @@ def menu_gerenciamento():
                                 first_verify=11-resto1
                                 if first_verify>=10:
                                     first_verify=0
-
                             #Cálculo do segundo dígito verificador
                             soma2=0                                            
                             multiplicacao2=11
@@ -171,21 +178,13 @@ def menu_gerenciamento():
                             chave = gerar_chave()
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                valores = (nome_completo,titulo_eleitor, prefixo_cpf, mesario, chave, 0)
-           # ==== INSERÇÃO NO BANCO ====
-                comando="INSERT INTO eleitores (nome,titulo_eleitor,cpf,mesario) VALUES (%s, %s, %s,%s)"
-                valores=(nome_completo,titulo_eleitor,cpf,mesario)
-                             # A partir daqui até o print, o CPF é validado antes de ser salvado
-                comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf, mesario, chave, 0)
-
                 executar(comando,valores)
                 print("Cadastrado.")   
             case 2:
                 print("Listagem de eleitores ainda nao foi feita.")
             case 3:
              # ==== BUSCAR ELEITOR ====
-                from conexaobd import buscar
                 cpf_inserido = input("Digite o seu CPF:")
                 comando = "SELECT * FROM eleitores WHERE cpf = %s"
                 valores = (cpf_inserido,)
@@ -206,7 +205,7 @@ def menu_gerenciamento():
          # ==== CADASTRO DE CANDIDATO ==== 
                 nome_completo_candidato = input("Digite seu nome completo:")
                 numero_candidato = int(input("Seu número para votação:"))
-                id_partido = int(input("Informe o ID do partido:"""))
+                id_partido = int(input("Informe o ID do partido:"))
                 comando = "INSERT INTO candidatos (candidato ,numero_votacao ,id_partido) VALUES (%s, %s, %s)"
                 valores = (nome_completo_candidato,numero_candidato,id_partido)
                 executar(comando,valores)
@@ -216,7 +215,6 @@ def menu_gerenciamento():
                 print("Listagem de candidatos ainda nao foi feita.")
             case 8:
              # ==== BUSCA DE CANDIDATO ====
-                from conexaobd import buscar
                 numero_candidatoB = int(input("Digite o número do candidato:"))
                 comando = """
                  SELECT c.candidato, p.partido, p.sigla
@@ -239,7 +237,6 @@ def menu_gerenciamento():
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
-
 def menu_abrir_votacao():
     """
     menu de abrir votação, identifica mesario e realiza a zerezima
@@ -251,8 +248,6 @@ def menu_abrir_votacao():
     opcao = 0
     while opcao != 3:
         print("\n=== ABRIR SISTEMA DE VOTACAO ===")
-
-
         print("1 - Identificar mesario")
         print("2 - Realizar zerezima")
         print("3 - Voltar")
@@ -271,7 +266,6 @@ def menu_abrir_votacao():
                 print("Voltando ao menu de votacao...")
             case _:
                 print("Opcao invalida.")
-
 def menu_auditoria():
     """
     menu de auditoria da votação, exibe logs e protocolos
@@ -300,7 +294,6 @@ def menu_auditoria():
                 print("Voltando ao menu de votacao...")
             case _:
                 print("Opcao invalida.")
-
 def menu_resultados():
     """
     resultados da votação
@@ -335,7 +328,6 @@ def menu_resultados():
                 print("Voltando ao menu de votacao...")
             case _:
                 print("Opcao invalida.")
-
 def menu_votacao():
     """
     menu principal de votação
@@ -367,7 +359,6 @@ def menu_votacao():
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
-
 def menu_principal():
     """
     menu principal, onde todo o sistema roda
