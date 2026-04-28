@@ -7,7 +7,7 @@ def menu_gerenciamento():
     args:
         none
     returns:
-        none
+        nones
     """
     opcao = 0  #comecamos a opcao com 0 so para entrar no menu pela primeira vez
     while opcao !=11: #menu continua abrindo enquanto o usuario nao escolher a opcao de voltar
@@ -62,25 +62,29 @@ def menu_gerenciamento():
                 titulo_valido = False
                 # Loop que só para quando o título for válido
                 while not titulo_valido:
-                    # Entrada do usuário
-                    titulo_eleitor = input("Digite o Título de Eleitor:")
                     # Verifica se está vazio
                     if campo_vazio(titulo_eleitor):
                         print("Erro: campo vazio.\n")
+                        titulo_eleitor = input("Tente novamente:")
                     # Verifica se só tem números
                     elif not apenas_numeros(titulo_eleitor):
-                        print("Erro: o título deve conter apenas números e sem espaço.\n")
+                        print("Erro: o título deve conter apenas números.\n")
+                        titulo_eleitor = input("Tente novamente:")
                     # Verifica tamanho correto (12 dígitos)
                     elif len(titulo_eleitor) != 12:
                         print("Erro: precisa ter exatamente 12 dígitos.\n")
+                        titulo_eleitor = input("Tente novamente:")
                      # Verifica sequência crescente inválida
                     elif sequencia_crescente(titulo_eleitor):
                         print("Erro: sequência inválida.\n")
+                        titulo_eleitor = input("Tente novamente:")
                     else:
                         # Extrai UF (posição 8 e 9 do número)
                         uf = int(titulo_eleitor[8:10])
                         if uf < 1 or uf > 28:
                             print("Erro: UF inválida.\n")
+                            titulo_eleitor = input ("Tente novamente:")
+                            continue
                         else:
                             numero = titulo_eleitor[:8]
                             digitos = titulo_eleitor[10:12]
@@ -175,7 +179,8 @@ def menu_gerenciamento():
                                 print("CPF inválido: erro nos dígitos verificadores.")
                                 cpf = input("CPF: ")
                                 cont = 0
-                            chave = gerar_chave()
+                            chave = gerar_chave(menu_votacao, menu_gerenciamento)
+                            print("Sua chave é:", chave)
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf, mesario, chave, 0)
