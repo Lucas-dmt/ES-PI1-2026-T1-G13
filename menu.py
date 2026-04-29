@@ -1,6 +1,6 @@
 from conexaobd import executar  #importa a função de execução da conexaobd
-from conexaobd import buscar
-from chave import gerar_chave
+from conexaobd import buscar   #importa a funcao buscar de conexaobd
+from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
 def menu_gerenciamento(): 
     """
     gerenciamento de eleitores e candidatos
