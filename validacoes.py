@@ -121,6 +121,7 @@ def validar_titulo(titulo_eleitor):
         print("Erro: sequência inválida.\n")
         titulo_eleitor = input("Tente novamente:")
     else:
+
  # Extrai UF (posição 8 e 9 do número)
         uf = int(titulo_eleitor[8:10])
         if uf < 1 or uf > 28:
@@ -145,6 +146,10 @@ def validar_titulo(titulo_eleitor):
             else:
                 print("Título inválido: dígitos não conferem")
 
+
+        print("Título inválido: dígitos não conferem")
+        return False
+        
 # === VERIFICAÇÃO DO NOME COMPLETO ===
 def verificar_nome(nome_completo):
     valido = False
@@ -156,4 +161,9 @@ def verificar_nome(nome_completo):
         if not valido:
             print("ERRO! Digite seu nome e sobrenome:")
             nome_completo = input("Tente novamente:")
+
                                                                                                                                                        
+
+
+
+                                                                                                                                                                                    
