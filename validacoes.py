@@ -133,6 +133,7 @@ def validar_titulo(titulo_eleitor):
         print("Título inválido: dígitos não conferem")
         return False
 
+<<<<<<< HEAD
 # === VERIFICAÇÃO DO NOME COMPLETO ===
 def verificar_nome(nome_completo):
     valido = False
@@ -145,5 +146,7 @@ def verificar_nome(nome_completo):
             print("ERRO! Digite seu nome e sobrenome:")
             nome_completo = input("Tente novamente:")
 
+=======
+>>>>>>> 158112f9436674884df6268b2b82d5f3d6c61d53
 
                                                                                                                                                                                      
