@@ -69,17 +69,8 @@ def validar_cpf(cpf):
         print("CPF inválido: erro nos dígitos verificadores.")
         return False
          
-cpf_valido = False
 
-while cpf_valido == False:
-     entrada = input("Digite seu CPF: ")
-     cpf_valido = validar_cpf(entrada)
          
-     if cpf_valido == False:
-           print("Tente novamente.\n")
-         
-
-
 # ==== VALIDAÇÃO DO TÍTULO ====
 
 # Função que verifica se o campo está vazio ou só tem espaço
