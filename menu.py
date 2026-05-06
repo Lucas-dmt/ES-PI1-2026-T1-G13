@@ -1,14 +1,9 @@
 from conexaobd import executar  #importa a função de execução da conexaobd
-<<<<<<< HEAD
-from conexaobd import buscar
-from chave import gerar_chave
 from validacoes import validar_cpf
 from validacoes import validar_titulo
 from validacoes import verificar_nome
-=======
 from conexaobd import buscar   #importa a funcao buscar de conexaobd
 from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
->>>>>>> 158112f9436674884df6268b2b82d5f3d6c61d53
 def menu_gerenciamento(): 
     """
     gerenciamento de eleitores e candidatos
@@ -51,7 +46,7 @@ def menu_gerenciamento():
                     mesario = 1
                 else:
                     mesario = 0
-                chave = gerar_chave()
+                chave = gerar_chave(menu_votacao, menu_gerenciamento)
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf, mesario, chave, 0)
