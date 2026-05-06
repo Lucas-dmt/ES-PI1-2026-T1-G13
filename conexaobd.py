@@ -1,12 +1,11 @@
 import mysql.connector
-
 def testar_conexao():
     try:
         conexao = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="ademir",
-            database="lad_py",
+            host="localhost", #sua hospedagem de rede (localhost ou 127.0.0.1 por padrão)
+            user="root", #seu usuario no mysql server (root é o padrão por maquina, se nunca utilizou mysql server antes, deixe do jeito que está)
+            password="ademir", #sua senha
+            database="lad_py", #não alterar, nome da database de banco.sql
             auth_plugin='mysql_native_password'
         )
         if conexao.is_connected():
@@ -14,34 +13,37 @@ def testar_conexao():
             conexao.close()
         else:
             print("Nao foi possivel conectar com o banco.")
+
     except mysql.connector.Error as erro:
         print("Erro ao conectar com o banco:", erro)
-
-def executar(comando, valores):
+def executar(comando,valores):
+    # Cria conexão com o banco, necessária para usar o cursor e executar SQL
     conexao = mysql.connector.connect(
-        host="localhost", 
-        user="root", 
-        password="ademir",
-        database="lad_py",
-        auth_plugin='mysql_native_password'
-    )
-    cursor = conexao.cursor()
-    cursor.execute(comando, valores)
-    conexao.commit()
-    cursor.close()
-    conexao.close()
+            host="localhost", 
+            user="root", 
+            password="ademir",
+            database="lad_py",
+            auth_plugin='mysql_native_password'
+        )
+    cursor=conexao.cursor() #cria um cursor para executar comandos SQL no banco
+    cursor.execute(comando,valores) #executa o comando SQL usando os valores informados
+    conexao.commit() #salva as alterações no banco de dados
+    cursor.close() #fecha o cursor após executar as operações no banco
 
 def buscar(comando, valores):
-    conexao = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="ademir",
-        database="lad_py",
-        auth_plugin='mysql_native_password'
-    )
-    cursor = conexao.cursor()
-    cursor.execute(comando, valores)
-    resultado = cursor.fetchone()
-    cursor.close()
-    conexao.close()
-    return resultado
+     conexao = mysql.connector.connect(
+            host="localhost", #sua hospedagem de rede (localhost ou 127.0.0.1 por padrão)
+            user="root", #seu usuario no mysql server (root é o padrão por maquina, se nunca utilizou mysql server antes, deixe do jeito que está)
+            password="ademir", #sua senha
+            database="lad_py", #não alterar, nome da database de banco.sql
+            auth_plugin='mysql_native_password'
+        )
+     cursor=conexao.cursor()
+     cursor.execute(comando, valores)
+     
+     resultado = cursor.fetchone()
+     cursor.close()
+
+     conexao.close()
+
+     return resultado
