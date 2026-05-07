@@ -1,6 +1,7 @@
 from conexaobd import executar  #importa a função de execução da conexaobd
 from validacoes import validar_titulo
 from validacoes import validar_cpf
+from validacoes import pedir_cpf
 from validacoes import verificar_nome
 from conexaobd import buscar   #importa a funcao buscar de conexaobd
 from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
@@ -37,9 +38,8 @@ def menu_gerenciamento():
                 verificar_nome(nome_completo)
                 titulo_eleitor = input("Digite o Título de Eleitor:")
                 validar_titulo(titulo_eleitor)
-                cpf = input("digite seu CPF:")
+                cpf = pedir_cpf()
                 prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
-                validar_cpf(cpf)
                 # ==== MESÁRIO ====
                 mesario = input("Mesário s/n:").lower()
                 if mesario == "s":
