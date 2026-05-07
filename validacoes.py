@@ -68,15 +68,7 @@ def validar_cpf(cpf):
     else:
         print("CPF inválido: erro nos dígitos verificadores.")
         return False
-         
-cpf_valido = False
-
-while cpf_valido == False:
-     entrada = input("Digite seu CPF: ")
-     cpf_valido = validar_cpf(entrada)
-         
-     if cpf_valido == False:
-           print("Tente novamente.\n")
+        
          
 
 
@@ -155,9 +147,6 @@ def validar_titulo(titulo_eleitor):
             else:
                 print("Título inválido: dígitos não conferem")
 
-
-        print("Título inválido: dígitos não conferem")
-        return False
         
 # === VERIFICAÇÃO DO NOME COMPLETO ===
 def verificar_nome(nome_completo):
@@ -170,6 +159,7 @@ def verificar_nome(nome_completo):
         if not valido:
             print("ERRO! Digite seu nome e sobrenome:")
             nome_completo = input("Tente novamente:")
+
 
                                                                                                                                                        
 
