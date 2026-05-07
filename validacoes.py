@@ -68,10 +68,16 @@ def validar_cpf(cpf):
     else:
         print("CPF inválido: erro nos dígitos verificadores.")
         return False
+<<<<<<< HEAD
         
          
 
 
+=======
+         
+
+         
+>>>>>>> dddfeb47979b8895c48af59b4fc253845d4b1959
 # ==== VALIDAÇÃO DO TÍTULO ====
 
 # Função que verifica se o campo está vazio ou só tem espaço
