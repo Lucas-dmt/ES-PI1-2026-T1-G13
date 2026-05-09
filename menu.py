@@ -1,19 +1,22 @@
-import random
-def gerar_chave():
-    return f"{random.randint(0,999999):06}"
+from conexaobd import executar  #importa a função de execução da conexaobd
+from validacoes import validar_titulo
+from validacoes import validar_cpf
+from validacoes import pedir_cpf
+from validacoes import verificar_nome
+from conexaobd import buscar   #importa a funcao buscar de conexaobd
+from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
 def menu_gerenciamento(): 
     """
     gerenciamento de eleitores e candidatos
     args:
         none
     returns:
-        none
+        nones
     """
     opcao = 0  #comecamos a opcao com 0 so para entrar no menu pela primeira vez
     while opcao !=11: #menu continua abrindo enquanto o usuario nao escolher a opcao de voltar
         print("\n=== MENU GERENCIAMENTO ===")
         print("1 - Cadastrar eleitor")
- 
         print("2 - Listar eleitores")
         print("3 - Buscar eleitor")
         print("4 - Editar eleitor")
@@ -24,109 +27,37 @@ def menu_gerenciamento():
         print("9 - Editar candidato")
         print("10 - Remover candidato")
         print("11 - Voltar")
-
         try: #tenta transformar o que o usuario digitou em numero
             opcao = int(input("Escolha uma opcao: "))
         except ValueError: #se o usuario digitar letra ou algo invalido, a opcao vira 0 (ValueError)
             opcao = 0
-
         #a partir daqui o programa verifica qual numero foi escolhido   
-        from conexaobd import executar  #importa a função de execução da conexaobd
         match opcao:
             case 1:
                 nome_completo = input("Digite seu nome completo:")
-                titulo_eleitor = int(input("Digite o número do título:"))
-                cpf = input("Digite seu CPF:")
+                verificar_nome(nome_completo)
+                titulo_eleitor = input("Digite o Título de Eleitor:")
+                validar_titulo(titulo_eleitor)
+                cpf = pedir_cpf()
                 prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
-             # ==== MESÁRIO ====
+                # ==== MESÁRIO ====
                 mesario = input("Mesário s/n:").lower()
                 if mesario == "s":
                     mesario = 1
                 else:
                     mesario = 0
-            # ==== VALIDAÇÃO DO CPF ====
-                cont = 0                             
-                while cont != 11:                             
-                    cont = 0 
-                    # aqui ele verifica se todos os caracteres são números, 11 dígitos
-                    for k in range(len(cpf)): 
-                        if cpf[k] >= "0" and cpf[k] <= "9":
-                            cont += 1
-                           
-                    if len(cpf) != 11 and cont < len(cpf):
-                        print("O cpf preicsa ter 11 dígitos e conter apenas números reais")
-                        cpf = input("CPF:")
-                        cont = 0
-
-                    elif len(cpf) != 11:
-                        print("O cpf precisa ter 11 dígitos")
-                        cpf = input("CPF:")
-                        cont = 0
-
-                    elif cont != 11:
-                        print("Utilize apenas números reais")
-                        cpf = input("CPF:")
-                        cont = 0
-                    else:                                                       # a partir desse "else", acontece a verificação matemática.
-                        iguais=0                                                # em primeiro lugar, verifica-se se o cpf não possui todos os dígitos iguais.
-                        for k in range (len(cpf)):                              # em segundo lugar, é verificado o primeiro dígito de verificação.
-                            if cpf[k] == cpf[0]:                                # em terceiro lugar, é verificado o segundo dígito de verificação.
-                                iguais+=1                                       # depois, os dígitos verificadores são comparados e então validados.
-                        if iguais == 11:
-                            print("CPF inválido: números repetidos")
-                            cpf = input("CPF:")
-                            cont = 0
-                        else:
-                            soma1=0
-                            multiplicacao1=10
-                            for i in range(9):
-                                soma1+=int(cpf[i])*multiplicacao1               # nesta linha, a string "cpf" é convertida em número inteiro,
-                                i+=1                                            # para que possa ser multiplicada como um número.
-                                multiplicacao1-=1
-                            resto1=soma1%11
-                            if resto1<2:
-                                first_verify=0
-                            else:
-                                first_verify=11-resto1
-                                if first_verify>=10:
-                                    first_verify=0
-
-                            #Cálculo do segundo dígito verificador
-                            soma2=0                                            
-                            multiplicacao2=11
-                            for i in range(9):
-                                soma2+=int(cpf[i])*multiplicacao2
-                                i+=1
-                                multiplicacao2-=1
-                            soma2+=first_verify*2
-                            resto2=soma2%11
-                            if resto2<2:
-                                second_verify=0
-                            else:
-                                second_verify=11-resto2
-                                if second_verify>=10:
-                                    second_verify=0
-                             #Validação final
-                            if first_verify == int(cpf[9]) and second_verify == int(cpf[10]):   
-                                print("CPF válido!")
-                        
-                            else:
-                                print("CPF inválido: erro nos dígitos verificadores.")
-                                cpf = input("CPF: ")
-                                cont = 0
-                            chave = gerar_chave()
+                chave = gerar_chave(nome_completo)
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                valores = (nome_completo,titulo_eleitor, prefixo_cpf, mesario, chave, 0)
+                valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf, mesario, chave, 0)
                 executar(comando,valores)
                 print("Cadastrado.")   
             case 2:
                 print("Listagem de eleitores ainda nao foi feita.")
             case 3:
              # ==== BUSCAR ELEITOR ====
-                from conexaobd import buscar
                 cpf_inserido = input("Digite o seu CPF:")
-                comando = "SELECT * FROM eleitores WHERE cpf_cifrado = %s"
+                comando = "SELECT * FROM eleitores WHERE cpf = %s"
                 valores = (cpf_inserido,)
                 eleitor = buscar(comando, valores)
                 if eleitor:
@@ -145,7 +76,7 @@ def menu_gerenciamento():
          # ==== CADASTRO DE CANDIDATO ==== 
                 nome_completo_candidato = input("Digite seu nome completo:")
                 numero_candidato = int(input("Seu número para votação:"))
-                id_partido = int(input("Informe o ID do partido:"""))
+                id_partido = int(input("Informe o ID do partido:"))
                 comando = "INSERT INTO candidatos (candidato ,numero_votacao ,id_partido) VALUES (%s, %s, %s)"
                 valores = (nome_completo_candidato,numero_candidato,id_partido)
                 executar(comando,valores)
@@ -155,7 +86,6 @@ def menu_gerenciamento():
                 print("Listagem de candidatos ainda nao foi feita.")
             case 8:
              # ==== BUSCA DE CANDIDATO ====
-                from conexaobd import buscar
                 numero_candidatoB = int(input("Digite o número do candidato:"))
                 comando = """
                  SELECT c.candidato, p.partido, p.sigla
@@ -178,8 +108,7 @@ def menu_gerenciamento():
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
-
-def menu_abrir_votacao():
+def menu_abrir_votacao(urna_aberta):
     """
     menu de abrir votação, identifica mesario e realiza a zerezima
     args:
@@ -187,11 +116,10 @@ def menu_abrir_votacao():
     returns:
         none
     """
+    mesario_autenticado = False
     opcao = 0
     while opcao != 3:
         print("\n=== ABRIR SISTEMA DE VOTACAO ===")
-
-
         print("1 - Identificar mesario")
         print("2 - Realizar zerezima")
         print("3 - Voltar")
@@ -203,14 +131,113 @@ def menu_abrir_votacao():
 
         match opcao:
             case 1:
-                print("Identificacao do mesario ainda nao foi feita.")
+                cpf = input("CPF do mesário:")
+                comando = """ SELECT * FROM eleitores WHERE cpf = %s AND mesario = 1 """
+                valores = (cpf,) 
+                resultado = buscar(comando,valores)
+                if resultado:
+                    mesario_autenticado = True
+                    print("Mesário autenticado.")
+                else: 
+                    print("Mesário não autorizado")
             case 2:
-                print("Zerezima ainda nao foi feita.")
+                # Impede zerézima sem mesário
+                if not mesario_autenticado:
+                    print("Autentique um mesario primeiro.")
+                    continue
+                # Impede abrir novamente
+                if urna_aberta:
+                    print("A urna já esta aberta.")
+                    continue
+                comando = """ SELECT candidato, numero_votacao
+                FROM candidatos """
+
+                candidatos = buscar(comando)
+
+                print("\n=== ZEREZIMA ===")
+                
+                for candidato in candidatos:
+                    print(f"{candidato[0]} ({candidato[1]}) -> 0 votos")
+                
+                urna_aberta = True
+                print("\nUrna liberada para votação.")
+
             case 3:
                 print("Voltando ao menu de votacao...")
             case _:
                 print("Opcao invalida.")
+    return urna_aberta
 
+def menu_encerramento(urna_aberta):
+    if  urna_aberta == False:
+        print("\nA urna já está fechada ou não foi aberta.")
+        return urna_aberta
+    
+    executando = True
+    while executando == True:
+        print("\n=== MENU DE ENCERRAMENTO ===")
+        print("1 - Iniciar Protocolo de Fechamento")
+        print("2 - Voltar")
+        try:
+            opcao=int(input("digite 1 ou 2: "))
+        except ValueError:
+            print("Opção inválida. Voltando para o menu de votação...")
+            return urna_aberta
+    
+        match opcao:
+            case 1:
+                try:
+                    titulo = input("digite o título:")
+                    prefixo_cpf = input("insira os 4 primeiros dígitos dpo cpf:")
+                    chave = input("chave de acesso:")
+
+                    comando = "SELECT chave_acesso_cifrada FROM eleitores WHERE titulo_eleitor = %s AND prefixo_cpf = %s AND mesario = 1 "           
+                    valores = (titulo, prefixo_cpf)
+                    resultado = buscar(comando, valores)
+
+                    if resultado != None:
+                        if resultado[0] == chave: 
+                            print("Chave correta!")
+                            confirmação = input("Deseja realmente encerrar a votação? (Sim/Não)")
+                            if confirmação =='Sim':
+                                segunda_chave = input("digite a chave novamente:")                        
+                                if resultado[0] == segunda_chave:
+                                    print("URNA ENCERRADA")
+                                    urna_aberta=False
+                                    executando = False
+                                    menu_resultados()
+                                    return urna_aberta
+                                else:
+                                    print("Erro. a chave está errada")
+                                    return urna_aberta
+
+
+                            elif confirmação == 'Não':
+                                print("Operação cancelada.")                        
+                                return urna_aberta  
+
+                            else:
+                                print("Resposta inválida. Operação cancelada.")
+                                return urna_aberta          
+                        else:
+                            print("Chave incorreta.") 
+                            return urna_aberta                   
+                    else:
+                        print("Mesário não encontrado ou sem permissão.")
+                        return urna_aberta
+
+                except ValueError:
+                     print(f"Erro: Digite apenas números para Título e CPF.")
+                     return urna_aberta
+            case 2:
+                print("Voltando para o menu de votação...")
+                return urna_aberta
+
+            case _:
+                print("Opção inválida")
+                return urna_aberta
+    return urna_aberta
+    
 def menu_auditoria():
     """
     menu de auditoria da votação, exibe logs e protocolos
@@ -239,7 +266,6 @@ def menu_auditoria():
                 print("Voltando ao menu de votacao...")
             case _:
                 print("Opcao invalida.")
-
 def menu_resultados():
     """
     resultados da votação
@@ -274,7 +300,6 @@ def menu_resultados():
                 print("Voltando ao menu de votacao...")
             case _:
                 print("Opcao invalida.")
-
 def menu_votacao():
     """
     menu principal de votação
@@ -283,6 +308,7 @@ def menu_votacao():
     returns:
         none
     """
+    urna_aberta = False
     opcao = 0
     while opcao != 4:
         print("\n=== MENU VOTACAO ===")
@@ -297,7 +323,7 @@ def menu_votacao():
 
         match opcao:
             case 1:
-                menu_abrir_votacao()
+                urna_aberta = menu_abrir_votacao(urna_aberta)
             case 2:
                 menu_auditoria()
             case 3:
@@ -306,7 +332,6 @@ def menu_votacao():
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
-
 def menu_principal():
     """
     menu principal, onde todo o sistema roda
@@ -336,7 +361,3 @@ def menu_principal():
             case _:
                 print("Opcao invalida.")
 menu_principal()
-
-         
-
-
