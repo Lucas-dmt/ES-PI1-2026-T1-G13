@@ -311,13 +311,14 @@ def menu_votacao():
     """
     urna_aberta = False
     opcao = 0
-    while opcao != 5:
+    while opcao != 6:
         print("\n=== MENU VOTACAO ===")
         print("1 - Votar")
         print("2 - Abrir sistema de votacao")
-        print("3 - Auditoria da votacao")
-        print("4 - Resultados da votacao")
-        print("5 - Voltar")
+        print("3 - Encerrar votacao")
+        print("4 - Auditoria da votacao")
+        print("5 - Resultados da votacao")
+        print("6 - Voltar")
         try:
             opcao = int(input("Escolha uma opcao: "))
         except ValueError:
@@ -337,10 +338,12 @@ def menu_votacao():
             case 2:
                 urna_aberta = menu_abrir_votacao(urna_aberta)
             case 3:
-                menu_auditoria()
+                urna_aberta = menu_encerramento(urna_aberta)
             case 4:
-                menu_resultados()
+                menu_auditoria()
             case 5:
+                menu_resultados()
+            case 6:
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
