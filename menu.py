@@ -149,8 +149,18 @@ def menu_abrir_votacao(urna_aberta):
                 if urna_aberta:
                     print("A urna já esta aberta.")
                     continue
-                comando = """ SELECT candidato, numero_votacao
-                FROM candidatos """
+                # ==== VERIFICA SE EXISTE ALGUEM QUE JA VOTOU ==== 
+                comando = """SELECT * FROM eleitores WHERE ja_votou = 1"""
+
+                resultado = buscar_tudo(comando)
+                if resultado:
+                    print("ERRO: Existem eleitores marcados como ja votaram.")
+                    continue
+                
+                # ==== BUSCA TODOS OS CANDIDATOS =====
+                comando = """SELECT candidato, numero_votacao
+                FROM Candidatos
+                """
 
                 candidatos = buscar_tudo(comando)
 
