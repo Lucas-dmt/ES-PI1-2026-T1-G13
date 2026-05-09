@@ -101,6 +101,8 @@ def menu_gerenciamento():
                     print(f"Nome: {resultado[0]}")
                     print(f"Partido: {resultado[1]}")
                     print(f"Sigla: {resultado[2]}")
+                else:
+                    print("\n[!] Erro: Eleitor não cadastrado.")
             case 9:
                 print("Edicao de candidatos ainda nao foi feita.")
             case 10:
@@ -133,7 +135,7 @@ def menu_abrir_votacao(urna_aberta):
         match opcao:
             case 1:
                 cpf = input("CPF do mesário:")
-                comando = """ SELECT * FROM eleitores WHERE cpf = % AND mesario = 1 """
+                comando = """ SELECT * FROM eleitores WHERE cpf = %s AND mesario = 1 """
                 valores = (cpf,) 
                 resultado = buscar(comando,valores)
                 if resultado:
@@ -153,7 +155,7 @@ def menu_abrir_votacao(urna_aberta):
                 comando = """ SELECT candidato, numero_votacao
                 FROM candidatos """
 
-                candidatos = buscar(comando)
+                candidatos = buscar(comando, ())
 
                 print("\n=== ZEREZIMA ===")
                 
@@ -311,12 +313,13 @@ def menu_votacao():
     """
     urna_aberta = False
     opcao = 0
-    while opcao != 4:
+    while opcao != 5:
         print("\n=== MENU VOTACAO ===")
-        print("1 - Abrir sistema de votacao")
-        print("2 - Auditoria da votacao")
-        print("3 - Resultados da votacao")
-        print("4 - Voltar")
+        print("1 - Votar")
+        print("2 - Abrir sistema de votacao")
+        print("3 - Auditoria da votacao")
+        print("4 - Resultados da votacao")
+        print("5 - Voltar")
         try:
             opcao = int(input("Escolha uma opcao: "))
         except ValueError:
@@ -324,12 +327,22 @@ def menu_votacao():
 
         match opcao:
             case 1:
-                urna_aberta = menu_abrir_votacao(urna_aberta)
+                if urna_aberta:
+                    print("\n === VOTAR ===")
+                    cpf =input("Seu CPF: ")
+                    numero_candidato = int(input("Seu número para votação: "))
+                    comando = "UPDATE eleitores SET ja_votou = %s, candidato_votado = %s WHERE cpf = %s"
+                    valores = (1, numero_candidato, cpf)
+                    executar(comando, valores)
+                else:
+                    print("A urna esta fechada, tente novamente mais tarde")
             case 2:
-                menu_auditoria()
+                urna_aberta = menu_abrir_votacao(urna_aberta)
             case 3:
-                menu_resultados()
+                menu_auditoria()
             case 4:
+                menu_resultados()
+            case 5:
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
