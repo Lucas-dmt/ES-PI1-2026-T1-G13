@@ -57,7 +57,7 @@ def buscar_tudo(comando):
         )
     cursor=conexao.cursor()
     cursor.execute(comando)
-    resultados = cursor.fetchall
+    resultados = cursor.fetchall()
     return resultados
    
     
