@@ -15,5 +15,6 @@ Requisitos para correção da reuniao 2:
 3-Protocolos:
 
 -depois de votado com sucesso,gera o numero do protocolo.
+-Criptografar o Protocolo
 -conferir se tem  protocolo ou nao,se tiver, o voto é legitimo,
 se nao,pode ser fraude,qualquer um pode dizer que votou
