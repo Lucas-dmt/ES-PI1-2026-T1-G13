@@ -40,10 +40,7 @@ def buscar(comando, valores):
         )
      cursor=conexao.cursor()
      cursor.execute(comando, valores)
-     
      resultado = cursor.fetchone()
      cursor.close()
-
      conexao.close()
-
      return resultado
