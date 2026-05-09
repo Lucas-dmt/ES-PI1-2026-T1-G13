@@ -167,3 +167,4 @@ def verificar_nome(nome_completo):
         else:
             print("ERRO! Digite seu nome e sobrenome:")
             nome_completo = input("Tente novamente:")
+        
