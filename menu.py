@@ -1,10 +1,10 @@
 from conexaobd import executar  #importa a função de execução da conexaobd
 from validacoes import validar_titulo
-from validacoes import validar_cpf
 from validacoes import pedir_cpf
 from validacoes import verificar_nome
 from conexaobd import buscar   #importa a funcao buscar de conexaobd
 from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
+from conexaobd import buscar_tudo
 def menu_gerenciamento(): 
     """
     gerenciamento de eleitores e candidatos
@@ -152,7 +152,7 @@ def menu_abrir_votacao(urna_aberta):
                 comando = """ SELECT candidato, numero_votacao
                 FROM candidatos """
 
-                candidatos = buscar(comando)
+                candidatos = buscar_tudo(comando)
 
                 print("\n=== ZEREZIMA ===")
                 
