@@ -155,11 +155,16 @@ def validar_titulo(titulo_eleitor):
 # === VERIFICAÇÃO DO NOME COMPLETO ===
 def verificar_nome(nome_completo):
     valido = False
+
     while not valido:
         for i in range(len(nome_completo)):
             if nome_completo[i] ==" " and i != 0 and i != len(nome_completo) - 1:
                 valido = True
-                print("Nome completo válido!")
-        if not valido:
+                break
+        
+        if valido:
+            print("Nome completo válido!")
+        else:
             print("ERRO! Digite seu nome e sobrenome:")
             nome_completo = input("Tente novamente:")
+        
