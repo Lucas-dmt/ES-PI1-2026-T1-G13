@@ -1,6 +1,5 @@
 from conexaobd import executar  #importa a função de execução da conexaobd
 from validacoes import validar_titulo
-from validacoes import validar_cpf
 from validacoes import pedir_cpf
 from validacoes import verificar_nome
 from conexaobd import buscar   #importa a funcao buscar de conexaobd
