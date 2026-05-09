@@ -167,6 +167,77 @@ def menu_abrir_votacao(urna_aberta):
             case _:
                 print("Opcao invalida.")
     return urna_aberta
+
+def menu_encerramento(urna_aberta):
+    if  urna_aberta == False:
+        print("\nA urna já está fechada ou não foi aberta.")
+        return urna_aberta
+    
+    executando = True
+    while executando == True:
+        print("\n=== MENU DE ENCERRAMENTO ===")
+        print("1 - Iniciar Protocolo de Fechamento")
+        print("2 - Voltar")
+        try:
+            opcao=int(input("digite 1 ou 2: "))
+        except ValueError:
+            print("Opção inválida. Voltando para o menu de votação...")
+            return urna_aberta
+    
+        match opcao:
+            case 1:
+                try:
+                    titulo = input("digite o título:")
+                    prefixo_cpf = input("insira os 4 primeiros dígitos dpo cpf:")
+                    chave = input("chave de acesso:")
+
+                    comando = "SELECT chave_acesso_cifrada FROM eleitores WHERE titulo_eleitor = %s AND prefixo_cpf = %s AND mesario = 1 "           
+                    valores = (titulo, prefixo_cpf)
+                    resultado = buscar(comando, valores)
+
+                    if resultado != None:
+                        if resultado[0] == chave: 
+                            print("Chave correta!")
+                            confirmação = input("Deseja realmente encerrar a votação? (Sim/Não)")
+                            if confirmação =='Sim':
+                                segunda_chave = input("digite a chave novamente:")                        
+                                if resultado[0] == segunda_chave:
+                                    print("URNA ENCERRADA")
+                                    urna_aberta=False
+                                    executando = False
+                                    menu_resultados()
+                                    return urna_aberta
+                                else:
+                                    print("Erro. a chave está errada")
+                                    return urna_aberta
+
+
+                            elif confirmação == 'Não':
+                                print("Operação cancelada.")                        
+                                return urna_aberta  
+
+                            else:
+                                print("Resposta inválida. Operação cancelada.")
+                                return urna_aberta          
+                        else:
+                            print("Chave incorreta.") 
+                            return urna_aberta                   
+                    else:
+                        print("Mesário não encontrado ou sem permissão.")
+                        return urna_aberta
+
+                except ValueError:
+                     print(f"Erro: Digite apenas números para Título e CPF.")
+                     return urna_aberta
+            case 2:
+                print("Voltando para o menu de votação...")
+                return urna_aberta
+
+            case _:
+                print("Opção inválida")
+                return urna_aberta
+    return urna_aberta
+    
 def menu_auditoria():
     """
     menu de auditoria da votação, exibe logs e protocolos
