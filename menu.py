@@ -108,7 +108,7 @@ def menu_gerenciamento():
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
-def menu_abrir_votacao():
+def menu_abrir_votacao(urna_aberta):
     """
     menu de abrir votação, identifica mesario e realiza a zerezima
     args:
@@ -116,6 +116,7 @@ def menu_abrir_votacao():
     returns:
         none
     """
+    mesario_autenticado = False
     opcao = 0
     while opcao != 3:
         print("\n=== ABRIR SISTEMA DE VOTACAO ===")
@@ -130,13 +131,42 @@ def menu_abrir_votacao():
 
         match opcao:
             case 1:
-                print("Identificacao do mesario ainda nao foi feita.")
+                cpf = input("CPF do mesário:")
+                comando = """ SELECT * FROM eleitores WHERE cpf = % AND mesario = 1 """
+                valores = (cpf,) 
+                resultado = buscar(comando,valores)
+                if resultado:
+                    mesario_autenticado = True
+                    print("Mesário autenticado.")
+                else: 
+                    print("Mesário não autorizado")
             case 2:
-                print("Zerezima ainda nao foi feita.")
+                # Impede zerézima sem mesário
+                if not mesario_autenticado:
+                    print("Autentique um mesario primeiro.")
+                    continue
+                # Impede abrir novamente
+                if urna_aberta:
+                    print("A urna já esta aberta.")
+                    continue
+                comando = """ SELECT candidato, numero_votacao
+                FROM candidatos """
+
+                candidatos = buscar(comando)
+
+                print("\n=== ZEREZIMA ===")
+                
+                for candidato in candidatos:
+                    print(f"{candidato[0]} ({candidato[1]}) -> 0 votos")
+                
+                urna_aberta = True
+                print("\nUrna liberada para votação.")
+
             case 3:
                 print("Voltando ao menu de votacao...")
             case _:
                 print("Opcao invalida.")
+    return urna_aberta
 def menu_auditoria():
     """
     menu de auditoria da votação, exibe logs e protocolos
@@ -207,6 +237,7 @@ def menu_votacao():
     returns:
         none
     """
+    urna_aberta = False
     opcao = 0
     while opcao != 4:
         print("\n=== MENU VOTACAO ===")
@@ -221,7 +252,7 @@ def menu_votacao():
 
         match opcao:
             case 1:
-                menu_abrir_votacao()
+                urna_aberta = menu_abrir_votacao(urna_aberta)
             case 2:
                 menu_auditoria()
             case 3:
