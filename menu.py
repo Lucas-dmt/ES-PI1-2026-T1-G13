@@ -5,7 +5,6 @@ from validacoes import pedir_cpf
 from validacoes import verificar_nome
 from conexaobd import buscar   #importa a funcao buscar de conexaobd
 from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
-from conexaobd import buscar_tudo #importa a funcao de buscar tudo de conexaobd
 def menu_gerenciamento(): 
     """
     gerenciamento de eleitores e candidatos
@@ -153,18 +152,17 @@ def menu_abrir_votacao(urna_aberta):
                 if urna_aberta:
                     print("A urna já esta aberta.")
                     continue
-                comando = """ SELECT candidato, numero_votacao
-                FROM candidatos """
-
-                candidatos = buscar_tudo(comando)
-
+                comando = """ SELECT COUNT(*) FROM eleitores WHERE ja_votou = 1 """
+                resultado = buscar(comando, ())
+                votos = resultado[0]
                 print("\n=== ZEREZIMA ===")
+                print(f"Total de votos registrados: {resultado[0]}")
                 
-                for candidato in candidatos:
-                    print(f"{candidato[0]} ({candidato[1]}) -> 0 votos")
-                
-                urna_aberta = True
-                print("\nUrna liberada para votação.")
+                if votos > 0:
+                    print("\nHouve uma anomalia no sistema, a urna não pode ser aberta.")
+                else:
+                    urna_aberta = True
+                    print("\nUrna liberada para votação.")
 
             case 3:
                 print("Voltando ao menu de votacao...")
