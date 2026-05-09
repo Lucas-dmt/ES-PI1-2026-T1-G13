@@ -5,8 +5,8 @@ CREATE TABLE eleitores (
     id_eleitor INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     titulo_eleitor CHAR(12) NOT NULL UNIQUE,
+    cpf CHAR(12) NOT NULL UNIQUE,
     prefixo_cpf CHAR(4) NOT NULL,
-    cpf_cifrado VARCHAR(120) NOT NULL UNIQUE,
     mesario BOOLEAN NOT NULL DEFAULT FALSE,
     chave_acesso_cifrada VARCHAR(120) NOT NULL,
     ja_votou BOOLEAN NOT NULL DEFAULT FALSE
