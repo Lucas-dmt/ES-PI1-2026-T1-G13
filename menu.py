@@ -132,7 +132,7 @@ def menu_abrir_votacao(urna_aberta):
         match opcao:
             case 1:
                 cpf = input("CPF do mesário:")
-                comando = """ SELECT * FROM eleitores WHERE cpf = % AND mesario = 1 """
+                comando = """ SELECT * FROM eleitores WHERE cpf = %s AND mesario = 1 """
                 valores = (cpf,) 
                 resultado = buscar(comando,valores)
                 if resultado:
