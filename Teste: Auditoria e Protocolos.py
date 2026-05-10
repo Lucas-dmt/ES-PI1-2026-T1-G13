@@ -9,9 +9,7 @@ def registrar_log(mensagem):
     auditoria.append(f"[{horario}] {mensagem}")
 
 
-
-
-#======= CASE 1:LOGS=====
+#============================CASE 1:LOGS========================
 
 print("Atualizando registros atuais...")
 
@@ -44,12 +42,54 @@ dias = 5
 print(f"\nVocê ainda não votou.")
 print(f"A votação acaba em {dias} dias.")
 
-#======MANIPULACAO DE ARQUIVO======
+
+
+
+#=======ABERTURA=======
+
+from auditoria import registrar_log
+
+registrar_log(
+    "ABERTURA: Votação iniciada com sucesso. Total de votos zerado."
+)
+
+#========VOTO DUPLO===
+
+registrar_log(
+    "ALERTA: Tentativa de voto duplo"
+)
+
+#=======ACESSO NEGADO===
+
+registrar_log(
+    "ALERTA: Tentativa de acesso negado"
+)
+
+#=====VOTO REALIZADO COM SUCESSO===
+
+
+
+#======ENCERRAMENTO DE VOTAÇAO======
+registrar_log(
+    "ENCERRAMENTO: Votação finalizada com sucesso."
+)
+
+
+#===============MANIPULACAO DE ARQUIVO=================
 
 with open("auditoria_log.txt", "a") as arquivo:
     arquivo.write(f"[{horario}] {msg}" + "\n")
 
-#=========GERAR PROTOCOLO DEPOIS DE VOTAR========
+#===MANIPULACAO DE ARQUIVO PARA SALVAR PROTOCOLO===
+
+def salvar_protocolo(protocolo):
+
+    with open(ARQUIVO_PROTOCOLOS, "a", encoding="utf-8") as arquivo:
+        arquivo.write(protocolo + "\n")
+
+
+
+#=========GERAR PROTOCOLO DEPOIS DE VOTAR=================
 
 
 def gerar_protocolo(candidato):
@@ -70,18 +110,7 @@ def gerar_protocolo(candidato):
 
 print(gerar_protocolo(13))
 
-
-
-
-#=======MANIPULACAO DE ARQUIVO PARA SALVAR PROTOCOLO=======
-
-def salvar_protocolo(protocolo):
-
-    with open(ARQUIVO_PROTOCOLOS, "a", encoding="utf-8") as arquivo:
-        arquivo.write(protocolo + "\n")
-
-
-#=======OCORRÊNCIA DOS LOGS==========
+#=================OCORRÊNCIA DOS LOGS===========================
 
 def exibir_logs():
 
