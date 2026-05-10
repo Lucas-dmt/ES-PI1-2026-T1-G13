@@ -89,12 +89,26 @@ def exibir_logs():
         with open("logs.txt", "r", encoding="utf-8") as arquivo:
 
             print("\n===== LOGS DE OCORRÊNCIAS =====\n")
+            if protocolos == []:
 
-            for linha in arquivo:
-                print(linha.strip())
+                    print("Nenhum protocolo encontrado.")
+
+                else:
+
+                    protocolos.sort()
+
+                    for protocolo in protocolos:
+
+                        print(protocolo.strip())
 
     except FileNotFoundError:
         print("Nenhum log encontrado.")
 
+elif opcao == 3:
 
+        print("\nVoltando ao menu principal...")
+
+    else:
+
+        print("\nOpcao invalida.")
 
