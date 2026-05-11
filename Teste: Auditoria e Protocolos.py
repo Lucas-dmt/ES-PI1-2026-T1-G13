@@ -17,6 +17,12 @@ def salvar_protocolo(protocolo):
     with open(ARQUIVO_PROTOCOLOS, "a", encoding="utf-8") as arquivo:
         arquivo.write(protocolo + "\n")
 
+protocolo = gerar_protocolo(22)
+
+salvar_protocolo(protocolo)
+
+print("\nProtocolo gerado:")
+print(protocolo)
 
 opcao = 0
 
