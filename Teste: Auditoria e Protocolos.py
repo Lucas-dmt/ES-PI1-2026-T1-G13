@@ -18,15 +18,6 @@ def salvar_protocolo(protocolo):
         arquivo.write(protocolo + "\n")
 
 
-
-
-def registrar_log(mensagem):
-    horario = datetime.now().strftime("%H:%M:%S")
-    auditoria.append(f"[{horario}] {mensagem}")
-
-#====================================
-
-
 opcao = 0
 
 while opcao != 4:
@@ -84,6 +75,12 @@ dias = 5
 
 print(f"\nAVISO: Você ainda não votou, restam {dias} dias para a votação acabar.")
 
+
+
+#=========REGISTRO DE LOGS==============================
+def registrar_log(mensagem):
+    horario = datetime.now().strftime("%H:%M:%S")
+    auditoria.append(f"[{horario}] {mensagem}")
 
 #=======ABERTURA=======
 
