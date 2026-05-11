@@ -102,6 +102,12 @@ registrar_log(
     "ALERTA: Tentativa de acesso negado"
 )
 
+# ============ VOTO REALIZADO =============
+
+registrar_log(
+    "SUCESSO: Voto realizado com sucesso"
+)
+
 #======ENCERRAMENTO DE VOTAÇAO======
 registrar_log(
     "ENCERRAMENTO: Votação finalizada com sucesso."
