@@ -3,7 +3,7 @@ import time import random
 
 auditoria = []
 arquivo_log = "auditoria_log.txt"
-
+ARQUIVO_PROTOCOLOS = "protocolos.txt"
 def registrar_log(mensagem):
     horario = datetime.now().strftime("%H:%M:%S")
     auditoria.append(f"[{horario}] {mensagem}")
@@ -39,10 +39,7 @@ except:
 
 dias = 5
 
-print(f"\nVocê ainda não votou.")
-print(f"A votação acaba em {dias} dias.")
-
-
+print(f"\nAVISO: Você ainda não votou, restam {dias} dias para a votação acabar.")
 
 
 #=======ABERTURA=======
