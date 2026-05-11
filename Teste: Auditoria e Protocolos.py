@@ -5,20 +5,65 @@ auditoria = []
 arquivo_log = "auditoria_log.txt"
 ARQUIVO_PROTOCOLOS = "protocolos.txt"
 
+#===============MANIPULACAO DE ARQUIVO=================
+
+with open("auditoria_log.txt", "a") as arquivo:
+    arquivo.write(f"[{horario}] {msg}" + "\n")
+
+#===MANIPULACAO DE ARQUIVO PARA SALVAR PROTOCOLO===
+
+def salvar_protocolo(protocolo):
+
+    with open(ARQUIVO_PROTOCOLOS, "a", encoding="utf-8") as arquivo:
+        arquivo.write(protocolo + "\n")
+
+
+
+
 def registrar_log(mensagem):
     horario = datetime.now().strftime("%H:%M:%S")
     auditoria.append(f"[{horario}] {mensagem}")
 
+#====================================
+
+
+opcao = 0
+
+while opcao != 4:
+
+    print("\n===== SISTEMA DE VOTACAO =====")
+
+    print("1 - Votar")
+    print("2 - Resultado")
+    print("3 - Auditoria")
+    print("4 - Sair")
+
+    opcao = int(input("\nEscolha: "))
+
+    elif opcao == 3:
+
+        auditoria = 0
+
+        while auditoria != 3:
+
+            print("\n=== AUDITORIA DA VOTACAO ===")
+
+            print("1 - Exibir logs")
+            print("2 - Exibir protocolos")
+            print("3 - Voltar")
+
+            auditoria = int(input("\nEscolha uma opcao: "))
+
 
 #============================CASE 1:LOGS========================
 
-print("Atualizando registros atuais...")
+if auditoria == 1:
+    print("Atualizando registros atuais...")
 
 # Espera 3 segundos
 time.sleep(3)
 
 print("\n===== LOGS =====")
-
 try:
 
     with open("logs.txt", "r", encoding="utf-8") as arquivo:
@@ -34,9 +79,6 @@ try:
 except:
 
     print("Arquivo de logs não encontrado.")
-
-
-# MENSAGEM FINAL
 
 dias = 5
 
@@ -63,28 +105,42 @@ registrar_log(
     "ALERTA: Tentativa de acesso negado"
 )
 
-#=====VOTO REALIZADO COM SUCESSO===
-
-
-
 #======ENCERRAMENTO DE VOTAÇAO======
 registrar_log(
     "ENCERRAMENTO: Votação finalizada com sucesso."
 )
 
+# ================PROTOCOLOS========================
 
-#===============MANIPULACAO DE ARQUIVO=================
+ elif auditoria == 2:
 
-with open("auditoria_log.txt", "a") as arquivo:
-    arquivo.write(f"[{horario}] {msg}" + "\n")
+                print("\nVerificando protocolos oficiais...")
 
-#===MANIPULACAO DE ARQUIVO PARA SALVAR PROTOCOLO===
+                time.sleep(2)
 
-def salvar_protocolo(protocolo):
+                print("\n===== PROTOCOLOS =====\n")
 
-    with open(ARQUIVO_PROTOCOLOS, "a", encoding="utf-8") as arquivo:
-        arquivo.write(protocolo + "\n")
+                try:
 
+                    with open("protocolos.txt", "r", encoding="utf-8") as arquivo:
+
+                        protocolos = arquivo.readlines()
+
+                        if protocolos == []:
+
+                            print("Nenhum protocolo encontrado.")
+
+                        else:
+
+                            protocolos.sort()
+
+                            for protocolo in protocolos:
+
+                                print(protocolo.strip())
+
+                except:
+
+                    print("Arquivo de protocolos nao encontrado.")
 
 
 #=========GERAR PROTOCOLO DEPOIS DE VOTAR=================
@@ -108,28 +164,6 @@ def gerar_protocolo(candidato):
 
 print(gerar_protocolo(13))
 
-#=================OCORRÊNCIA DOS LOGS===========================
-
-def exibir_logs():
-
-    try:
-        with open("logs.txt", "r", encoding="utf-8") as arquivo:
-
-            print("\n===== LOGS DE OCORRÊNCIAS =====\n")
-            if protocolos == []:
-
-                    print("Nenhum protocolo encontrado.")
-
-                else:
-
-                    protocolos.sort()
-
-                    for protocolo in protocolos:
-
-                        print(protocolo.strip())
-
-    except FileNotFoundError:
-        print("Nenhum log encontrado.")
 
 elif opcao == 3:
 
