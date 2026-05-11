@@ -2,6 +2,128 @@ from datetime import datetime
 import time
 import random
 
+import time
+
+opcao = 0
+
+while opcao != 4:
+
+    print("\n===== SISTEMA DE VOTACAO =====")
+
+    print("1 - Votar")
+    print("2 - Resultado")
+    print("3 - Auditoria")
+    print("4 - Sair")
+
+    opcao = int(input("\nEscolha: "))
+
+    elif opcao == 3:
+
+        auditoria = 0
+
+        while auditoria != 3:
+
+            print("\n=== AUDITORIA DA VOTACAO ===")
+
+            print("1 - Exibir logs")
+            print("2 - Exibir protocolos")
+            print("3 - Voltar")
+
+            auditoria = int(input("\nEscolha uma opcao: "))
+
+            # =========================
+            # LOGS
+            # =========================
+
+            if auditoria == 1:
+
+                print("\nAtualizando registros atuais...")
+
+                time.sleep(2)
+
+                print("\n===== LOGS =====\n")
+
+                try:
+
+                    with open("logs.txt", "r", encoding="utf-8") as arquivo:
+
+                        logs = arquivo.read()
+
+                        if logs == "":
+
+                            print("Nenhum log encontrado.")
+
+                        else:
+
+                            print(logs)
+
+                except:
+
+                    print("Arquivo de logs nao encontrado.")
+
+                print("\nVoce ainda nao votou.")
+                print("A votacao acaba em 5 dias.")
+
+            # =========================
+            # PROTOCOLOS
+            # =========================
+
+            elif auditoria == 2:
+
+                print("\nVerificando protocolos oficiais...")
+
+                time.sleep(2)
+
+                print("\n===== PROTOCOLOS =====\n")
+
+                try:
+
+                    with open("protocolos.txt", "r", encoding="utf-8") as arquivo:
+
+                        protocolos = arquivo.readlines()
+
+                        if protocolos == []:
+
+                            print("Nenhum protocolo encontrado.")
+
+                        else:
+
+                            protocolos.sort()
+
+                            for protocolo in protocolos:
+
+                                print(protocolo.strip())
+
+                except:
+
+                    print("Arquivo de protocolos nao encontrado.")
+
+            # =========================
+            # VOLTAR
+            # =========================
+
+            elif auditoria == 3:
+
+                print("\nVoltando...")
+
+            else:
+
+                print("\nOpcao invalida.")
+
+    # =========================
+    # SAIR
+    # =========================
+
+    elif opcao == 4:
+
+        print("\nSaindo do sistema...")
+
+    else:
+
+        print("\nOpcao invalida.")
+
+
+
 auditoria = []
 
 arquivo_log = "auditoria_log.txt"
