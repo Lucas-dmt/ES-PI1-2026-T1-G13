@@ -113,7 +113,7 @@ registrar_log(
 
                 print("\nVerificando protocolos oficiais...")
 
-                time.sleep(2)
+                time.sleep(3)
 
                 print("\n===== PROTOCOLOS =====\n")
 
@@ -121,22 +121,24 @@ registrar_log(
 
                     with open("protocolos.txt", "r", encoding="utf-8") as arquivo:
 
-                        protocolos = arquivo.readlines()
+                        protocolos = arquivo.readlines() 
 
-                        if protocolos == []:
+                        print(protocolos)
+
+                        if protocolos == []: #Le todas as linhas do arquivo e guardar em uma lista.
+
 
                             print("Nenhum protocolo encontrado.")
 
                         else:
+                              
+                            protocolos.sort() #Ordena a ordem do protocolo 
 
-                            protocolos.sort()
+                            for protocolo in protocolos: #Percorre linha por linha.
 
-                            for protocolo in protocolos:
+                                print(protocolo.replace("\n", "")) #Remove apenas a quebra de linha:
 
-                                print(protocolo.strip())
-
-                except:
-
+                except FileNotFoundError:
                     print("Arquivo de protocolos nao encontrado.")
 
 
@@ -147,8 +149,8 @@ def gerar_protocolo(candidato):
 
     letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-    letra1 = random.choice(letras)
-    letra2 = random.choice(letras)
+    letra1 = random.choice(letras) # Gera letra Ateatoria
+    letra2 = random.choice(letras) # Gera letra Ateatoria
 
     numeros = random.randint(10000, 99999)
 
@@ -159,12 +161,14 @@ def gerar_protocolo(candidato):
 
 # EXEMPLO
 
-print(gerar_protocolo(13))
+print(gerar_protocolo(22))
 
 
 elif opcao == 3:
 
         print("\nVoltando ao menu principal...")
+
+menu_principal()
 
     else:
 
