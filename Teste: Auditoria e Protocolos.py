@@ -4,6 +4,7 @@ import time import random
 auditoria = []
 arquivo_log = "auditoria_log.txt"
 ARQUIVO_PROTOCOLOS = "protocolos.txt"
+
 def registrar_log(mensagem):
     horario = datetime.now().strftime("%H:%M:%S")
     auditoria.append(f"[{horario}] {mensagem}")
