@@ -7,7 +7,7 @@ from validacoes import verificar_nome
 from conexaobd import buscar   #importa a funcao buscar de conexaobd
 from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
 from chave_protocolo import gerar_protocolo #importa a funcao de geracao de geracao de protocolo em protocolo.py
-from auditoria import mostrar_logs, mostrar_protocolos, validar_protocolo, registrar_log
+from auditoria import mostrar_logs, mostrar_protocolos, validar_protocolo, registrar_log, salvar_protocolo
 
 def menu_gerenciamento(): 
     """
@@ -386,6 +386,9 @@ def menu_votacao():
                             registrar_log()
 
                             protocolo = gerar_protocolo(candidato)
+                            print("Seu protocolo de votação é:", protocolo)
+                            salvar_protocolo(protocolo)
+                            registrar_log(f"PROTOCOLO GERADO:{protocolo}")
                         
                         else:
                             print("Candidato não encontrado. Tente novamente.")
