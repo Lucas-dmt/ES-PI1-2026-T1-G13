@@ -27,7 +27,7 @@ def gerar_protocolo(candidato):
 
 def salvar_protocolo(protocolo):
 
-    with open(ARQUIVO_PROTOCOLOS, "a", encoding="utf-8") as arquivo:
+    with open(arquivo_log, "a", encoding="utf-8") as arquivo:
         arquivo.write(protocolo + "\n")
 
 protocolo = gerar_protocolo(22)
@@ -100,6 +100,7 @@ if auditoria == 1:
 mostrar_logs()
 
 elif auditoria == 2:
+
 mostrar_protocolos()
 
 elif auditoria == 3:
