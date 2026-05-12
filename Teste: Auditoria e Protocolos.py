@@ -107,6 +107,9 @@ elif auditoria == 3:
 
  else:
   print("\nOpcao invalida.")
+
+
+
 #=========REGISTRO DE LOGS==============================
 def registrar_log(mensagem):
     horario = datetime.now().strftime("%H:%M:%S")
@@ -115,6 +118,7 @@ with open("auditoria_log.txt", "a") as arquivo:
     arquivo.write(f"[{horario}] {mensagem}" + "\n")
 
     auditoria.append(f"[{horario}] {mensagem}")
+
 
 
 #=========MOSTRAR LOGS DE OCORRÊNCIA========    
