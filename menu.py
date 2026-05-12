@@ -1,3 +1,5 @@
+from datetime import datetime
+import time
 from conexaobd import executar  #importa a função de execução da conexaobd
 from validacoes import validar_titulo
 from validacoes import pedir_cpf
@@ -251,26 +253,41 @@ def menu_auditoria():
     returns:
         none
     """
-    opcao = 0
-    while opcao != 3:
+   opcao = 0
+
+    while opcao != 4:
+
         print("\n=== AUDITORIA DA VOTACAO ===")
+
         print("1 - Exibir logs")
         print("2 - Exibir protocolos")
-        print("3 - Voltar")
-        try:
-            opcao = int(input("Escolha uma opcao: "))
-        except ValueError:
-            opcao = 0
+        print("3 - Validar protocolos") 
+        print("4 - Voltar")
+
+        opcao = int(input("\nEscolha uma opcao: "))
 
         match opcao:
             case 1:
-                print("Exibicao de logs ainda nao foi feita.")
+
+                mostrar_logs()
+        
             case 2:
-                print("Exibicao de protocolos ainda nao foi feita.")
+
+                mostrar_protocolos()
+                
             case 3:
-                print("Voltando ao menu de votacao...")
+        
+                validar_protocolo()
+
+            case 4:
+
+                print("\nVoltando ao menu de votacao...")
+
+                menu_votacao()
+
             case _:
                 print("Opcao invalida.")
+                
 def menu_resultados():
     """
     resultados da votação
