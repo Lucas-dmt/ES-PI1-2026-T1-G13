@@ -7,10 +7,22 @@ auditoria = []
 arquivo_log = "auditoria_log.txt"
 ARQUIVO_PROTOCOLOS = "protocolos.txt"
 
-#===============MANIPULACAO DE ARQUIVO=================
 
-with open("auditoria_log.txt", "a") as arquivo:
-    arquivo.write(f"[{horario}] {msg}" + "\n")
+#=========GERAR PROTOCOLO DEPOIS DE VOTAR=================
+
+
+def gerar_protocolo(candidato):
+
+    letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    letra1 = random.choice(letras) # Gera letra Ateatoria
+    letra2 = random.choice(letras) # Gera letra Ateatoria
+
+    numeros = random.randint(10000, 99999)
+
+    protocolo = "V" + letra1 + letra2 + "26" + str(candidato) + str(numeros)
+
+    return protocolo
 
 #===MANIPULACAO DE ARQUIVO PARA SALVAR PROTOCOLO===
 
@@ -25,6 +37,41 @@ salvar_protocolo(protocolo)
 
 print("\nProtocolo gerado:")
 print(protocolo)
+
+
+#============MOSTRAR PROTOCOLOS===========
+def mostrar_protocolos():
+                print("\nVerificando protocolos oficiais...")
+
+                time.sleep(3)
+
+                print("\n===== PROTOCOLOS =====\n")
+
+                try:
+
+                    with open("protocolos.txt", "r", encoding="utf-8") as arquivo:
+
+                        protocolos = arquivo.readlines() 
+
+                        print(protocolos)
+
+                        if protocolos == []: #Le todas as linhas do arquivo e guardar em uma lista.
+
+
+                            print("Nenhum protocolo encontrado.")
+
+                        else:
+                              
+                            protocolos.sort() #Ordena a ordem do protocolo 
+
+                            for protocolo in protocolos: #Percorre linha por linha.
+
+                                print(protocolo.replace("\n", "")) #Remove apenas a quebra de linha:
+
+                except FileNotFoundError:
+                    print("Arquivo de protocolos nao encontrado.")
+
+
 
 opcao = 0
 
@@ -57,38 +104,42 @@ while opcao != 4:
 #============================CASE 1:LOGS========================
 
 if auditoria == 1:
-    print("Atualizando registros atuais...")
-
-# Espera 3 segundos
-time.sleep(3)
-
-print("\n===== LOGS =====")
-try:
-
-    with open("logs.txt", "r", encoding="utf-8") as arquivo:
-
-        logs = arquivo.read()
-
-        if logs == "":
-            print("Nenhum log encontrado.")
-
-        else:
-            print(logs)
-
-except:
-
-    print("Arquivo de logs não encontrado.")
-
-dias = 5
-
-print(f"\nAVISO: Você ainda não votou, restam {dias} dias para a votação acabar.")
-
-
 
 #=========REGISTRO DE LOGS==============================
 def registrar_log(mensagem):
     horario = datetime.now().strftime("%H:%M:%S")
+
+with open("auditoria_log.txt", "a") as arquivo:
+    arquivo.write(f"[{horario}] {msg}" + "\n")
+
     auditoria.append(f"[{horario}] {mensagem}")
+
+
+#=========MOSTRAR LOGS DE OCORRÊNCIA========    
+  def mostrar_logs():
+
+    print("\nAtualizando registros atuais...")
+
+    time.sleep(3)
+
+    print("\n===== LOGS =====")
+
+    try:
+
+        with open("logs.txt", "r", encoding="utf-8") as arquivo:
+
+            logs = arquivo.read()
+
+            if logs == "":
+                print("Nenhum log encontrado.")
+
+            else:
+                print(logs)
+
+    except FileNotFoundError:
+
+        print("Arquivo de logs nao encontrado.")
+
 
 #=======ABERTURA=======
 
@@ -120,62 +171,6 @@ registrar_log(
 registrar_log(
     "ENCERRAMENTO: Votação finalizada com sucesso."
 )
-
-# ================PROTOCOLOS========================
-
- elif auditoria == 2:
-
-                print("\nVerificando protocolos oficiais...")
-
-                time.sleep(3)
-
-                print("\n===== PROTOCOLOS =====\n")
-
-                try:
-
-                    with open("protocolos.txt", "r", encoding="utf-8") as arquivo:
-
-                        protocolos = arquivo.readlines() 
-
-                        print(protocolos)
-
-                        if protocolos == []: #Le todas as linhas do arquivo e guardar em uma lista.
-
-
-                            print("Nenhum protocolo encontrado.")
-
-                        else:
-                              
-                            protocolos.sort() #Ordena a ordem do protocolo 
-
-                            for protocolo in protocolos: #Percorre linha por linha.
-
-                                print(protocolo.replace("\n", "")) #Remove apenas a quebra de linha:
-
-                except FileNotFoundError:
-                    print("Arquivo de protocolos nao encontrado.")
-
-
-#=========GERAR PROTOCOLO DEPOIS DE VOTAR=================
-
-
-def gerar_protocolo(candidato):
-
-    letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-    letra1 = random.choice(letras) # Gera letra Ateatoria
-    letra2 = random.choice(letras) # Gera letra Ateatoria
-
-    numeros = random.randint(10000, 99999)
-
-    protocolo = "V" + letra1 + letra2 + "26" + str(candidato) + str(numeros)
-
-    return protocolo
-
-
-# EXEMPLO
-
-print(gerar_protocolo(22))
 
 
 elif opcao == 3:
