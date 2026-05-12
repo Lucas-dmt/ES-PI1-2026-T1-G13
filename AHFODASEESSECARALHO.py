@@ -117,13 +117,14 @@ def menu_auditoria():
 
     opcao = 0
 
-    while opcao != 3:
+    while opcao != 4:
 
         print("\n=== AUDITORIA DA VOTACAO ===")
 
         print("1 - Exibir logs")
         print("2 - Exibir protocolos")
-        print("3 - Voltar")
+        print("3 - Validar protocolos") 
+        print("4 - Voltar")
 
         opcao = int(input("\nEscolha uma opcao: "))
 
@@ -137,13 +138,17 @@ def menu_auditoria():
 
         elif opcao == 3:
 
-            print("\nVoltando ao menu principal...")
+            validar_protocolo()
+
+        elif opcao == 4:
+
+            print("\nVoltando ao menu de votacao...")
 
         else:
+            print("\n Opçao invalida")
 
-            print("\nOpcao invalida.")
-
-
+menu_votacao()
+    
 # ========= REGISTROS =========
 
 registrar_log(
