@@ -7,21 +7,6 @@ auditoria = []
 arquivo_log = "auditoria_log.txt"
 arquivo_protocolos = "protocolos.txt"
 
-# ========= GERAR PROTOCOLO =========
-
-def gerar_protocolo(candidato):
-
-    letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-    letra1 = random.choice(letras)
-    letra2 = random.choice(letras)
-
-    numeros = random.randint(10000, 99999)
-
-    protocolo = "V" + letra1 + letra2 + "26" + str(candidato) + str(numeros)
-
-    return protocolo
-
 
 # ========= SALVAR PROTOCOLO =========
 
