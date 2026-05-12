@@ -365,11 +365,13 @@ def menu_votacao():
                             valores = (1, candidato, cpf)
                             executar(comando, valores)
                             print(f"Você votou no candidato: {resultado[0]}")
+                            registrar_log()
 
                             protocolo = gerar_protocolo(candidato)
                         
                         else:
                             print("Candidato não encontrado. Tente novamente.")
+                            registrar_log()
 
                     
                 else:
