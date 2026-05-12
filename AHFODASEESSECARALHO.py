@@ -1,0 +1,177 @@
+from datetime import datetime
+import time
+import random
+
+auditoria = []
+
+arquivo_log = "auditoria_log.txt"
+arquivo_protocolos = "protocolos.txt"
+
+# ========= GERAR PROTOCOLO =========
+
+def gerar_protocolo(candidato):
+
+    letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    letra1 = random.choice(letras)
+    letra2 = random.choice(letras)
+
+    numeros = random.randint(10000, 99999)
+
+    protocolo = "V" + letra1 + letra2 + "26" + str(candidato) + str(numeros)
+
+    return protocolo
+
+
+# ========= SALVAR PROTOCOLO =========
+
+def salvar_protocolo(protocolo):
+
+    with open(arquivo_protocolos, "a", encoding="utf-8") as arquivo:
+
+        arquivo.write(protocolo + "\n")
+
+
+# ========= MOSTRAR PROTOCOLOS =========
+
+def mostrar_protocolos():
+
+    print("\nVerificando protocolos oficiais...")
+
+    time.sleep(3)
+
+    print("\n===== PROTOCOLOS DE VOTACAO =====\n")
+
+    try:
+
+        with open(arquivo_protocolos, "r", encoding="utf-8") as arquivo:
+
+            protocolos = arquivo.readlines()
+
+            if protocolos == []:
+
+                print("Nenhum protocolo encontrado.")
+
+            else:
+
+                protocolos.sort()
+
+                print("Protocolos registrados oficialmente:\n")
+
+                for protocolo in protocolos:
+
+                    print(protocolo.replace("\n", ""))
+
+                print("\nAuditoria concluida com sucesso.")
+
+    except FileNotFoundError:
+
+        print("Arquivo oficial de protocolos nao encontrado.")
+
+
+# ========= REGISTRAR LOG =========
+
+def registrar_log(mensagem):
+
+    horario = datetime.now().strftime("%H:%M:%S")
+
+    with open(arquivo_log, "a", encoding="utf-8") as arquivo:
+
+        arquivo.write(f"[{horario}] {mensagem}\n")
+
+    auditoria.append(f"[{horario}] {mensagem}")
+
+
+# ========= MOSTRAR LOGS =========
+
+def mostrar_logs():
+
+    print("\nAtualizando registros atuais...")
+
+    time.sleep(3)
+
+    print("\n===== LOGS =====\n")
+
+    try:
+
+        with open(arquivo_log, "r", encoding="utf-8") as arquivo:
+
+            logs = arquivo.read()
+
+            if logs == "":
+
+                print("Nenhum log encontrado.")
+
+            else:
+
+                print(logs)
+
+    except FileNotFoundError:
+
+        print("Arquivo de logs nao encontrado.")
+
+
+# ========= MENU AUDITORIA =========
+
+def menu_auditoria():
+
+    opcao = 0
+
+    while opcao != 3:
+
+        print("\n=== AUDITORIA DA VOTACAO ===")
+
+        print("1 - Exibir logs")
+        print("2 - Exibir protocolos")
+        print("3 - Voltar")
+
+        opcao = int(input("\nEscolha uma opcao: "))
+
+        if opcao == 1:
+
+            mostrar_logs()
+
+        elif opcao == 2:
+
+            mostrar_protocolos()
+
+        elif opcao == 3:
+
+            print("\nVoltando ao menu principal...")
+
+        else:
+
+            print("\nOpcao invalida.")
+
+
+# ========= REGISTROS =========
+
+registrar_log(
+    "ABERTURA: Votação iniciada com sucesso. Total de votos zerado."
+)
+
+registrar_log(
+    "ALERTA: Tentativa de voto duplo"
+)
+
+registrar_log(
+    "ALERTA: Tentativa de acesso negado"
+)
+
+registrar_log(
+    "SUCESSO: Voto realizado com sucesso"
+)
+
+registrar_log(
+    "ENCERRAMENTO: Votação finalizada com sucesso."
+)
+
+# ========= GERAR PROTOCOLO TESTE =========
+
+protocolo = gerar_protocolo(13)
+
+salvar_protocolo(protocolo)
+
+# ========= ABRIR MENU =========
+
+menu_auditoria()
