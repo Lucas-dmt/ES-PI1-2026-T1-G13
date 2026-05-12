@@ -155,6 +155,8 @@ registrar_log(
 
 #========VOTO DUPLO===
 
+if eleitor["ja_votou"] == True:
+
 registrar_log(
     "ALERTA: Tentativa de voto duplo"
 )
