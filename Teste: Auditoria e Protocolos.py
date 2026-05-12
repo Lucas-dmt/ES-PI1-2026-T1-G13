@@ -5,7 +5,7 @@ import random
 
 auditoria = []
 arquivo_log = "auditoria_log.txt"
-ARQUIVO_PROTOCOLOS = "protocolos.txt"
+arquivo_protocolos = "protocolos.txt"
 
 
 #=========GERAR PROTOCOLO DEPOIS DE VOTAR=================
