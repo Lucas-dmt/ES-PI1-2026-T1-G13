@@ -340,6 +340,7 @@ def menu_votacao():
                             print("CPF não encontrado. Tente novamente.")
                         elif resultado[1] == 1:
                             print(f"Eleitor {resultado[0]} já votou. Você não pode votar novamente.")
+                            registrar_log()
                         else:
                             print(f"Bem-vindo, {resultado[0]}! Você pode votar agora.")
                             verificar_cpf = 1
