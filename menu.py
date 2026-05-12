@@ -6,7 +6,8 @@ from validacoes import pedir_cpf
 from validacoes import verificar_nome
 from conexaobd import buscar   #importa a funcao buscar de conexaobd
 from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
-from protocolo import gerar_protocolo #importa a funcao de geracao de geracao de protocolo em protocolo.py
+from chave_protocolo import gerar_protocolo #importa a funcao de geracao de geracao de protocolo em protocolo.py
+from auditoria import mostrar_logs, mostrar_protocolos, validar_protocolo, registrar_log
 
 def menu_gerenciamento(): 
     """
@@ -253,7 +254,7 @@ def menu_auditoria():
     returns:
         none
     """
-   opcao = 0
+    opcao = 0
 
     while opcao != 4:
 
