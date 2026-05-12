@@ -166,6 +166,20 @@ registrar_log(
     "ENCERRAMENTO: Votação finalizada com sucesso."
 )
 
+if votos < 0:
+
+    registrar_log(
+        "ALERTA: Alteração suspeita nos votos"
+    )
+
+if protocolo not in protocolos:
+
+    print("Protocolo inválido!")
+
+    registrar_log(
+        "ALERTA: Protocolo inválido detectado"
+    )
+    
 # ========= GERAR PROTOCOLO TESTE =========
 
 protocolo = gerar_protocolo(13)
