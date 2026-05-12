@@ -95,11 +95,18 @@ def menu_auditoria():
 
             auditoria = int(input("\nEscolha uma opcao: "))
 
-
-#================CASE 1:LOGS========================
-
 if auditoria == 1:
 
+mostrar_logs()
+
+elif auditoria == 2:
+mostrar_protocolos()
+
+elif auditoria == 3:
+ print("\nVoltando ao menu principal...")
+
+ else:
+  print("\nOpcao invalida.")
 #=========REGISTRO DE LOGS==============================
 def registrar_log(mensagem):
     horario = datetime.now().strftime("%H:%M:%S")
@@ -165,14 +172,4 @@ registrar_log(
     "ENCERRAMENTO: Votação finalizada com sucesso."
 )
 
-
-elif opcao == 3:
-
-        print("\nVoltando ao menu principal...")
-
 menu_principal()
-
-    else:
-
-        print("\nOpcao invalida.")
-
