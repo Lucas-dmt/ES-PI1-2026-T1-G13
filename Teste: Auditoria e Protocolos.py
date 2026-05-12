@@ -1,5 +1,7 @@
 from datetime import datetime
-import time import random
+import time
+import random
+
 
 auditoria = []
 arquivo_log = "auditoria_log.txt"
