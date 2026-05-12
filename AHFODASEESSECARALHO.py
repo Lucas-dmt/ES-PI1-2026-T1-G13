@@ -111,6 +111,62 @@ def mostrar_logs():
         print("Arquivo de logs nao encontrado.")
 
 
+#============== VALIDAR PROTOCOLO ========= 
+
+def validar_protocolo():
+
+    print("\n===== VALIDACAO DE PROTOCOLO =====")
+
+    protocolo_digitado = input("\nDigite o protocolo: ")
+
+    try:
+
+        with open(arquivo_protocolos, "r", encoding="utf-8") as arquivo:
+
+            protocolos = arquivo.readlines()
+
+            encontrados = 0
+
+            for protocolo in protocolos:
+
+                protocolo = protocolo.replace("\n", "")
+
+                if protocolo == protocolo_digitado:
+
+                    encontrados += 1
+
+            if encontrados == 1:
+
+                print("\nPROTOCOLO VALIDO")
+                print("Nenhuma fraude encontrada.")
+
+                registrar_log(
+                    "AUDITORIA: Protocolo validado com sucesso."
+                )
+
+            elif encontrados > 1:
+
+                print("\nALERTA DE FRAUDE")
+                print("Protocolo duplicado encontrado.")
+
+                registrar_log(
+                    "ALERTA: Possivel fraude por protocolo duplicado."
+                )
+
+            else:
+
+                print("\nPROTOCOLO INVALIDO")
+                print("O protocolo nao existe na base oficial.")
+
+                registrar_log(
+                    "ALERTA: Tentativa de validacao de protocolo falso."
+                )
+
+    except FileNotFoundError:
+
+        print("\nArquivo de protocolos nao encontrado.")
+
+
 # ========= MENU AUDITORIA =========
 
 def menu_auditoria():
