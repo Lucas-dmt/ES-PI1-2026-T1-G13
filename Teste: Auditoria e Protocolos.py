@@ -30,14 +30,6 @@ def salvar_protocolo(protocolo):
     with open(arquivo_log, "a", encoding="utf-8") as arquivo:
         arquivo.write(protocolo + "\n")
 
-protocolo = gerar_protocolo(22)
-
-salvar_protocolo(protocolo)
-
-print("\nProtocolo gerado:")
-print(protocolo)
-
-
 #============MOSTRAR PROTOCOLOS===========
 def mostrar_protocolos():
 
@@ -155,8 +147,6 @@ registrar_log(
 )
 
 #========VOTO DUPLO===
-
-if eleitor["ja_votou"] == True:
 
 registrar_log(
     "ALERTA: Tentativa de voto duplo"
