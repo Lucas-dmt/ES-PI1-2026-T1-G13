@@ -4,6 +4,8 @@ from validacoes import pedir_cpf
 from validacoes import verificar_nome
 from conexaobd import buscar   #importa a funcao buscar de conexaobd
 from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
+from protocolo import gerar_protocolo #importa a funcao de geracao de geracao de protocolo em protocolo.py
+
 def menu_gerenciamento(): 
     """
     gerenciamento de eleitores e candidatos
