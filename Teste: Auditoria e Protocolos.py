@@ -110,7 +110,7 @@ def registrar_log(mensagem):
     horario = datetime.now().strftime("%H:%M:%S")
 
 with open("auditoria_log.txt", "a") as arquivo:
-    arquivo.write(f"[{horario}] {msg}" + "\n")
+    arquivo.write(f"[{horario}] {mensagem}" + "\n")
 
     auditoria.append(f"[{horario}] {mensagem}")
 
@@ -142,8 +142,6 @@ with open("auditoria_log.txt", "a") as arquivo:
 
 
 #=======ABERTURA=======
-
-from auditoria import registrar_log
 
 registrar_log(
     "ABERTURA: Votação iniciada com sucesso. Total de votos zerado."
