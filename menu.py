@@ -334,10 +334,12 @@ def menu_votacao():
                     verificar_cpf = 0
                     while verificar_cpf == 0:
                         cpf =input("Seu CPF: ")
-                        comando = "SELECT nome FROM eleitores WHERE cpf = %s"
+                        comando = "SELECT nome, ja_votou FROM eleitores WHERE cpf = %s"
                         resultado = buscar(comando, (cpf,))
                         if resultado == None:
                             print("CPF não encontrado. Tente novamente.")
+                        elif resultado[1] == 1:
+                            print(f"Eleitor {resultado[0]} já votou. Você não pode votar novamente.")
                         else:
                             print(f"Bem-vindo, {resultado[0]}! Você pode votar agora.")
                             verificar_cpf = 1
@@ -353,13 +355,13 @@ def menu_votacao():
                             print("Chave incorreta. Tente novamente.")
                     parte_final = 0
                     while parte_final == 0:
-                        numero_candidato = int(input("Insira o numero do candidato que voce deseja votar: "))
+                        candidato = int(input("Insira o numero do candidato que voce deseja votar: "))
                         comando = "SELECT candidato FROM candidatos WHERE numero_votacao = %s"
-                        resultado = buscar(comando, (numero_candidato,))
+                        resultado = buscar(comando, (candidato,))
                         if resultado:
                             parte_final = 1
                             comando = "UPDATE eleitores SET ja_votou = %s, candidato_votado = %s WHERE cpf = %s"
-                            valores = (1, numero_candidato, cpf)
+                            valores = (1, candidato, cpf)
                             executar(comando, valores)
                             print(f"Você votou no candidato: {resultado[0]}")
 
