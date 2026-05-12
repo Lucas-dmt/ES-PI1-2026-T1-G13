@@ -33,4 +33,4 @@ time.sleep(5)
 protocolo = gerar_protocolo(candidato)
 
 print("Voto realizado com sucesso!")
-print("Protocolo:", protocolo)
+print("Seu protocolo é:", protocolo)
