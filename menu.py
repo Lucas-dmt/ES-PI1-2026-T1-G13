@@ -114,7 +114,7 @@ def menu_gerenciamento():
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
-def menu_abrir_votacao(urna_aberta):
+def menu_abrir_votacao(urna_aberta,registrar_log):
     """
     menu de abrir votação, identifica mesario e realiza a zerezima
     args:
@@ -173,7 +173,7 @@ def menu_abrir_votacao(urna_aberta):
                 print("Opcao invalida.")
     return urna_aberta
 
-def menu_encerramento(urna_aberta):
+def menu_encerramento(urna_aberta,registrar_log):
     if  urna_aberta == False:
         print("\nA urna já está fechada ou não foi aberta.")
         return urna_aberta
@@ -363,10 +363,7 @@ def menu_votacao():
                             executar(comando, valores)
                             print(f"Você votou no candidato: {resultado[0]}")
 
-
-                            #=========== teste =========
                             protocolo = gerar_protocolo(candidato)
-                           #==========================================
                         
                         else:
                             print("Candidato não encontrado. Tente novamente.")
