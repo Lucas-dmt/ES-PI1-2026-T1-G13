@@ -211,7 +211,3 @@ registrar_log(
 registrar_log(
     "ENCERRAMENTO: Votação finalizada com sucesso."
 )
-
-# ========= ABRIR MENU =========
-
-menu_auditoria()
