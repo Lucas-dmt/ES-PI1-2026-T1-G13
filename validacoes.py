@@ -150,7 +150,7 @@ def validar_titulo(titulo_eleitor):
                 titulo_valido = True
             else:
                 print("Título inválido: dígitos não conferem")
-
+                titulo_eleitor = input("Tente novamente:")
         
 # === VERIFICAÇÃO DO NOME COMPLETO ===
 def verificar_nome(nome_completo):
