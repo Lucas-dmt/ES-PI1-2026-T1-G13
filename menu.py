@@ -348,54 +348,68 @@ def menu_votacao():
 
         match opcao:
             case 1:
+                #verifica se a urna esta aberta, se estiver libera pra tela de votacao
                 if urna_aberta:
                     print("\n === VOTAR ===")
                     verificar_cpf = 0
+                    #loop para enquanto nao for inputado um CPF cadastrado, nao liberar o acesso
                     while verificar_cpf == 0:
                         cpf =input("Seu CPF: ")
+                        #aqui ele busca no banco de dados se ele ja votou e o nome dele apenas com o cpf - se achar prossegue
                         comando = "SELECT nome, ja_votou FROM eleitores WHERE cpf = %s"
                         resultado = buscar(comando, (cpf,))
                         if resultado == None:
+                            #caso nao ache o cpf
                             print("CPF não encontrado. Tente novamente.")
                         elif resultado[1] == 1:
+                            #caso o eleitor ja tenha votado
                             print(f"Eleitor {resultado[0]} já votou. Você não pode votar novamente.")
                             registrar_log()
                         else:
+                            #caso de certo
                             print(f"Bem-vindo, {resultado[0]}! Você pode votar agora.")
                             verificar_cpf = 1
                     verificar_chave = 0
+                    #proximo loop resgata a chave de acesso gerada quando o cadastro foi gerado
                     while verificar_chave == 0:
                         chave = input("Digite sua chave de acesso: ")
+                        #busca a chave de acesso e compara com o que o usuario digitou
                         comando = "SELECT chave_acesso_cifrada FROM eleitores WHERE cpf = %s"
                         resultado = buscar(comando, (cpf,))
+                        #caso esteja tudo OK, ele passa para a proxima etapa
                         if resultado and resultado[0] == chave:
                             print("Chave correta! Você pode votar.")
                             verificar_chave = 1
+                        #ou precisa digitar novamente caso errado
                         else:
                             print("Chave incorreta. Tente novamente.")
                     parte_final = 0
+                    #loop final -- aqui eh a hora de realmente votar
                     while parte_final == 0:
                         candidato = int(input("Insira o numero do candidato que voce deseja votar: "))
+                        #busca no banco de dados o numero do candidato - por exemplo 22 (bolsonaro) -- se achar prossegue
                         comando = "SELECT candidato FROM candidatos WHERE numero_votacao = %s"
                         resultado = buscar(comando, (candidato,))
+                        #caso encontre 
                         if resultado:
                             parte_final = 1
+                            #aqui ele pega a coluna JA_VOTOU no banco de dados e adiciona 1, registrando o seu voto oficialmente
                             comando = "UPDATE eleitores SET ja_votou = %s, candidato_votado = %s WHERE cpf = %s"
+                            #ele tambem adiciona a uma coluna -- candidato_votado o candidato votado
                             valores = (1, candidato, cpf)
                             executar(comando, valores)
                             print(f"Você votou no candidato: {resultado[0]}")
                             registrar_log("Voto registrado para o candidato: " + resultado[0])
-
                             protocolo = gerar_protocolo(candidato)
                             print("Seu protocolo de votação é:", protocolo)
                             salvar_protocolo(protocolo)
                             registrar_log(f"PROTOCOLO GERADO:{protocolo}")
-                        
+                        #caso o candidato nao seja encontrado   
                         else:
                             print("Candidato não encontrado. Tente novamente.")
                             registrar_log()
 
-                    
+                #caso a urna esteja fechada   
                 else:
                     print("A urna esta fechada, tente novamente mais tarde")
             case 2:
