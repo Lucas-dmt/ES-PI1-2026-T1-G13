@@ -177,12 +177,13 @@ def menu_abrir_votacao(urna_aberta):
     return urna_aberta
 
 def menu_encerramento(urna_aberta):
+    #se a urna não estiver aberta, é necessário passar pela abertura da votação antes
     if  urna_aberta == False:
         print("\nA urna já está fechada ou não foi aberta.")
         return urna_aberta
     
-    executando = True
-    while executando == True:
+    executando = True    #"executando" foi criado para dizer se a urna está ou não aberta
+    while executando == True:    #enquanto "executando" for true, a urna está aberta e pode ser fechada
         print("\n=== MENU DE ENCERRAMENTO ===")
         print("1 - Iniciar Protocolo de Fechamento")
         print("2 - Voltar")
@@ -193,8 +194,9 @@ def menu_encerramento(urna_aberta):
             return urna_aberta
     
         match opcao:
-            case 1:
+            case 1: 
                 try:
+                    #aqui, é realizada a verificação de mesário
                     titulo = input("digite o título:")
                     prefixo_cpf = input("insira os 4 primeiros dígitos dpo cpf:")
                     chave = input("chave de acesso:")
@@ -203,13 +205,14 @@ def menu_encerramento(urna_aberta):
                     valores = (titulo, prefixo_cpf)
                     resultado = buscar(comando, valores)
 
+                    #se o resultado for != none, ou seja, o mesário existe, ele pode encerrar a urna
                     if resultado != None:
                         if resultado[0] == chave: 
                             print("Chave correta!")
                             confirmação = input("Deseja realmente encerrar a votação? (Sim/Não)")
                             if confirmação =='Sim':
                                 segunda_chave = input("digite a chave novamente:")                        
-                                if resultado[0] == segunda_chave:
+                                if resultado[0] == segunda_chave:    #confirmação dupla da chave de acesso
                                     print("URNA ENCERRADA")
                                     urna_aberta=False
                                     executando = False
