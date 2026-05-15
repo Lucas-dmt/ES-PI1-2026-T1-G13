@@ -188,7 +188,7 @@ def menu_encerramento(urna_aberta):
         print("1 - Iniciar Protocolo de Fechamento")
         print("2 - Voltar")
         try:
-            opcao=int(input("digite 1 ou 2: "))
+            opcao=int(input("digite 1 ou 2: ") .strip() )
         except ValueError:
             print("Opção inválida. Voltando para o menu de votação...")
             return urna_aberta
@@ -197,9 +197,9 @@ def menu_encerramento(urna_aberta):
             case 1: 
                 try:
                     #aqui, é realizada a verificação de mesário
-                    titulo = input("digite o título:")
-                    prefixo_cpf = input("insira os 4 primeiros dígitos dpo cpf:")
-                    chave = input("chave de acesso:")
+                    titulo = input("digite o título:").strip() 
+                    prefixo_cpf = input("insira os 4 primeiros dígitos dpo cpf:").strip()
+                    chave = input("chave de acesso:").strip()
 
                     comando = "SELECT chave_acesso_cifrada FROM eleitores WHERE titulo_eleitor = %s AND prefixo_cpf = %s AND mesario = 1 "           
                     valores = (titulo, prefixo_cpf)
@@ -209,9 +209,9 @@ def menu_encerramento(urna_aberta):
                     if resultado != None:
                         if resultado[0] == chave: 
                             print("Chave correta!")
-                            confirmação = input("Deseja realmente encerrar a votação? (Sim/Não)")
-                            if confirmação =='Sim':
-                                segunda_chave = input("digite a chave novamente:")                        
+                            confirmação = input("Deseja realmente encerrar a votação? (sim/não)").strip().lower()
+                            if confirmação =='sim':
+                                segunda_chave = input("digite a chave novamente:").strip()                       
                                 if resultado[0] == segunda_chave:    #confirmação dupla da chave de acesso
                                     print("URNA ENCERRADA")
                                     urna_aberta=False
@@ -223,7 +223,7 @@ def menu_encerramento(urna_aberta):
                                     return urna_aberta
 
 
-                            elif confirmação == 'Não':
+                            elif confirmação == 'não':
                                 print("Operação cancelada.")                        
                                 return urna_aberta  
 
