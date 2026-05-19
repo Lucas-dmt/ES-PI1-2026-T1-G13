@@ -3,7 +3,7 @@ def validar_cpf(cpf):
     cont = 0
     # aqui ele verifica se todos os caracteres são números, 11 dígitos
     for k in range(len(cpf)):
-        if cpf[k] >= "0" and cpf[k] <= "9":
+        if cpf[k].isdigit():
             cont += 1
 
     if len(cpf) != 11 and cont < len(cpf):
