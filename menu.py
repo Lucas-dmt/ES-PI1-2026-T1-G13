@@ -26,7 +26,10 @@ def menu_gerenciamento():
         print("4 - Buscar candidato")
         print("5 - Criar Partido")
         print("6 - Buscar Partido")
-        print("7 - Voltar")
+        print("7 - Editar eleitor")
+        print("8 - Remover eleitor")
+        print("9 - Voltar")
+        
         try: #tenta transformar o que o usuario digitou em numero
             opcao = int(input("Escolha uma opcao: "))
         except ValueError: #se o usuario digitar letra ou algo invalido, a opcao vira 0 (ValueError)
@@ -114,6 +117,71 @@ def menu_gerenciamento():
                 else:
                     print("\n[!] Erro: Partido não cadastrado.")
             case 7:
+                # === EDIÇÃO DE CANDIDATO ===
+                print("1 - alterar nome")
+                print("2 - alterar cpf")
+                print("3 - alterar título")
+                print("4 - voltar")
+                
+                opcao = 0
+                while opcao != 4:
+                    print("1 - alterar nome")
+                    print("2 - alterar cpf")
+                    print("3 - alterar título")
+                    print("4 - voltar")
+                
+                    try:
+                        opcao=int(input("digite um número de 1 a 4:"))
+                    except ValueError:
+                        opcao = 0
+                    match opcao:
+                        
+                        case 1:
+                            chave_acesso_cifrada = input("chave:")
+                            nome_completo=input("nome:")
+                            comando="UPDATE eleitores SET nome = %s WHERE chave_acesso_cifrada = %s"
+                            valores = (nome_completo, chave_acesso_cifrada)
+                            executar(comando, valores)
+                                   
+                        case 2:
+                            chave_acesso_cifrada = input("chave:") 
+                            cpf=pedir_cpf()
+                            comando="UPDATE eleitores SET cpf = %s WHERE chave_acesso_cifrada = %s"
+                            valores = (cpf, chave_acesso_cifrada)
+                            executar(comando, valores)
+                                                        
+                        case 3:
+                            chave_acesso_cifrada = input("chave:") 
+                            titulo_eleitor = input("Digite o Título de Eleitor:")
+                            validar_titulo(titulo_eleitor)
+                            comando = "UPDATE eleitores SET titulo_eleitor = %s WHERE chave_acesso_cifrada = %s"
+                            valores = (titulo_eleitor, chave_acesso_cifrada)
+                            executar(comando,valores)
+                            
+                        case 4:
+                            print("voltando ao menu principal")
+                               
+                        case _:
+                            print("opção inválida")
+            case 8:
+                chave_acesso_cifrada=input("digite a chave do eleitor a ser removido:")
+                confirmação = 0
+                while confirmação != 2:
+                    try:
+                        confirmação=int(input("deseja realmente remover o eleitor?"))
+                    except ValueError:
+                        confirmação = 0
+                        
+                    match confirmação:
+                        case 1:
+                            comando = "DELETE FROM eleitores WHERE chave_acesso_cifrada = %s"
+                            valores = (chave_acesso_cifrada)
+                            executar (comando, valores )
+                        case 2:
+                            print("Voltando ao menu principal")
+                        case _:
+                            print("opção inválida")
+            case 9:
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
