@@ -1,8 +1,8 @@
 conjunto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-a = 4
-b = 3
-c = 1
-d = 2
+k11 = 4
+k12 = 3
+k21 = 1
+k22 = 2
 
 def converter_texto_numero(texto):
     numeros = []
@@ -35,3 +35,4 @@ def criptografar_hill(texto):
         resultado.append(novo2)
 
     return converter_numero_texto(resultado)
+
