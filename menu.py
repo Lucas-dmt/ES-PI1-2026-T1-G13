@@ -1,5 +1,5 @@
-from datetime import datetime
-import time
+import os
+os.system('cls' if os.name == 'nt' else 'clear')
 from conexaobd import executar  #importa a função de execução da conexaobd
 from validacoes import validar_titulo
 from validacoes import pedir_cpf
@@ -8,6 +8,7 @@ from conexaobd import buscar   #importa a funcao buscar de conexaobd
 from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
 from chave_protocolo import gerar_protocolo #importa a funcao de geracao de geracao de protocolo em protocolo.py
 from auditoria import mostrar_logs, mostrar_protocolos, validar_protocolo, registrar_log, salvar_protocolo
+from criptografia import criptografar_hill
 
 def menu_gerenciamento(): 
     """
@@ -18,7 +19,7 @@ def menu_gerenciamento():
         nones
     """
     opcao = 0  #comecamos a opcao com 0 so para entrar no menu pela primeira vez
-    while opcao !=9: #menu continua abrindo enquanto o usuario nao escolher a opcao de voltar
+    while opcao !=7: #menu continua abrindo enquanto o usuario nao escolher a opcao de voltar
         print("\n=== MENU GERENCIAMENTO ===")
         print("1 - Cadastrar eleitor")
         print("2 - Buscar eleitor")
@@ -26,9 +27,7 @@ def menu_gerenciamento():
         print("4 - Buscar candidato")
         print("5 - Criar Partido")
         print("6 - Buscar Partido")
-        print("7 - Editar eleitor")
-        print("8 - Remover eleitor")
-        print("9 - Voltar")
+        print("7 - Voltar")
         try: #tenta transformar o que o usuario digitou em numero
             opcao = int(input("Escolha uma opcao: "))
         except ValueError: #se o usuario digitar letra ou algo invalido, a opcao vira 0 (ValueError)
@@ -41,6 +40,7 @@ def menu_gerenciamento():
                 titulo_eleitor = input("Digite o Título de Eleitor:")
                 validar_titulo(titulo_eleitor)
                 cpf = pedir_cpf()
+                cpf_cifrado = criptografar_hill(cpf)
                 prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
                 # ==== MESÁRIO ====
                 mesario = input("Mesário s/n:").lower()
@@ -49,6 +49,7 @@ def menu_gerenciamento():
                 else:
                     mesario = 0
                 chave = gerar_chave(nome_completo)
+                chave_acesso_cifrada = criptografar_hill(chave)
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf, mesario, chave, 0)
@@ -116,74 +117,6 @@ def menu_gerenciamento():
                 else:
                     print("\n[!] Erro: Partido não cadastrado.")
             case 7:
-                # === EDIÇÃO DE CANDIDATO ===
-
-                opcao = 0
-                while opcao != 5:
-                    print("1 - vizualizar id do eleitor")
-                    print("2 - alterar nome")
-                    print("3 - alterar cpf")
-                    print("4 - alterar título")
-                    print("5 - voltar")
-                
-                    try:
-                        opcao=int(input("digite um número de 1 a 5:"))
-                    except ValueError:
-                        opcao = 0
-                    match opcao:
-                        case 1:
-                            cpf=pedir_cpf()
-                            titulo_eleitor = input("Digite o Título de Eleitor:")
-                            comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
-                            valores = (cpf, titulo_eleitor)
-                            resultado = executar(comando, valores)
-                        
-                        case 2:
-                            id_eleitor = input("id do eleitor:")
-                            nome_completo=input("nome:")
-                            comando="UPDATE eleitores SET nome = %s WHERE id_eleitor = %s"
-                            valores = (nome_completo, id_eleitor)
-                            executar(comando, valores)
-                                   
-                        case 3:
-                            id_eleitor = input("id do eleitor:") 
-                            cpf=pedir_cpf()
-                            comando="UPDATE eleitores SET cpf = %s WHERE id_eleitor = %s"
-                            valores = (cpf, id_eleitor)
-                            executar(comando, valores)
-                                                        
-                        case 4:
-                            id_eleitor = input("id do eleitor:") 
-                            titulo_eleitor = input("Digite o Título de Eleitor:")
-                            validar_titulo(titulo_eleitor)
-                            comando = "UPDATE eleitores SET titulo_eleitor = %s WHERE id_eleitor = %s"
-                            valores = (titulo_eleitor, id_eleitor)
-                            executar(comando,valores)
-                            
-                        case 5:
-                            print("voltando ao menu principal")
-                               
-                        case _:
-                            print("opção inválida")
-            case 8:
-                chave_acesso_cifrada=input("digite a chave do eleitor a ser removido:")
-                confirmação = 0
-                while confirmação != 2:
-                    try:
-                        confirmação=int(input("deseja realmente remover o eleitor?"))
-                    except ValueError:
-                        confirmação = 0
-                        
-                    match confirmação:
-                        case 1:
-                            comando = "DELETE FROM eleitores WHERE chave_acesso_cifrada = %s"
-                            valores = (chave_acesso_cifrada)
-                            executar (comando, valores )
-                        case 2:
-                            print("Voltando ao menu principal")
-                        case _:
-                            print("opção inválida")
-            case 9:
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
@@ -399,6 +332,7 @@ def menu_votacao():
 
                             protocolo = gerar_protocolo(candidato)
                             print("Seu protocolo de votação é:", protocolo)
+                            protocolo_votacao_cifrado = criptografar_hill(protocolo)
                             salvar_protocolo(protocolo)
                             registrar_log(f"PROTOCOLO GERADO:{protocolo}")
                         
