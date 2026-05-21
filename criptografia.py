@@ -28,8 +28,8 @@ def criptografar_hill(texto):
         x = numeros[i]
         y = numeros[i + 1]
 
-        novo1 = (a * x + b * y) % 36
-        novo2 = (c * x + d * y) % 36
+        novo1 = (k11 * x + k12 * y) % 36
+        novo2 = (k21 * x + k22 * y) % 36
  
         resultado.append(novo1)
         resultado.append(novo2)
