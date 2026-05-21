@@ -122,12 +122,13 @@ def menu_gerenciamento():
                 # === EDIÇÃO DE ELEITOR ===
 
                 opcao = 0
-                while opcao != 5:
+                while opcao != 6:
                     print("1 - vizualizar id do eleitor")
                     print("2 - alterar nome")
                     print("3 - alterar cpf")
                     print("4 - alterar título")
-                    print("5 - voltar")
+                    print("5 - mesário")
+                    print("6 - voltar")
                 
                     try:
                         opcao=int(input("digite um número de 1 a 5:"))
@@ -162,8 +163,19 @@ def menu_gerenciamento():
                             comando = "UPDATE eleitores SET titulo_eleitor = %s WHERE id_eleitor = %s"
                             valores = (titulo_eleitor, id_eleitor)
                             executar(comando,valores)
-                            
+
                         case 5:
+                            id_eleitor = input("id do eleitor:") 
+                            mesario = input("Mesário s/n:").lower()
+                            if mesario == "s":
+                                mesario = 1
+                            else:
+                                mesario = 0
+                            comando="UPDATE eleitores SET mesario = %s WHERE id_eleitor = %s"
+                            valores = (mesario, id_eleitor)
+                            executar(comando, valores)
+                            
+                        case 6:
                             print("voltando ao menu principal")
                                
                         case _:
