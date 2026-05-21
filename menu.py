@@ -139,7 +139,7 @@ def menu_gerenciamento():
                             titulo_eleitor = input("Digite o Título de Eleitor:")
                             comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
                             valores = (cpf, titulo_eleitor)
-                            resultado = executar(comando, valores)
+                            executar(comando, valores)
                         
                         case 2:
                             id_eleitor = input("id do eleitor:")
