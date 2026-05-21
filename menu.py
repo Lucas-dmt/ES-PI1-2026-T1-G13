@@ -120,7 +120,7 @@ def menu_gerenciamento():
                     print("\n[!] Erro: Partido não cadastrado.")
             case 7:
                 # === EDIÇÃO DE ELEITOR ===
-
+                
                 opcao = 0
                 while opcao != 6:
                     print("1 - vizualizar id do eleitor")
@@ -185,14 +185,15 @@ def menu_gerenciamento():
                 confirmação = 0
                 while confirmação != 2:
                     try:
-                        confirmação=int(input("deseja realmente remover o eleitor?"))
+                        confirmação=int(input("deseja realmente remover o eleitor? (1 para sim, e 2 para não)"))
                     except ValueError:
                         confirmação = 0
                         
                     match confirmação:
-                        case 1:
-                            comando = "DELETE FROM eleitores WHERE chave_acesso_cifrada = %s"
-                            valores = (chave_acesso_cifrada)
+                        case 1: 
+                            id_eleitor=int(input("id:"))                           
+                            comando = "DELETE FROM eleitores WHERE id_eleitor = %s"
+                            valores = (id_eleitor,)
                             executar (comando, valores )
                         case 2:
                             print("Voltando ao menu principal")
