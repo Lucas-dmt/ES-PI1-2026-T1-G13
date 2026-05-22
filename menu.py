@@ -54,7 +54,7 @@ def menu_gerenciamento():
                 chave_acesso_cifrada = criptografar_hill(chave)
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf, mesario, chave, 0)
+                valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, 0)
                 executar(comando,valores)
                 print("Cadastrado.")   
             case 2:
@@ -400,6 +400,16 @@ def menu_votacao():
                         else:
                             print(f"Bem-vindo, {resultado[0]}! Você pode votar agora.")
                             verificar_cpf = 1
+                    verificar_titulo = 0
+                    while verificar_titulo == 0:
+                        titulo_eleitor = input("Digite o Título de Eleitor: ")
+                        comando = "SELECT nome FROM eleitores WHERE cpf = %s AND titulo_eleitor = %s"
+                        resultado = buscar(comando, (cpf, titulo_eleitor))
+                        if resultado:
+                            print(f"Título de Eleitor válido! Bem-vindo, {resultado[0]}!")
+                            verificar_titulo = 1
+                        else:
+                            print("Título de Eleitor inválido. Tente novamente.")
                     verificar_chave = 0
                     while verificar_chave == 0:
                         chave = input("Digite sua chave de acesso: ")
@@ -412,28 +422,51 @@ def menu_votacao():
                             print("Chave incorreta. Tente novamente.")
                     parte_final = 0
                     while parte_final == 0:
-                        candidato = int(input("Insira o numero do candidato que voce deseja votar: "))
-                        comando = "SELECT candidato FROM candidatos WHERE numero_votacao = %s"
-                        resultado = buscar(comando, (candidato,))
-                        if resultado:
-                            parte_final = 1
-                            comando = "UPDATE eleitores SET ja_votou = %s, candidato_votado = %s WHERE cpf = %s"
-                            valores = (1, candidato, cpf)
-                            executar(comando, valores)
-                            print(f"Você votou no candidato: {resultado[0]}")
-                            registrar_log()
-
-                            protocolo = gerar_protocolo(candidato)
-                            print("Seu protocolo de votação é:", protocolo)
-                            protocolo_votacao_cifrado = criptografar_hill(protocolo)
-                            salvar_protocolo(protocolo)
-                            registrar_log(f"PROTOCOLO GERADO:{protocolo}")
-                        
-                        else:
-                            print("Candidato não encontrado. Tente novamente.")
-                            registrar_log()
-
-                    
+                        numero_candidatoB = int(input("Digite 1 para votar em um candidato e 2 para voto em nulo :"))
+                        if numero_candidatoB == 1:
+                            comando = """
+                            SELECT c.candidato, p.partido, p.sigla
+                            FROM candidatos c
+                            JOIN partidos p ON c.id_partido = p.id_partido
+                            WHERE c.numero_votacao = %s
+                            """
+                            valores = (numero_candidatoB,)
+                            resultado = buscar(comando, valores)
+                            if resultado:
+                                print("\n--- INFORMAÇÕES DO CANDIDATO ---")
+                                print(f"Nome: {resultado[0]}")
+                                print(f"Partido: {resultado[1]}")
+                                print(f"Sigla: {resultado[2]}")
+                                confirmacao = input("Deseja confirmar seu voto para este candidato? (1 para Sim/2 para Não)")
+                                if confirmacao == "1":
+                                    comando = "UPDATE eleitores SET ja_votou = 1 WHERE cpf = %s"
+                                    valores = (cpf,)
+                                    executar(comando, valores)
+                                    comando_2 = "INSERT INTO votos (id_candidato) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s))"
+                                    executar(comando_2, (numero_candidatoB,))
+                                    #comando_3 = gustavo vai fazer o comando pra inserir no sql o protocolo aqui (CANDIDATO)
+                                    parte_final = 1
+                                    print(f"Voto registrado no candidato: {resultado[0]} com sucesso!")
+                                elif confirmacao == "2":
+                                    print("Voto cancelado. Você pode escolher outro candidato.")
+                                else:
+                                    print("Opção inválida. Tente novamente.")
+                            else:
+                                print("\n[!] Erro: Eleitor não cadastrado.")
+                        elif numero_candidatoB == 2:
+                            confirmacao = input("Deseja confirmar seu voto em nulo? (1 para Sim/2 para Não)")
+                            if confirmacao == "1":
+                                comando = "UPDATE eleitores SET ja_votou = 1 WHERE cpf = %s"
+                                valores = (cpf,)
+                                executar(comando, valores)
+                                comando_2 = "INSERT INTO votos (voto_nulo) VALUES (1)"
+                                executar(comando_2, ())
+                                #comando_3 = gustavo vai fazer o comando pra inserir no sql o protocolo aqui (NULO)
+                                parte_final = 1
+                            elif confirmacao == "2":
+                                print("Voto nulo cancelado. Você pode escolher um candidato.")
+                            else:
+                                print("Opção inválida. Tente novamente.")
                 else:
                     print("A urna esta fechada, tente novamente mais tarde")
             case 2:

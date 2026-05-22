@@ -1,7 +1,7 @@
     CREATE DATABASE lad_py;
     USE lad_py;
 
-    CREATE TABLE partidos (
+       CREATE TABLE partidos (
         id_partido INT AUTO_INCREMENT PRIMARY KEY,
         partido VARCHAR(50) NOT NULL,
         sigla VARCHAR(10) NOT NULL UNIQUE
@@ -23,9 +23,7 @@
         prefixo_cpf CHAR(4) NOT NULL,
         mesario BOOLEAN NOT NULL DEFAULT FALSE,
         chave_acesso_cifrada VARCHAR(120) NOT NULL,
-        ja_votou BOOLEAN NOT NULL DEFAULT FALSE,
-        candidato_votado INT DEFAULT NULL,
-        FOREIGN KEY (candidato_votado) REFERENCES candidatos(numero_votacao)
+        ja_votou BOOLEAN NOT NULL DEFAULT FALSE
     );
 
     CREATE TABLE votos (
