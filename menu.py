@@ -199,7 +199,8 @@ def menu_gerenciamento():
                             titulo_eleitor = input("Digite o Título de Eleitor:")
                             comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
                             valores = (cpf, titulo_eleitor)
-                            executar(comando, valores)
+                            resultado = buscar(comando, valores)
+                            print(resultado)
                         case 2:
                             id_eleitor=int(input("id:"))                           
                             comando = "DELETE FROM eleitores WHERE id_eleitor = %s"
@@ -237,17 +238,20 @@ def menu_encerramento(urna_aberta):
                     prefixo_cpf = input("insira os 4 primeiros dígitos dpo cpf:")
                     chave = input("chave de acesso:")
 
+                    chave_cifrada = criptografar_hill(chave)
+
                     comando = "SELECT chave_acesso_cifrada FROM eleitores WHERE titulo_eleitor = %s AND prefixo_cpf = %s AND mesario = 1 "           
                     valores = (titulo, prefixo_cpf)
                     resultado = buscar(comando, valores)
 
                     if resultado != None:
-                        if resultado[0] == chave: 
+                        if resultado[0] == chave_cifrada: 
                             print("Chave correta!")
                             confirmação = input("Deseja realmente encerrar a votação? (Sim/Não)")
                             if confirmação =='Sim':
-                                segunda_chave = input("digite a chave novamente:")                        
-                                if resultado[0] == segunda_chave:
+                                segunda_chave = input("digite a chave novamente:")  
+                                segunda_chave_cifrada = criptografar_hill(segunda_chave)                      
+                                if resultado[0] == segunda_chave_cifrada:
                                     print("URNA ENCERRADA")
                                     urna_aberta=False
                                     executando = False
@@ -474,25 +478,32 @@ def menu_votacao():
                     print("A urna ja está aberta.")
                 else: 
                     titulo = input("Digite o titulo:")
-                    prefixo_cpf = ("Insira os 4 primeiros digitos do cpf:")
+                    prefixo_cpf = input("Insira os 4 primeiros digitos do cpf:")
+                    chave = input("Digite sua chave de acesso:")
+
+                    chave_cifrada = criptografar_hill(chave)
+
                     comando = """ SELECT * FROM eleitores WHERE titulo_eleitor = %s AND prefixo_cpf = %s AND mesario = 1"""
                     valores = (titulo, prefixo_cpf,)
                     resultado = buscar(comando, valores)
                     if resultado:
-                        print("mesário autorizado")
-                        comando = """ SELECT COUNT(*) FROM eleitores WHERE  ja_votou = 1 """
-                        resultado_votos = buscar(comando, ())
-                        
-                        votos = resultado_votos[0]
-                        
-                        print("=== ZEREZIMA ===")
-                        print(f"Total de votos registrados:{votos}")
-                        
-                        if votos > 0:
-                            print("\nHouve uma anomalia no sistema, a urna não pode ser aberta.")
+                        if resultado[0] == chave_cifrada:
+                            print("mesário autorizado")
+                            comando = """ SELECT COUNT(*) FROM eleitores WHERE  ja_votou = 1 """
+                            resultado_votos = buscar(comando, ())
+                            
+                            votos = resultado_votos[0]
+                            
+                            print("=== ZEREZIMA ===")
+                            print(f"Total de votos registrados:{votos}")
+                            
+                            if votos > 0:
+                                print("\nHouve uma anomalia no sistema, a urna não pode ser aberta.")
+                            else:
+                                urna_aberta = True
+                                print("\nUrna liberada para votação.")
                         else:
-                            urna_aberta = True
-                            print("\nUrna liberada para votação.")
+                            print("Chave incorreta")
                     else:
                         print("Mesário não autorizado")
             case 3:
