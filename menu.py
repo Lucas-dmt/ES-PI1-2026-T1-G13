@@ -182,24 +182,35 @@ def menu_gerenciamento():
                             print("opção inválida")
             case 8:
                #=== REMOVER ELEITOR===  
-                confirmação = 0
-                while confirmação != 2:
+                opcao = 0
+                while opcao != 3:
+                    print("1 - vizuallizar id do eleitor")
+                    print("2 - remover eleitor")
+                    print("3 - voltar")
                     try:
-                        confirmação=int(input("deseja realmente remover o eleitor? (1 para sim, e 2 para não)"))
-                    except ValueError:
-                        confirmação = 0
+                        opcao=int(input("digite a opção:"))
                         
-                    match confirmação:
+                    except ValueError:
+                        opcao = 0
+                        
+                    match opcao:
                         case 1: 
+                            cpf=pedir_cpf()
+                            titulo_eleitor = input("Digite o Título de Eleitor:")
+                            comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
+                            valores = (cpf, titulo_eleitor)
+                            executar(comando, valores)
+                        case 2:
                             id_eleitor=int(input("id:"))                           
                             comando = "DELETE FROM eleitores WHERE id_eleitor = %s"
                             valores = (id_eleitor,)
                             executar (comando, valores )
-                        case 2:
-                            print("Voltando ao menu principal")
+                        case 3:
+                            print("voltando ao menu principal")
                         case _:
                             print("opção inválida")
                 print("Voltando ao menu principal...")
+                
             case _:
                 print("Opcao invalida.")
 
