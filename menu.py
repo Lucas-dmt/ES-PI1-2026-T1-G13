@@ -9,6 +9,7 @@ from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
 from chave_protocolo import gerar_protocolo #importa a funcao de geracao de geracao de protocolo em protocolo.py
 from auditoria import mostrar_logs, mostrar_protocolos, validar_protocolo, registrar_log, salvar_protocolo
 from criptografia import criptografar_hill
+from datetime import datetime
 
 def menu_gerenciamento(): 
     """
@@ -298,14 +299,15 @@ def menu_auditoria():
     """
     opcao = 0
 
-    while opcao != 4:
+    while opcao != 5:
 
         print("\n=== AUDITORIA DA VOTACAO ===")
 
         print("1 - Exibir logs")
         print("2 - Exibir protocolos")
         print("3 - Validar protocolos") 
-        print("4 - Voltar")
+        print("4 - Resultado da votacao")
+        print("5 - Voltar")
 
         opcao = int(input("\nEscolha uma opcao: "))
 
@@ -323,6 +325,10 @@ def menu_auditoria():
                 validar_protocolo()
 
             case 4:
+
+                menu_resultados()
+
+            case 5:
 
                 print("\nVoltando ao menu de votacao...")
 
@@ -345,7 +351,7 @@ def menu_resultados():
         print("1 - Boletim de urna")
         print("2 - Estatistica de comparecimento")
         print("3 - Votos por partido")
-        print("4 - Validacao de integridade")
+        print("4 - Validacao de Integridade")
         print("5 - Voltar")
         try:
             opcao = int(input("Escolha uma opcao: "))
@@ -354,12 +360,23 @@ def menu_resultados():
 
         match opcao:
             case 1:
+                #aqui temos que fazer isso:opção Boletim de Urna, listando os
+                #votos consolidados por candidato em ordem alfabética.
+                #RF002.03.03: O sistema deve, ao final do Boletim de Urna, declarar o vencedor da
+                #eleição, informando nome, número, partido e o total de votos obtido
                 print("Boletim de urna ainda nao foi feito.")
             case 2:
+                #O sistema deve disponibilizar a opção Estatística de Comparecimento,
+                #informando a quantidade absoluta de pessoas que votaram e o percentual que isso
+                #representa em relação ao total de eleitores aptos.
                 print("Estatistica de comparecimento ainda nao foi feita.")
             case 3:
+                #RF002.03.05: O sistema deve disponibilizar a opção Votos por Partido, exibindo a
+                #somatória de votos recebidos por cada legenda partidária.
                 print("Votos por partido ainda nao foram feitos.")
             case 4:
+                #RF002.03.06: O sistema deve disponibilizar a opção Validação de Integridade, permitindo
+                #a verificação da integridade dos dados de votação.
                 print("Validacao de integridade ainda nao foi feita.")
             case 5:
                 print("Voltando ao menu de votacao...")
@@ -375,13 +392,12 @@ def menu_votacao():
     """
     urna_aberta = False
     opcao = 0
-    while opcao != 5:
+    while opcao != 4:
         print("\n=== MENU VOTACAO ===")
         print("1 - Votar")
         print("2 - Abrir sistema de votacao")
         print("3 - Auditoria da votacao")
-        print("4 - Resultados da votacao")
-        print("5 - Voltar")
+        print("4 - Voltar")
         try:
             opcao = int(input("Escolha uma opcao: "))
         except ValueError:
@@ -393,8 +409,8 @@ def menu_votacao():
                     print("\n === VOTAR ===")
                     verificar_cpf = 0
                     while verificar_cpf == 0:
-                        cpf =input("Seu CPF: ")
-                        comando = "SELECT nome, ja_votou FROM eleitores WHERE cpf = %s"
+                        cpf =input("Seu primeiros 4 digitos do CPF: ")
+                        comando = "SELECT nome, ja_votou FROM eleitores WHERE prefixo_cpf = %s"
                         resultado = buscar(comando, (cpf,))
                         if resultado == None:
                             print("CPF não encontrado. Tente novamente.")
@@ -402,32 +418,34 @@ def menu_votacao():
                             print(f"Eleitor {resultado[0]} já votou. Você não pode votar novamente.")
                             registrar_log()
                         else:
-                            print(f"Bem-vindo, {resultado[0]}! Você pode votar agora.")
+                            print(f"CPF válido!")
                             verificar_cpf = 1
                     verificar_titulo = 0
                     while verificar_titulo == 0:
                         titulo_eleitor = input("Digite o Título de Eleitor: ")
-                        comando = "SELECT nome FROM eleitores WHERE cpf = %s AND titulo_eleitor = %s"
+                        comando = "SELECT nome FROM eleitores WHERE prefixo_cpf = %s AND titulo_eleitor = %s"
                         resultado = buscar(comando, (cpf, titulo_eleitor))
                         if resultado:
-                            print(f"Título de Eleitor válido! Bem-vindo, {resultado[0]}!")
+                            print(f"Título de Eleitor válido!")
                             verificar_titulo = 1
                         else:
                             print("Título de Eleitor inválido. Tente novamente.")
                     verificar_chave = 0
                     while verificar_chave == 0:
-                        chave = input("Digite sua chave de acesso: ")
-                        comando = "SELECT chave_acesso_cifrada FROM eleitores WHERE cpf = %s"
-                        resultado = buscar(comando, (cpf,))
-                        if resultado and resultado[0] == chave:
-                            print("Chave correta! Você pode votar.")
+                        chave_cifrada = input("Digite sua chave de acesso: ")
+                        chave_cifrada = criptografar_hill(chave)
+                        comando = "SELECT nome, chave_acesso_cifrada FROM eleitores WHERE chave_acesso_cifrada = %s"
+                        resultado = buscar(comando, (chave_cifrada,))
+                        if resultado[1] == chave_cifrada:
+                            print(f"Chave correta! Você pode votar, bem vindo {resultado[0]}!")
                             verificar_chave = 1
                         else:
                             print("Chave incorreta. Tente novamente.")
                     parte_final = 0
                     while parte_final == 0:
-                        numero_candidatoB = int(input("Digite 1 para votar em um candidato e 2 para voto em nulo :"))
-                        if numero_candidatoB == 1:
+                        escolha = int(input("Digite 1 para votar em um candidato e 2 para voto em nulo :"))
+                        if escolha == 1:
+                            numero_candidatoB = int(input("Digite o número do candidato:"))
                             comando = """
                             SELECT c.candidato, p.partido, p.sigla
                             FROM candidatos c
@@ -443,28 +461,33 @@ def menu_votacao():
                                 print(f"Sigla: {resultado[2]}")
                                 confirmacao = input("Deseja confirmar seu voto para este candidato? (1 para Sim/2 para Não)")
                                 if confirmacao == "1":
-                                    comando = "UPDATE eleitores SET ja_votou = 1 WHERE cpf = %s"
+                                    comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
                                     valores = (cpf,)
                                     executar(comando, valores)
-                                    comando_2 = "INSERT INTO votos (id_candidato) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s))"
-                                    executar(comando_2, (numero_candidatoB,))
-                                    #comando_3 = gustavo vai fazer o comando pra inserir no sql o protocolo aqui (CANDIDATO)
-                                    parte_final = 1
+                                    horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                    comando_2 = "INSERT INTO votos (id_candidato, datetime_voto) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s), %s)"
+                                    executar(comando_2, (numero_candidatoB, horario_voto))
+                                    #gustavo vai fazer o comando pra inserir no sql o protocolo aqui (CANDIDATO) e tambem printar pro eleitor
                                     print(f"Voto registrado no candidato: {resultado[0]} com sucesso!")
+                                    #print("protocolo do gustavo aqui")
+                                    parte_final = 1
+                                    
                                 elif confirmacao == "2":
                                     print("Voto cancelado. Você pode escolher outro candidato.")
                                 else:
                                     print("Opção inválida. Tente novamente.")
                             else:
                                 print("\n[!] Erro: Eleitor não cadastrado.")
-                        elif numero_candidatoB == 2:
-                            confirmacao = input("Deseja confirmar seu voto em nulo? (1 para Sim/2 para Não)")
+                        elif escolha == 2:
+                            confirmacao = input("Deseja confirmar seu voto em nulo? (1 para Sim/2 para Não):")
                             if confirmacao == "1":
-                                comando = "UPDATE eleitores SET ja_votou = 1 WHERE cpf = %s"
+                                comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
                                 valores = (cpf,)
                                 executar(comando, valores)
-                                comando_2 = "INSERT INTO votos (voto_nulo) VALUES (1)"
-                                executar(comando_2, ())
+                                horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto) VALUES (1, %s)"
+                                executar(comando_2, (horario_voto,))
+                                print("Voto nulo registrado com sucesso!")
                                 #comando_3 = gustavo vai fazer o comando pra inserir no sql o protocolo aqui (NULO)
                                 parte_final = 1
                             elif confirmacao == "2":
@@ -478,6 +501,7 @@ def menu_votacao():
                     print("A urna ja está aberta.")
                 else: 
                     titulo = input("Digite o titulo:")
+                    validar_titulo(titulo)
                     prefixo_cpf = input("Insira os 4 primeiros digitos do cpf:")
                     chave = input("Digite sua chave de acesso:")
 
@@ -487,7 +511,7 @@ def menu_votacao():
                     valores = (titulo, prefixo_cpf,)
                     resultado = buscar(comando, valores)
                     if resultado:
-                        if resultado[0] == chave_cifrada:
+                        if resultado[6] == chave_cifrada:
                             print("mesário autorizado")
                             comando = """ SELECT COUNT(*) FROM eleitores WHERE  ja_votou = 1 """
                             resultado_votos = buscar(comando, ())
@@ -508,9 +532,8 @@ def menu_votacao():
                         print("Mesário não autorizado")
             case 3:
                 menu_auditoria()
+
             case 4:
-                menu_resultados()
-            case 5:
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
