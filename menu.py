@@ -233,7 +233,24 @@ def menu_gerenciamento():
                 print("Opcao invalida.")
 
 def menu_encerramento(urna_aberta):
-    if  urna_aberta == False:
+"""Interface de terminal para o fechamento controlado da urna eletrônica.
+
+    Esta função gerencia o fluxo de encerramento do evento eleitoral. Ela valida 
+    se a urna está ativa, exige a identificação de um eleitor com privilégios de 
+    mesário por meio de seus documentos, compara as credenciais e solicita uma 
+    confirmação dupla de segurança antes de consolidar o encerramento.
+
+    Requisitos Atendidos:
+        - RF002: Integração com o fluxo final do Módulo de Votação.
+
+    Args:
+        urna_aberta (bool): Estado atual da urna (True para aberta, False para fechada).
+
+    Returns:
+        urna aberta: O estado atualizado da urna após a execução da função (False se for 
+            encerrada com sucesso, ou o estado original caso falhe ou seja cancelada).
+    """
+    if urna_aberta == False:
         print("\nA urna já está fechada ou não foi aberta.")
         return urna_aberta
     
@@ -271,38 +288,35 @@ def menu_encerramento(urna_aberta):
                                 if resultado[0] == segunda_chave_cifrada:
                                     print("URNA ENCERRADA")
                                     urna_aberta=False
-                                    executando = False
                                     menu_resultados()
-                                    return urna_aberta
+                                    
                                 else:
                                     print("Erro. a chave está errada")
-                                    return urna_aberta
-
-
+                                    
                             elif confirmação == 'Não':
                                 print("Operação cancelada.")                        
-                                return urna_aberta  
 
                             else:
                                 print("Resposta inválida. Operação cancelada.")
-                                return urna_aberta          
+                                
                         else:
                             print("Chave incorreta.") 
-                            return urna_aberta                   
+                  
                     else:
                         print("Mesário não encontrado ou sem permissão.")
-                        return urna_aberta
 
                 except ValueError:
                      print(f"Erro: Digite apenas números para Título e CPF.")
-                     return urna_aberta
+                    
+                executando = False
+        
             case 2:
                 print("Voltando para o menu de votação...")
-                return urna_aberta
+                executando = False
 
             case _:
                 print("Opção inválida")
-                return urna_aberta
+                executando = False
     return urna_aberta
     
 def menu_auditoria():
