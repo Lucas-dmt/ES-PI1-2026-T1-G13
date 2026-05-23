@@ -465,7 +465,7 @@ def menu_votacao():
                             registrar_log("ALERTA: Tentativa de acesso negado por chave inválida.")
                     verificar_chave = 0
                     while verificar_chave == 0:
-                        chave_cifrada = input("Digite sua chave de acesso: ")
+                        chave = input("Digite sua chave de acesso: ")
                         chave_cifrada = criptografar_hill(chave)
                         comando = "SELECT nome, chave_acesso_cifrada FROM eleitores WHERE chave_acesso_cifrada = %s"
                         resultado = buscar(comando, (chave_cifrada,))
