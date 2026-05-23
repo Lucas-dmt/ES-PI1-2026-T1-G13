@@ -465,8 +465,8 @@ def menu_votacao():
                             registrar_log("ALERTA: Tentativa de acesso negado por chave inválida.")
                     verificar_chave = 0
                     while verificar_chave == 0:
-                        chave = input("Digite sua chave de acesso: ")
-                        chave_cifrada = criptografar_hill(chave)
+                        chave_cifrada = input("Digite sua chave de acesso: ")
+                        chave_cifrada = criptografar_hill(chave)    
                         comando = "SELECT nome, chave_acesso_cifrada FROM eleitores WHERE chave_acesso_cifrada = %s"
                         resultado = buscar(comando, (chave_cifrada,))
                         if resultado[1] == chave_cifrada:
@@ -501,6 +501,8 @@ def menu_votacao():
                                     comando_2 = "INSERT INTO votos (id_candidato, datetime_voto) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s), %s)"
                                     executar(comando_2, (numero_candidatoB, horario_voto))
                                     #gustavo vai fazer o comando pra inserir no sql o protocolo aqui (CANDIDATO) e tambem printar pro eleitor
+                                    protocolo = gerar_protocolo(numero_candidatoB, cpf_cifrado)
+                                    salvar_protocolo(protocolo)
                                     print(f"Voto registrado no candidato: {resultado[0]} com sucesso!")
                                     registrar_log(f"SUCESSO: Voto realizado com sucesso para candidato {resultado[0]}")
                                 elif confirmacao == "2":
@@ -519,6 +521,8 @@ def menu_votacao():
                                 comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto) VALUES (1, %s)"
                                 executar(comando_2, (horario_voto,))
                                 print("Voto nulo registrado com sucesso!")
+                                protocolo = gerar_protocolo("NULO", cpf_cifrado)
+                                salvar_protocolo(protocolo)
                                 #comando_3 = gustavo vai fazer o comando pra inserir no sql o protocolo aqui (NULO)
                                 parte_final = 1
                                 registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
@@ -568,7 +572,7 @@ def menu_votacao():
                         registrar_log("ALERTA: Tentativa de abertura da urna por usuário sem permissão.")
             case 3:
                 menu_auditoria()
-                
+
             case 4:
                 print("Voltando ao menu principal...")
             case _:
