@@ -36,7 +36,7 @@ def menu_gerenciamento():
         None
     """
     opcao = 0  #comecamos a opcao com 0 so para entrar no menu pela primeira vez
-    while opcao !=9: #menu continua abrindo enquanto o usuario nao escolher a opcao de voltar
+    while opcao !=7: #menu continua abrindo enquanto o usuario nao escolher a opcao de voltar
         print("\n=== MENU GERENCIAMENTO ===")
         print("1 - Cadastrar eleitor")
         print("2 - Buscar eleitor")
@@ -44,9 +44,7 @@ def menu_gerenciamento():
         print("4 - Buscar candidato")
         print("5 - Criar Partido")
         print("6 - Buscar Partido")
-        print("7 - Editar eleitor")
-        print("8 - Remover eleitor")
-        print("9 - Voltar")
+        print("7 - Voltar")
         try: #tenta transformar o que o usuario digitou em numero
             opcao = int(input("Escolha uma opcao: "))
         except ValueError: #se o usuario digitar letra ou algo invalido, a opcao vira 0 (ValueError)
@@ -136,99 +134,8 @@ def menu_gerenciamento():
                 else:
                     print("\n[!] Erro: Partido não cadastrado.")
             case 7:
-                # === EDIÇÃO DE ELEITOR ===
-                
-                opcao = 0
-                while opcao != 6:
-                    print("1 - vizualizar id do eleitor")
-                    print("2 - alterar nome")
-                    print("3 - alterar cpf")
-                    print("4 - alterar título")
-                    print("5 - mesário")
-                    print("6 - voltar")
-                
-                    try:
-                        opcao=int(input("digite um número de 1 a 5:"))
-                    except ValueError:
-                        opcao = 0
-                    match opcao:
-                        case 1:
-                            cpf=pedir_cpf()
-                            titulo_eleitor = input("Digite o Título de Eleitor:")
-                            comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
-                            valores = (cpf, titulo_eleitor)
-                            executar(comando, valores)
-                        
-                        case 2:
-                            id_eleitor = input("id do eleitor:")
-                            nome_completo=input("nome:")
-                            comando="UPDATE eleitores SET nome = %s WHERE id_eleitor = %s"
-                            valores = (nome_completo, id_eleitor)
-                            executar(comando, valores)
-                                   
-                        case 3:
-                            id_eleitor = input("id do eleitor:") 
-                            cpf=pedir_cpf()
-                            comando="UPDATE eleitores SET cpf = %s WHERE id_eleitor = %s"
-                            valores = (cpf, id_eleitor)
-                            executar(comando, valores)
-                                                        
-                        case 4:
-                            id_eleitor = input("id do eleitor:") 
-                            titulo_eleitor = input("Digite o Título de Eleitor:")
-                            validar_titulo(titulo_eleitor)
-                            comando = "UPDATE eleitores SET titulo_eleitor = %s WHERE id_eleitor = %s"
-                            valores = (titulo_eleitor, id_eleitor)
-                            executar(comando,valores)
-
-                        case 5:
-                            id_eleitor = input("id do eleitor:") 
-                            mesario = input("Mesário s/n:").lower()
-                            if mesario == "s":
-                                mesario = 1
-                            else:
-                                mesario = 0
-                            comando="UPDATE eleitores SET mesario = %s WHERE id_eleitor = %s"
-                            valores = (mesario, id_eleitor)
-                            executar(comando, valores)
-                            
-                        case 6:
-                            print("voltando ao menu principal")
-                               
-                        case _:
-                            print("opção inválida")
-            case 8:
-               #=== REMOVER ELEITOR===  
-                opcao = 0
-                while opcao != 3:
-                    print("1 - vizuallizar id do eleitor")
-                    print("2 - remover eleitor")
-                    print("3 - voltar")
-                    try:
-                        opcao=int(input("digite a opção:"))
-                        
-                    except ValueError:
-                        opcao = 0
-                        
-                    match opcao:
-                        case 1: 
-                            cpf=pedir_cpf()
-                            titulo_eleitor = input("Digite o Título de Eleitor:")
-                            comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
-                            valores = (cpf, titulo_eleitor)
-                            resultado = buscar(comando, valores)
-                            print(resultado)
-                        case 2:
-                            id_eleitor=int(input("id:"))                           
-                            comando = "DELETE FROM eleitores WHERE id_eleitor = %s"
-                            valores = (id_eleitor,)
-                            executar (comando, valores )
-                        case 3:
-                            print("voltando ao menu principal")
-                        case _:
-                            print("opção inválida")
-                print("Voltando ao menu principal...")
-                
+                # ==== VOLTAR PARA O MENU PRINCIPAL ====
+                    print("\nVoltando ao menu principal...")  
             case _:
                 print("Opcao invalida.")
 
@@ -315,7 +222,7 @@ def menu_auditoria():
     """
     opcao = 0
 
-    while opcao != 5:
+    while opcao != 7:
 
         print("\n=== AUDITORIA DA VOTACAO ===")
 
@@ -323,7 +230,9 @@ def menu_auditoria():
         print("2 - Exibir protocolos")
         print("3 - Validar protocolos") 
         print("4 - Resultado da votacao")
-        print("5 - Voltar")
+        print("5 - Remover Eleitor")
+        print("6 - Editar Eleitor")
+        print("7 - Voltar")
 
         opcao = int(input("\nEscolha uma opcao: "))
 
@@ -343,8 +252,97 @@ def menu_auditoria():
             case 4:
 
                 menu_resultados()
-
+            
             case 5:
+                #=== REMOVER ELEITOR===  
+                opcao = 0
+                while opcao != 3:
+                    print("1 - vizuallizar id do eleitor")
+                    print("2 - remover eleitor")
+                    print("3 - voltar")
+                    try:
+                        opcao=int(input("digite a opção:"))
+                        
+                    except ValueError:
+                        opcao = 0
+                        
+                    match opcao:
+                        case 1: 
+                            cpf=pedir_cpf()
+                            titulo_eleitor = input("Digite o Título de Eleitor:")
+                            comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
+                            valores = (cpf, titulo_eleitor)
+                            resultado = buscar(comando, valores)
+                            print(resultado)
+                        case 2:
+                            id_eleitor=int(input("id:"))                           
+                            comando = "DELETE FROM eleitores WHERE id_eleitor = %s"
+                            valores = (id_eleitor,)
+                            executar (comando, valores )
+                        case 3:
+                            print("voltando ao menu principal")
+                        case _:
+                            print("opção inválida")
+                print("Voltando ao menu principal...")
+
+            case 6:
+                # === EDIÇÃO DE ELEITOR ===
+                
+                opcao = 0
+                while opcao != 6:
+                    print("1 - vizualizar id do eleitor")
+                    print("2 - alterar nome")
+                    print("3 - alterar cpf")
+                    print("4 - alterar título")
+                    print("5 - mesário")
+                    print("6 - voltar")
+                
+                    try:
+                        opcao=int(input("digite um número de 1 a 5:"))
+                    except ValueError:
+                        opcao = 0
+                    match opcao:
+                        case 1:
+                            cpf=pedir_cpf()
+                            titulo_eleitor = input("Digite o Título de Eleitor:")
+                            comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
+                            valores = (cpf, titulo_eleitor)
+                            executar(comando, valores)
+                        
+                        case 2:
+                            id_eleitor = input("id do eleitor:")
+                            nome_completo=input("nome:")
+                            comando="UPDATE eleitores SET nome = %s WHERE id_eleitor = %s"
+                            valores = (nome_completo, id_eleitor)
+                            executar(comando, valores)
+                                   
+                        case 3:
+                            id_eleitor = input("id do eleitor:") 
+                            cpf=pedir_cpf()
+                            comando="UPDATE eleitores SET cpf = %s WHERE id_eleitor = %s"
+                            valores = (cpf, id_eleitor)
+                            executar(comando, valores)
+                                                        
+                        case 4:
+                            id_eleitor = input("id do eleitor:") 
+                            titulo_eleitor = input("Digite o Título de Eleitor:")
+                            validar_titulo(titulo_eleitor)
+                            comando = "UPDATE eleitores SET titulo_eleitor = %s WHERE id_eleitor = %s"
+                            valores = (titulo_eleitor, id_eleitor)
+                            executar(comando,valores)
+
+                        case 5:
+                            id_eleitor = input("id do eleitor:") 
+                            mesario = input("Mesário s/n:").lower()
+                            if mesario == "s":
+                                mesario = 1
+                            else:
+                                mesario = 0
+                            comando="UPDATE eleitores SET mesario = %s WHERE id_eleitor = %s"
+                            valores = (mesario, id_eleitor)
+                            executar(comando, valores)
+
+            case 7:
 
                 print("\nVoltando ao menu de votacao...")
 
