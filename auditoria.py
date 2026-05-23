@@ -58,7 +58,7 @@ def mostrar_protocolos():
 
 def registrar_log(mensagem):
 
-    horario = datetime.now().strftime("%H:%M:%S")
+    horario = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     with open(arquivo_log, "a", encoding="utf-8") as arquivo:
 
@@ -187,27 +187,3 @@ def menu_auditoria():
 
         else:
             print("\n Opçao invalida")
-
-
-    
-# ========= REGISTROS =========
-
-registrar_log(
-    "ABERTURA: Votação iniciada com sucesso. Total de votos zerado."
-)
-
-registrar_log(
-    "ALERTA: Tentativa de voto duplo"
-)
-
-registrar_log(
-    "ALERTA: Tentativa de acesso negado"
-)
-
-registrar_log(
-    "SUCESSO: Voto realizado com sucesso"
-)
-
-registrar_log(
-    "ENCERRAMENTO: Votação finalizada com sucesso."
-)
