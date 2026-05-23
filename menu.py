@@ -11,12 +11,28 @@ from auditoria import mostrar_logs, mostrar_protocolos, validar_protocolo, regis
 from criptografia import criptografar_hill
 
 def menu_gerenciamento(): 
-    """
-    gerenciamento de eleitores e candidatos
-    args:
-        none
-    returns:
-        nones
+    """Interface de terminal para o controle administrativo de eleitores e candidatos.
+
+    Esta função gerencia as operações do módulo administrativo, englobando
+    o cadastro, busca, edição e exclusão de dados correspondentes às regras
+    de negócio do sistema de votação digital fictício. as funçoes de validação 
+    estão no arquivo "validações", e a de criptografia em "criptografia", 
+    porém foram chamadas no menu.
+
+    Requisitos Atendidos:
+        - RF001: Módulo de Gerenciamento Administrativo.
+        - RF001.01, RF001.02, RF001.03, RF001.04: Processo de Cadastro do Eleitor.
+        - RF001.05: Edição de dados do Eleitor.
+        - RF001.06: Remoção do Eleitor.
+        - RF001.07: Busca por Eleitor específico.
+        - RF001.08: Listagem de todos os Eleitores.
+        - RF001.09 a RF001.14: dados do Candidato.
+
+    Args:
+        None
+
+    Returns:
+        None
     """
     opcao = 0  #comecamos a opcao com 0 so para entrar no menu pela primeira vez
     while opcao !=9: #menu continua abrindo enquanto o usuario nao escolher a opcao de voltar
