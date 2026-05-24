@@ -470,6 +470,7 @@ def menu_votacao():
                         resultado = buscar(comando, (chave_cifrada,))
                         if resultado[1] == chave_cifrada:
                             print(f"Chave correta! Você pode votar, bem vindo {resultado[0]}!")
+                            registrar_log("SUCESSO: Chave de acesso válida para o inicio da votaçao.")
                             verificar_chave = 1
                         else:
                             print("Chave incorreta. Tente novamente.")
@@ -506,6 +507,7 @@ def menu_votacao():
                                     parte_final = 1
                                 elif confirmacao == "2":
                                     print("Voto cancelado. Você pode escolher outro candidato.")
+                                    registrar_log("ALERTA: Voto para candidato foi cancelado.")
                                 else:
                                     print("Opção inválida. Tente novamente.")
                             else:
@@ -527,6 +529,7 @@ def menu_votacao():
                                 registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
                             elif confirmacao == "2":
                                 print("Voto nulo cancelado. Você pode escolher um candidato.")
+                                registrar_log("ALERTA: Voto nulo foi cancelado.")
                             else:
                                 print("Opção inválida. Tente novamente.")
                 else:
