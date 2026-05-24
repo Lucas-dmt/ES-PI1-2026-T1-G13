@@ -440,9 +440,8 @@ def menu_votacao():
                     verificar_cpf = 0
                     while verificar_cpf == 0:
                         cpf =input("Seu primeiros 4 digitos do CPF: ")
-                        cpf_cifrado = criptografar_hill(cpf)
                         comando = "SELECT nome, ja_votou FROM eleitores WHERE prefixo_cpf = %s"
-                        resultado = buscar(comando, (cpf_cifrado,))
+                        resultado = buscar(comando, (cpf,))
                         if resultado == None:
                             registrar_log("ALERTA: Tentativa de acesso com CPF não cadastrado.")
                             print("CPF não encontrado. Tente novamente.")
@@ -456,7 +455,7 @@ def menu_votacao():
                     while verificar_titulo == 0:
                         titulo_eleitor = input("Digite o Título de Eleitor: ")
                         comando = "SELECT nome FROM eleitores WHERE prefixo_cpf = %s AND titulo_eleitor = %s"
-                        resultado = buscar(comando, (cpf_cifrado, titulo_eleitor))
+                        resultado = buscar(comando, (cpf, titulo_eleitor))
                         if resultado:
                             print(f"Título de Eleitor válido!")
                             verificar_titulo = 1
@@ -495,16 +494,16 @@ def menu_votacao():
                                 confirmacao = input("Deseja confirmar seu voto para este candidato? (1 para Sim/2 para Não)")
                                 if confirmacao == "1":
                                     comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
-                                    valores = (cpf_cifrado,)
+                                    valores = (cpf,)
                                     executar(comando, valores)
+                                    protocolo = gerar_protocolo(numero_candidatoB)
+                                    protocolo_cifrado = criptografar_hill(protocolo)
                                     horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                                    comando_2 = "INSERT INTO votos (id_candidato, datetime_voto) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s), %s)"
-                                    executar(comando_2, (numero_candidatoB, horario_voto))
-                                    #gustavo vai fazer o comando pra inserir no sql o protocolo aqui (CANDIDATO) e tambem printar pro eleitor
-                                    protocolo = gerar_protocolo(numero_candidatoB, cpf_cifrado)
-                                    salvar_protocolo(protocolo)
+                                    comando_2 = "INSERT INTO votos (id_candidato, datetime_voto, protocolo_votacao_cifrado) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s), %s, %s)"
+                                    executar(comando_2, (numero_candidatoB, horario_voto, protocolo_cifrado)) 
                                     print(f"Voto registrado no candidato: {resultado[0]} com sucesso!")
                                     registrar_log(f"SUCESSO: Voto realizado com sucesso para candidato {resultado[0]}")
+                                    parte_final = 1
                                 elif confirmacao == "2":
                                     print("Voto cancelado. Você pode escolher outro candidato.")
                                 else:
@@ -515,15 +514,15 @@ def menu_votacao():
                             confirmacao = input("Deseja confirmar seu voto em nulo? (1 para Sim/2 para Não):")
                             if confirmacao == "1":
                                 comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
-                                valores = (cpf_cifrado,)
+                                valores = (cpf,)
                                 executar(comando, valores)
+                                protocolo = gerar_protocolo("NULO")
+                                protocolo_cifrado = criptografar_hill(protocolo)
                                 horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                                comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto) VALUES (1, %s)"
-                                executar(comando_2, (horario_voto,))
+                                comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto, protocolo_votacao_cifrado) VALUES (1, %s, %s)"
+                                executar(comando_2, (horario_voto, protocolo_cifrado))
                                 print("Voto nulo registrado com sucesso!")
-                                protocolo = gerar_protocolo("NULO", cpf_cifrado)
-                                salvar_protocolo(protocolo)
-                                #comando_3 = gustavo vai fazer o comando pra inserir no sql o protocolo aqui (NULO)
+                                protocolo = gerar_protocolo("NULO")
                                 parte_final = 1
                                 registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
                             elif confirmacao == "2":
