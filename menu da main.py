@@ -524,6 +524,7 @@ def menu_votacao():
                                 executar(comando_2, (horario_voto,))
                                 print("Voto nulo registrado com sucesso!")
                                 protocolo = gerar_protocolo("NULO", cpf_cifrado)
+                                protocolo_cifrado = criptografar_hill(protocolo)
                                 salvar_protocolo(protocolo)
                                 #comando_3 = gustavo vai fazer o comando pra inserir no sql o protocolo aqui (NULO)
                                 parte_final = 1
