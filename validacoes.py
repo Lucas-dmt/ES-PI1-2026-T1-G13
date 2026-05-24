@@ -125,31 +125,37 @@ def validar_titulo(titulo_eleitor):
     elif sequencia_crescente(titulo_eleitor):
         print("Erro: sequência inválida.\n")
         titulo_eleitor = input("Tente novamente:")
-    else:
+    # Mudamos de 'else:' para um 'elif' que testa a UF antes de qualquer cálculo:
+    elif int(titulo_eleitor[8:10]) < 1 or int(titulo_eleitor[8:10]) > 28:
+         print("Erro: UF inválida.\n")
+         titulo_eleitor = input("Tente novamente:")
+         # O 'continue' antigo que ficava aqui FOI REMOVIDO.
 
- # Extrai UF (posição 8 e 9 do número)
-        uf = int(titulo_eleitor[8:10])
-        if uf < 1 or uf > 28:
-            print("Erro: UF inválida.\n")
-            titulo_eleitor = input ("Tente novamente:")
-            continue
-        else:
-            numero = titulo_eleitor[:8]
-            digitos = titulo_eleitor[10:12]
-            pesos1 = [2, 3, 4, 5, 6, 7, 8, 9]
-            soma = 0
-            for i in range(8):
-                soma += int(numero[i]) * pesos1[i]
-            resto = soma % 11
-            dv1 = 0 if resto == 10 else resto
-            soma2 = (int(titulo_eleitor[8]) * 7) + (int(titulo_eleitor[9]) * 8) + (dv1 * 9)
-            resto2 = soma2 % 11
-            dv2 = 0 if resto2 == 10 else resto2
-            if digitos == str(dv1) + str(dv2):
-                print("Título válido")
-                titulo_valido = True
-            else:
-                print("Título inválido: dígitos não conferem")
+    else:
+        # Este novo 'else' só executa se o título passou em TODAS as validações acima.
+        # Agora a extração da UF e dos dígitos é 100% segura.
+         uf = int(titulo_eleitor[8:10])
+         numero = titulo_eleitor[:8]
+         digitos = titulo_eleitor[10:12]
+         pesos1 = [2, 3, 4, 5, 6, 7, 8, 9]
+         soma = 0
+         for i in range(8):
+            soma += int(numero[i]) * pesos1[i]
+         resto = soma % 11
+         dv1 = 0 if resto == 10 else resto
+         soma2 = (int(titulo_eleitor[8]) * 7) + (int(titulo_eleitor[9]) * 8) + (dv1 * 9)
+         resto2 = soma2 % 11
+         dv2 = 0 if resto2 == 10 else resto2
+            
+         if digitos == str(dv1) + str(dv2):
+            print("Título válido")
+            titulo_valido = True
+            return titulo_eleitor # Adicionado para retornar o valor limpo ao final
+         else:
+            # Pequeno ajuste aqui: se os dígitos falharem, precisamos pedir o input 
+            # de novo, senão ele travaria no while com o mesmo número incorreto.
+            print("Título inválido: dígitos não conferem.\n")
+            titulo_eleitor = input("Tente novamente: ")
 
         
 # === VERIFICAÇÃO DO NOME COMPLETO ===
