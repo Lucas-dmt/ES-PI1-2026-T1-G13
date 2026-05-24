@@ -44,3 +44,18 @@ def buscar(comando, valores):
      cursor.close()
      conexao.close()
      return resultado
+
+def buscar_tudo(comando, valores=()):
+    conexao = mysql.connector.connect(
+        host="localhost", 
+        user="root", 
+        password="ademir", 
+        database="lad_py", 
+        auth_plugin='mysql_native_password'
+    )
+    cursor = conexao.cursor()
+    cursor.execute(comando, valores)
+    resultado = cursor.fetchall()  # Captura todas as linhas da consulta
+    cursor.close()
+    conexao.close()
+    return resultado

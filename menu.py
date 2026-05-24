@@ -1,10 +1,12 @@
 import os
 os.system('cls' if os.name == 'nt' else 'clear')
 from conexaobd import executar  #importa a função de execução da conexaobd
+import time
 from validacoes import validar_titulo
 from validacoes import pedir_cpf
 from validacoes import verificar_nome
 from conexaobd import buscar   #importa a funcao buscar de conexaobd
+from conexaobd import buscar_tudo
 from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
 from chave_protocolo import gerar_protocolo #importa a funcao de geracao de geracao de protocolo em protocolo.py
 from auditoria import mostrar_logs, mostrar_protocolos, validar_protocolo, registrar_log, salvar_protocolo
@@ -389,20 +391,94 @@ def menu_resultados():
 
         match opcao:
             case 1:
-                #aqui temos que fazer isso:opção Boletim de Urna, listando os
-                #votos consolidados por candidato em ordem alfabética.
-                #RF002.03.03: O sistema deve, ao final do Boletim de Urna, declarar o vencedor da
-                #eleição, informando nome, número, partido e o total de votos obtido
-                print("Boletim de urna ainda nao foi feito.")
+
+                comando = """
+                SELECT 
+                    c.candidato, 
+                    c.numero_votacao, 
+                    p.sigla, 
+                    COUNT(v.id_voto) AS votos   
+                FROM candidatos c
+                JOIN partidos p ON c.id_partido = p.id_partido
+                LEFT JOIN votos v ON c.id_candidato = v.id_candidato
+                GROUP BY c.id_candidato, c.candidato, c.numero_votacao, p.sigla
+                ORDER BY c.candidato ASC;
+                """
+ 
+                resultado = buscar_tudo(comando, ())
+                
+                print("\n=== BOLETIM DE URNA ===")
+                print("-" * 50)
+                
+                vencedor_nome = None
+                vencedor_numero = None
+                vencedor_sigla = None
+                max_votos = -1
+                empate = False
+
+                if resultado:
+
+                    for linha in resultado:
+                        nome_cand, num_cand, sigla_part, qtd_votos = linha[:4]
+                        print(f"Candidato: {nome_cand:<25} | Número: {num_cand:<5} | Partido: {sigla_part:<6} | Votos: {qtd_votos}")
+                        
+                        if qtd_votos > max_votos:
+                            max_votos = qtd_votos
+                            vencedor_nome = nome_cand
+                            vencedor_numero = num_cand
+                            vencedor_sigla = sigla_part
+                            empate = False
+                        elif qtd_votos == max_votos and max_votos > 0:
+                            empate = True
+                    
+                    print("-" * 50)
+                    
+                    if max_votos == 0:
+                        print("Eleição encerrada sem votos computados para candidatos.")
+                    elif empate:
+                        print(f"Empate técnico! Mais de um candidato obteve {max_votos} votos.")
+                    else:
+                        print("=== VENCEDOR DA ELEIÇÃO ===")
+                        time.sleep(5)
+                        print(f"Nome: {vencedor_nome}")
+                        print(f"Número: {vencedor_numero}")
+                        print(f"Partido: {vencedor_sigla}")
+                        print(f"Total de Votos: {max_votos}")
+                else:
+                    print("Nenhum candidato cadastrado no sistema.")
+                print("-" * 50)
             case 2:
                  #O sistema deve disponibilizar a opção Estatística de Comparecimento,
                 #informando a quantidade absoluta de pessoas que votaram e o percentual que isso
                 #representa em relação ao total de eleitores aptos.
                 print("Estatistica de comparecimento ainda nao foi feita.")
             case 3:
-                  #RF002.03.05: O sistema deve disponibilizar a opção Votos por Partido, exibindo a
-                #somatória de votos recebidos por cada legenda partidária.
-                print("Votos por partido ainda nao foram feitos.")
+                # Query para somar os votos agrupando por legenda partidária
+                comando = """
+                SELECT 
+                    p.partido, 
+                    p.sigla, 
+                    COUNT(v.id_voto) AS total_votos
+                FROM partidos p
+                JOIN candidatos c ON p.id_partido = c.id_partido
+                LEFT JOIN votos v ON c.id_candidato = v.id_candidato
+                GROUP BY p.id_partido, p.partido, p.sigla
+                ORDER BY total_votos DESC;
+                """
+                # Buscando todos os partidos que possuem candidatos e seus respectivos votos
+                resultado = buscar_tudo(comando, ())
+                
+                print("\n=== VOTOS POR PARTIDO ===")
+                print("-" * 50)
+                
+                if resultado:
+                    for linha in resultado:
+                        nome_partido, sigla, total_votos = linha[:3]
+                        print(f"Partido: {nome_partido:<20} | Sigla: {sigla:<6} | Total de Votos: {total_votos}")
+                else:
+                    print("Nenhum dado de votação ou partido encontrado.")
+                    
+                print("-" * 50)
             case 4:
                  #RF002.03.06: O sistema deve disponibilizar a opção Validação de Integridade, permitindo
                 #a verificação da integridade dos dados de votação.
@@ -524,7 +600,6 @@ def menu_votacao():
                                 comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto, protocolo_votacao_cifrado) VALUES (1, %s, %s)"
                                 executar(comando_2, (horario_voto, protocolo_cifrado))
                                 print("Voto nulo registrado com sucesso!")
-                                protocolo = gerar_protocolo("NULO")
                                 parte_final = 1
                                 registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
                             elif confirmacao == "2":
