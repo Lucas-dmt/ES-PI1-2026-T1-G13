@@ -43,9 +43,9 @@ def mostrar_protocolos():
 
                 print("Protocolos registrados oficialmente:\n")
 
-                for protocolo in protocolos: # percorre cada item da lista do protocolo
+                for protocolo in protocolos: # Percorre protocolo por protocolo
 
-                    print(protocolo.replace("\n", "")) # substitui o valor da string
+                    print(protocolo.replace("\n", "")) # Remove a quebra de linha (\n)
 
                 print("\nAuditoria concluida com sucesso.")
 
