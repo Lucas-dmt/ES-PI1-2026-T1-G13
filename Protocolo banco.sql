@@ -8,14 +8,15 @@ CREATE TABLE protocolos (
 
 
        """COMANDO 3 PARA (CANDIDATO)"""
-protocolo = gerar_protocolo(numero_candidatoB, cpf_cifrado)
+protocolo = gerar_protocolo(numero_candidatoB)
+protocolo_cifrado = criptografar_hill(protocolo)
 salvar_protocolo(protocolo)
 
 comando_3 = """
 INSERT INTO protocolos (protocolo, tipo_voto,horario_voto)
 VALUES (%s, %s , %s)
 """
-valores_3 = (protocolo, "VOTO PARA CANDIDATO",horario_voto)
+valores_3 = (protocolo_cifrado, "VOTO PARA CANDIDATO",horario_voto)
 executar(comando_3, valores_3)
 
 print(f"\nPROTOCOLO DO VOTO: {protocolo}")
@@ -32,14 +33,15 @@ registrar_log(f"SUCESSO: Voto realizado com sucesso para candidato {resultado[0]
          
        """COMANDO 3 PARA (VOTO NULO)"""
 
-protocolo = gerar_protocolo("NULO", cpf_cifrado)
+protocolo = gerar_protocolo("NULO")
+protocolo_cifrado = criptografar_hill(protocolo)
 salvar_protocolo(protocolo)
 
 comando_3 = """
 INSERT INTO protocolos (protocolo, tipo_voto,horario_voto)
 VALUES (%s, %s , %s)
 """
-valores_3 = (protocolo, "VOTO NULO",horario_voto)
+valores_3 = (protocolo_cifrado, "VOTO NULO",horario_voto)
 executar(comando_3, valores_3)
 
 print(f"\nPROTOCOLO DO VOTO: {protocolo}")
