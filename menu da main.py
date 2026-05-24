@@ -472,6 +472,7 @@ def menu_votacao():
                         if resultado[1] == chave_cifrada:
                             print(f"Chave correta! Você pode votar, bem vindo {resultado[0]}!")
                             verificar_chave = 1
+                            registrar_log("SUCESSO: Chave de acesso válida para o inicio da votaçao.")
                         else:
                             print("Chave incorreta. Tente novamente.")
                     parte_final = 0
