@@ -529,7 +529,7 @@ def menu_votacao():
                                 registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
                             elif confirmacao == "2":
                                 print("Voto nulo cancelado. Você pode escolher um candidato.")
-                                registrar_log("AVISO: Voto nulo foi cancelado.")
+                                registrar_log("ALERTA: Voto nulo foi cancelado.")
                             else:
                                 print("Opção inválida. Tente novamente.")
                 else:
