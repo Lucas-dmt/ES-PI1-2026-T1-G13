@@ -503,6 +503,7 @@ def menu_votacao():
                                     executar(comando_2, (numero_candidatoB, horario_voto))
                                     #gustavo vai fazer o comando pra inserir no sql o protocolo aqui (CANDIDATO) e tambem printar pro eleitor
                                     protocolo = gerar_protocolo(numero_candidatoB, cpf_cifrado)
+                                    protocolo_cifrado = criptografar_hill(protocolo)
                                     salvar_protocolo(protocolo)
                                     print(f"Voto registrado no candidato: {resultado[0]} com sucesso!")
                                     registrar_log(f"SUCESSO: Voto realizado com sucesso para candidato {resultado[0]}")
