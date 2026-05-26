@@ -74,7 +74,7 @@ def menu_gerenciamento():
                 chave_acesso_cifrada = criptografar_hill(chave)
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                valores = (nome_completo,titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, 0)
+                valores = [nome_completo,titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, 0]
                 executar(comando,valores)
                 print("Cadastrado.")   
             case 2:
@@ -99,7 +99,7 @@ def menu_gerenciamento():
                 numero_candidato = int(input("Seu número para votação:"))
                 id_partido = int(input("Informe o ID do partido:"))
                 comando = "INSERT INTO candidatos (candidato ,numero_votacao ,id_partido) VALUES (%s, %s, %s)"
-                valores = (nome_completo_candidato,numero_candidato,id_partido)
+                valores = [nome_completo_candidato,numero_candidato,id_partido]
                 executar(comando,valores)
  
                 print("Cadastrado com sucesso!")
@@ -112,7 +112,7 @@ def menu_gerenciamento():
                  JOIN partidos p ON c.id_partido = p.id_partido
                  WHERE c.numero_votacao = %s
                 """
-                valores = (numero_candidatoB,)
+                valores = [numero_candidatoB]
                 resultado = buscar(comando, valores)
                 if resultado:
                     print("\n--- INFORMAÇÕES DO CANDIDATO ---")
@@ -126,14 +126,14 @@ def menu_gerenciamento():
                 nome_partido = input("Digite o nome do partido:")
                 sigla_partido = input("Digite a sigla do partido:")
                 comando = "INSERT INTO partidos (partido, sigla) VALUES (%s, %s)"
-                valores = (nome_partido, sigla_partido)
+                valores = [nome_partido, sigla_partido]
                 executar(comando, valores)
                 print("Partido cadastrado com sucesso!")
             case 6:
              # ==== BUSCA DE PARTIDO ==== 
                 sigla_partidoB = input("Digite a sigla do partido:")
                 comando = "SELECT partido FROM partidos WHERE sigla = %s"
-                valores = (sigla_partidoB,)
+                valores = [sigla_partidoB]
                 resultado = buscar(comando, valores)
                 if resultado:
                     print(f"Partido: {resultado[0]}")
@@ -161,14 +161,14 @@ def menu_gerenciamento():
                             cpf_cifrado = criptografar_hill(cpf)
                             titulo_eleitor = input("Digite o Título de Eleitor:")
                             comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
-                            valores = (cpf_cifrado, titulo_eleitor)
+                            valores = [cpf_cifrado, titulo_eleitor]
                             executar(comando, valores)
                         
                         case 2:
                             id_eleitor = input("id do eleitor:")
                             nome_completo=input("nome:")
                             comando="UPDATE eleitores SET nome = %s WHERE id_eleitor = %s"
-                            valores = (nome_completo, id_eleitor)
+                            valores = [nome_completo, id_eleitor]
                             executar(comando, valores)
                                    
                         case 3:
@@ -176,7 +176,7 @@ def menu_gerenciamento():
                             cpf=pedir_cpf()
                             cpf_cifrado = criptografar_hill(cpf)
                             comando="UPDATE eleitores SET cpf = %s WHERE id_eleitor = %s"
-                            valores = (cpf_cifrado, id_eleitor)
+                            valores = [cpf_cifrado, id_eleitor]
                             executar(comando, valores)
                                                         
                         case 4:
@@ -184,7 +184,7 @@ def menu_gerenciamento():
                             titulo_eleitor = input("Digite o Título de Eleitor:")
                             validar_titulo(titulo_eleitor)
                             comando = "UPDATE eleitores SET titulo_eleitor = %s WHERE id_eleitor = %s"
-                            valores = (titulo_eleitor, id_eleitor)
+                            valores = [titulo_eleitor, id_eleitor]
                             executar(comando,valores)
 
                         case 5:
@@ -195,7 +195,7 @@ def menu_gerenciamento():
                             else:
                                 mesario = 0
                             comando="UPDATE eleitores SET mesario = %s WHERE id_eleitor = %s"
-                            valores = (mesario, id_eleitor)
+                            valores = [mesario, id_eleitor]
                             executar(comando, valores)
                             
                         case 6:
@@ -222,13 +222,13 @@ def menu_gerenciamento():
                             cpf_cifrado = criptografar_hill(cpf)
                             titulo_eleitor = input("Digite o Título de Eleitor:")
                             comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
-                            valores = (cpf_cifrado, titulo_eleitor)
+                            valores = [cpf_cifrado, titulo_eleitor]
                             resultado = buscar(comando, valores)
                             print(resultado)
                         case 2:
                             id_eleitor=int(input("id:"))                           
                             comando = "DELETE FROM eleitores WHERE id_eleitor = %s"
-                            valores = (id_eleitor,)
+                            valores = [id_eleitor]
                             executar (comando, valores )
                         case 3:
                             print("voltando ao menu principal")
@@ -283,7 +283,7 @@ def menu_encerramento(urna_aberta):
                     chave_cifrada = criptografar_hill(chave)
 
                     comando = "SELECT chave_acesso_cifrada FROM eleitores WHERE titulo_eleitor = %s AND prefixo_cpf = %s AND mesario = 1 "           
-                    valores = (titulo, prefixo_cpf)
+                    valores = [titulo, prefixo_cpf]
                     resultado = buscar(comando, valores)
 
                     if resultado != None:
@@ -427,7 +427,7 @@ def menu_resultados():
                 ORDER BY c.candidato ASC;
                 """
  
-                resultado = buscar_tudo(comando, ())
+                resultado = buscar_tudo(comando, [])
                 
                 print("\n=== BOLETIM DE URNA ===")
                 print("-" * 50)
@@ -488,7 +488,7 @@ def menu_resultados():
                 ORDER BY total_votos DESC;
                 """
                 # Buscando todos os partidos que possuem candidatos e seus respectivos votos
-                resultado = buscar_tudo(comando, ())
+                resultado = buscar_tudo(comando, [])
                 
                 print("\n=== VOTOS POR PARTIDO ===")
                 print("-" * 50)
@@ -503,7 +503,7 @@ def menu_resultados():
                 print("-" * 50)
             case 4:
                 #Aqui ele vai verificar quantos votos foram registrados com sucesso impedidos de ter duplicidade,fraude ou campo vazio 
-                """ SELECT COUNT(*)
+                """SELECT COUNT(*)
                 FROM votos v
                 LEFT JOIN candidatos c
                     ON v.id_candidato = c.id_candidato
@@ -516,14 +516,14 @@ def menu_resultados():
                 SELECT COUNT(*)
                 FROM eleitores
                 """
-                total_eleitores = buscar(comando, ())[0]
+                total_eleitores = buscar(comando, [])[0]
 
                 # Total de votos registrados
                 comando = """
                 SELECT COUNT(*)
                 FROM votos
                 """
-                total_votos = buscar(comando, ())[0]
+                total_votos = buscar(comando, [])[0]
             
                 # Pessoas marcadas como ja_votou
                 comando = """
@@ -531,18 +531,18 @@ def menu_resultados():
                 FROM eleitores
                 WHERE ja_votou = 1
                 """
-                total_ja_votou = buscar(comando, ())[0]
+                total_ja_votou = buscar(comando, [])[0]
             
                 # Votos com candidato inexistente
                 comando = """
-                votos_invalidos = buscar(comando, ())[0]
+                votos_invalidos = buscar(comando, [])[0]
             
                 print("=" * 55)
                 print(f"Eleitores aptos.............: {total_eleitores}")
                 print(f"Votos registrados..........: {total_votos}")
                 print(f"Eleitores que ja votaram...: {total_ja_votou}")
                 print(f"Votos invalidos............: {votos_invalidos}")
-                print("=" * 55)
+                print("=" * 55) """
             
                 erro = False
             
@@ -617,7 +617,7 @@ def menu_votacao():
                     while verificar_cpf == 0:
                         cpf =input("Seu primeiros 4 digitos do CPF: ")
                         comando = "SELECT nome, ja_votou FROM eleitores WHERE prefixo_cpf = %s"
-                        resultado = buscar(comando, (cpf,))
+                        resultado = buscar(comando, [cpf])
                         if resultado == None:
                             registrar_log("ALERTA: Tentativa de acesso com CPF não cadastrado.")
                             print("CPF não encontrado. Tente novamente.")
@@ -631,7 +631,7 @@ def menu_votacao():
                     while verificar_titulo == 0:
                         titulo_eleitor = input("Digite o Título de Eleitor: ")
                         comando = "SELECT nome FROM eleitores WHERE prefixo_cpf = %s AND titulo_eleitor = %s"
-                        resultado = buscar(comando, (cpf, titulo_eleitor))
+                        resultado = buscar(comando, [cpf, titulo_eleitor])
                         if resultado:
                             print(f"Título de Eleitor válido!")
                             verificar_titulo = 1
@@ -643,7 +643,7 @@ def menu_votacao():
                         chave = input("Digite sua chave de acesso: ")
                         chave_cifrada = criptografar_hill(chave)    
                         comando = "SELECT nome, chave_acesso_cifrada FROM eleitores WHERE chave_acesso_cifrada = %s"
-                        resultado = buscar(comando, (chave_cifrada,))
+                        resultado = buscar(comando, [chave_cifrada])
                         if resultado[1] == chave_cifrada:
                             print(f"Chave correta! Você pode votar, bem vindo {resultado[0]}!")
                             registrar_log("SUCESSO: Chave de acesso válida para o inicio da votaçao.")
@@ -661,7 +661,7 @@ def menu_votacao():
                             JOIN partidos p ON c.id_partido = p.id_partido
                             WHERE c.numero_votacao = %s
                             """
-                            valores = (numero_candidatoB,)
+                            valores = [numero_candidatoB]
                             resultado = buscar(comando, valores)
                             if resultado:
                                 print("\n--- INFORMAÇÕES DO CANDIDATO ---")
@@ -671,13 +671,13 @@ def menu_votacao():
                                 confirmacao = input("Deseja confirmar seu voto para este candidato? (1 para Sim/2 para Não)")
                                 if confirmacao == "1":
                                     comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
-                                    valores = (cpf,)
+                                    valores = [cpf]
                                     executar(comando, valores)
                                     protocolo = gerar_protocolo(numero_candidatoB)
                                     protocolo_cifrado = criptografar_hill(protocolo)
                                     horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                     comando_2 = "INSERT INTO votos (id_candidato, datetime_voto, protocolo_votacao_cifrado) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s), %s, %s)"
-                                    executar(comando_2, (numero_candidatoB, horario_voto, protocolo_cifrado)) 
+                                    executar(comando_2, [numero_candidatoB, horario_voto, protocolo_cifrado]) 
                                     print(f"Voto registrado no candidato: {resultado[0]} com sucesso!")
                                     registrar_log(f"SUCESSO: Voto realizado com sucesso para candidato {resultado[0]}")
                                     parte_final = 1
@@ -692,13 +692,13 @@ def menu_votacao():
                             confirmacao = input("Deseja confirmar seu voto em nulo? (1 para Sim/2 para Não):")
                             if confirmacao == "1":
                                 comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
-                                valores = (cpf,)
+                                valores = [cpf]
                                 executar(comando, valores)
                                 protocolo = gerar_protocolo("NULO")
                                 protocolo_cifrado = criptografar_hill(protocolo)
                                 horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                 comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto, protocolo_votacao_cifrado) VALUES (1, %s, %s)"
-                                executar(comando_2, (horario_voto, protocolo_cifrado))
+                                executar(comando_2, [horario_voto, protocolo_cifrado])
                                 print("Voto nulo registrado com sucesso!")
                                 parte_final = 1
                                 registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
@@ -721,13 +721,13 @@ def menu_votacao():
                     chave_cifrada = criptografar_hill(chave)
 
                     comando = """ SELECT * FROM eleitores WHERE titulo_eleitor = %s AND prefixo_cpf = %s AND mesario = 1"""
-                    valores = (titulo, prefixo_cpf,)
+                    valores = [titulo, prefixo_cpf]
                     resultado = buscar(comando, valores)
                     if resultado:
                         if resultado[6] == chave_cifrada:
                             print("mesário autorizado")
                             comando = """ SELECT COUNT(*) FROM eleitores WHERE  ja_votou = 1 """
-                            resultado_votos = buscar(comando, ())
+                            resultado_votos = buscar(comando, [])
                             
                             votos = resultado_votos[0]
                             
