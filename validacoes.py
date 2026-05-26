@@ -1,5 +1,24 @@
 ### VALIDAÇÃO DO CPF ###
 def validar_cpf(cpf):
+    """
+    Executa a validação estrutural e matemática de um número de CPF.
+
+    A função valida a string de entrada verificando se ela possui exatamente 
+    11 dígitos numéricos, descarta sequências de números repetidos e calcula 
+    os dois dígitos verificadores (DV) por meio de somatórios ponderados e 
+    operação de resto de divisão por 11 (Módulo 11).
+
+    Requisitos Atendidos:
+        - RF001.02: Validação matemática do CPF aceitando apenas números reais.
+
+    Args:
+        cpf : Cadeia de caracteres contendo o CPF a ser validado.
+
+    Returns:
+        bool: True se o CPF for matematicamente válido, False caso contrário.
+        0 ou first verify: decide o primeiro dígito verificador
+        0 ou second_verify: decide o segundo dígito verificador
+    """
     cont = 0
     # aqui ele verifica se todos os caracteres são números, 11 dígitos
     for k in range(len(cpf)):
@@ -70,6 +89,22 @@ def validar_cpf(cpf):
         return False
     
 def pedir_cpf():
+    """
+    Interface de captura contínua e garantia de entrada para o CPF do eleitor.
+
+    Mantém um loop de repetição no terminal até que o usuário forneça um 
+    documento de CPF que atenda com sucesso a todos os critérios de 
+    validação da função matemática interna.
+
+    Requisitos Atendidos:
+        - RF001.01: Solicitação obrigatória do documento de identificação (CPF).
+
+    Args:
+        None
+
+    Returns:
+        cpf (str): O número de CPF validado contendo exatamente 11 dígitos numéricos.
+    """
      valido = False
      while not valido:
         cpf = input("Digite seu CPF:")
