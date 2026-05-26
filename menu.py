@@ -503,7 +503,7 @@ def menu_resultados():
                 print("-" * 50)
             case 4:
                 #Aqui ele vai verificar quantos votos foram registrados com sucesso impedidos de ter duplicidade,fraude ou campo vazio 
-                SELECT COUNT(*)
+                """ SELECT COUNT(*)
                 FROM votos v
                 LEFT JOIN candidatos c
                     ON v.id_candidato = c.id_candidato
