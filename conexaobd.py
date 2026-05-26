@@ -45,7 +45,7 @@ def buscar(comando, valores):
      conexao.close()
      return resultado
 
-def buscar_tudo(comando, valores=()):
+def buscar_tudo(comando, valores=[]):
     conexao = mysql.connector.connect(
         host="localhost", 
         user="root", 
