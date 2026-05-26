@@ -328,11 +328,21 @@ def menu_encerramento(urna_aberta):
     
 def menu_auditoria():
     """
-    menu de auditoria da votação, exibe logs e protocolos
-    args:
-        none
-    returns:
-        none
+    Interface de terminal para o módulo de auditoria e transparência do sistema.
+
+   gerenciamento do fluxo de verificação e fiscalização pós-votação. Ela 
+    permite ao usuário consultar o histórico de eventos críticos do sistema, listar 
+    e validar os protocolos emitidos, além de visualizar o relatório final de encerramento de urnas.
+
+    Requisitos Atendidos:
+        - RF002.02.01: Permite o acesso à Exibição de Logs de Ocorrências.
+        - RF002.02.02: Permite o acesso à Exibição dos Protocolos de Votação.
+
+    Args:
+        None
+
+    Returns:
+        None
     """
     opcao = 0
 
@@ -370,11 +380,23 @@ def menu_auditoria():
                 
 def menu_resultados():
     """
-    resultados da votação
-    args: 
-        none
-    returns:
-        none
+    Interface de terminal para o submodulo de relatorios e apuracao de resultados.
+
+    centralização da exibicao das estatisticas da eleicao, permitindo 
+    a emissao do boletim de urna, calculos de comparecimento eleitoral, votacao 
+    consolidada por legenda partidaria e auditoria de integridade dos dados.
+
+    Requisitos Atendidos:
+        - RF002.03.01: Emissao do Boletim de Urna com totalizacao e definicao do vencedor.
+        - RF002.03.02: Exibicao da Estatistica de Comparecimento absoluto e percentual.
+        - RF002.03.03: Consolidacao e listagem de Votos por Partido.
+        - RF002.03.06: Execucao da Validacao de Integridade dos dados de votacao.
+
+    Args:
+        None
+
+    Returns:
+        None
     """
     opcao = 0
     while opcao != 5:
@@ -489,11 +511,25 @@ def menu_resultados():
                 print("Opcao invalida.")
 def menu_votacao():
     """
-    menu principal de votação
-    args:
-        none
-    returns:
-        none
+    Interface de terminal para o modulo de processamento do evento eleitoral.
+
+    Esta funcao gerencia o ciclo de vida completo da urna eletronica. Ela controla 
+    o estado da urna, executa o fluxo sequencial de identificacao do eleitor 
+    (CPF, Titulo e Chave de Acesso), processa a computacao de votos nominais ou nulos 
+    e direciona para as telas de administracao e auditoria.
+
+    Requisitos Atendidos:
+        - RF002: Processamento das etapas do processo eleitoral e controle da urna.
+        - RF002.02.01.03: Registro do evento de ABERTURA apos validacao do mesario.
+        - RF002.02.01.04: Registro de ALERTA para falhas de identificacao ou acesso negado.
+        - RF002.02.01.05: Registro de ALERTA para tentativa de voto duplo.
+        - RF002.02.01.06: Registro de SUCESSO no instante da confirmacao do voto.
+
+    Args:
+        None
+
+    Returns:
+        None
     """
     urna_aberta = False
     opcao = 0
@@ -655,12 +691,22 @@ def menu_votacao():
             case _:
                 print("Opcao invalida.")
 def menu_principal():
-    """
-    menu principal, onde todo o sistema roda
-    args:
-        none
-    returns:
-        none
+     """
+    Interface de terminal para o menu raiz e ponto de entrada do sistema de votação.
+
+    Esta função gerencia a navegação inicial do software via linha de comando, 
+    atuando como o ponto central que direciona o fluxo do usuário para o módulo 
+    administrativo (Gerenciamento) ou para o módulo de execução eleitoral (Votação).
+
+    Requisitos Atendidos:
+        - RF001: Ponto de partida para o acesso ao módulo de Gerenciamento.
+        - RF002: Ponto de partida para o acesso ao módulo de Votação.
+
+    Args:
+        None
+
+    Returns:
+        None
     """
     opcao = 0
     while opcao != 3:
