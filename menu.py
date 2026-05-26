@@ -502,9 +502,73 @@ def menu_resultados():
                     
                 print("-" * 50)
             case 4:
-                 #RF002.03.06: O sistema deve disponibilizar a opção Validação de Integridade, permitindo
-                #a verificação da integridade dos dados de votação.
-                print("Validacao de integridade ainda nao foi feita.")
+                #Aqui ele vai verificar quantos votos foram registrados com sucesso impedidos de ter duplicidade,fraude ou campo vazio 
+                SELECT COUNT(*)
+                FROM votos v
+                LEFT JOIN candidatos c
+                    ON v.id_candidato = c.id_candidato
+                WHERE v.id_candidato IS NOT NULL
+                AND c.id_candidato IS NULL
+                """ print("\n=== VALIDACAO DE INTEGRIDADE ===")
+            
+                # Total de eleitores aptos
+                comando = """
+                SELECT COUNT(*)
+                FROM eleitores
+                """
+                total_eleitores = buscar(comando, ())[0]
+
+                # Total de votos registrados
+                comando = """
+                SELECT COUNT(*)
+                FROM votos
+                """
+                total_votos = buscar(comando, ())[0]
+            
+                # Pessoas marcadas como ja_votou
+                comando = """
+                SELECT COUNT(*)
+                FROM eleitores
+                WHERE ja_votou = 1
+                """
+                total_ja_votou = buscar(comando, ())[0]
+            
+                # Votos com candidato inexistente
+                comando = """
+                votos_invalidos = buscar(comando, ())[0]
+            
+                print("=" * 55)
+                print(f"Eleitores aptos.............: {total_eleitores}")
+                print(f"Votos registrados..........: {total_votos}")
+                print(f"Eleitores que ja votaram...: {total_ja_votou}")
+                print(f"Votos invalidos............: {votos_invalidos}")
+                print("=" * 55)
+            
+                erro = False
+            
+                # Confere se ja tem mais de um voto de Eleitor apto
+                if total_votos > total_eleitores:
+                    print("[ERRO] Existem mais votos do que eleitores aptos.")
+                    erro = True
+            
+                # Confere se todos os votos registrados pertencem a eleitores marcados como ja_votou
+                if total_votos != total_ja_votou:
+                    print("[ERRO] Quantidade de votos diferente dos eleitores marcados como votantes.")
+                    erro = True
+            
+                # Confere se há votos ligados a candidatos inexistentes no banco de dados
+                if votos_invalidos > 0:
+                    print("[ERRO] Existem votos associados a candidatos inexistentes.")
+                    erro = True
+            
+                # Validaçao final
+                if erro == False:
+                    print("INTEGRIDADE VALIDADA COM SUCESSO.")
+                    print("Nenhuma anomalia encontrada nos dados da votação.")
+                else:
+                    print("\nALERTA: Foram encontradas inconsistencias no sistema.")
+            
+                print("=" * 55)
             case 5:
                 print("Voltando ao menu de votacao...")
             case _:
