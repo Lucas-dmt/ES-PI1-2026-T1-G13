@@ -470,10 +470,119 @@ def menu_resultados():
                     print("Nenhum candidato cadastrado no sistema.")
                 print("-" * 50)
             case 2:
-                 #O sistema deve disponibilizar a opção Estatística de Comparecimento,
-                #informando a quantidade absoluta de pessoas que votaram e o percentual que isso
-                #representa em relação ao total de eleitores aptos.
-                print("Estatistica de comparecimento ainda nao foi feita.")
+
+                    def print_suspense(texto, velocidade=0.10):
+                        for letra in texto: #imprime letra por letra do texto dentro do print_suspense
+                            print(letra, end="")
+                            time.sleep(velocidade) #tempo de espera de 0.10 segundos para imprimir outra letra dentro do parametro print_suspense(texto)
+                        print()
+                
+                    # Efeito de carregamento
+                    print("Calculando resultados", end="")
+                
+                    time.sleep(1)  #a cada 1 segundo imprime um ponto e junta os outros pontos na mesma linha para dar mais impressao a um carregamento real do programa
+                    print(".", end="")
+                
+                    time.sleep(1)
+                    print(".", end="")
+                
+                    time.sleep(1)
+                    print(".")
+                
+                    time.sleep(0.3)
+                
+                    print("\n=== ESTATISTICA DE COMPARECIMENTO ===")
+                
+                    # Busca os dados do banco
+                    comando = """
+                    SELECT
+                        (SELECT COUNT(*) FROM eleitores) AS total_eleitores,
+                        (SELECT COUNT(*) FROM votos) AS total_votos,
+                        (SELECT COUNT(*) FROM votos WHERE tipo_voto = 'CANDIDATO') AS votos_candidato,
+                        (SELECT COUNT(*) FROM votos WHERE tipo_voto = 'NULO') AS votos_nulos
+                    """
+                
+                    resultado = buscar(comando, ())
+                
+                    if resultado:
+                
+                        # Dados do banco
+                        total_eleitores = resultado[0]
+                        total_votos = resultado[1]
+                        votos_candidato = resultado[2]
+                        votos_nulos = resultado[3]
+                
+                        # Calculo das Estatisticas
+                        if total_eleitores > 0:
+                
+                            percentual_comparecimento = (
+                                total_votos / total_eleitores
+                            ) * 100
+                
+                            percentual_candidato = (
+                                votos_candidato / total_eleitores
+                            ) * 100
+                
+                            percentual_nulos = (
+                                votos_nulos / total_eleitores
+                            ) * 100
+                
+                            abstencao = total_eleitores - total_votos
+                
+                            percentual_abstencao = (
+                                abstencao / total_eleitores
+                            ) * 100
+                
+                        else:
+                            percentual_comparecimento = 0
+                            percentual_candidato = 0
+                            percentual_nulos = 0
+                            abstencao = 0
+                            percentual_abstencao = 0
+                
+                        time.sleep(0.1)
+                
+                        # Exibição com efeito terminal
+                        print_suspense(f"Total de eleitores aptos: {total_eleitores}")
+                        time.sleep(1)
+                
+                        print_suspense(f"Quantidade de pessoas que votaram: {total_votos}")
+                        time.sleep(1)
+                
+                        print_suspense(f"Quantidade de votos em candidatos: {votos_candidato}")
+                        time.sleep(1)
+                
+                        print_suspense(f"Quantidade de votos nulos: {votos_nulos}")
+                        time.sleep(1)
+                
+                        print_suspense(
+                            f"Percentual de comparecimento: {percentual_comparecimento:.2f}%"
+                        )
+                        time.sleep(1)
+                
+                        print_suspense(
+                            f"Percentual de votos candidatos: {percentual_candidato:.2f}%"
+                        )
+                        time.sleep(1)
+                
+                        print_suspense(
+                            f"Percentual de votos nulos: {percentual_nulos:.2f}%"
+                        )
+                        time.sleep(1)
+                
+                        print_suspense(f"Abstencoes: {abstencao}")
+                        time.sleep(1)
+                
+                        print_suspense(
+                            f"Percentual de abstencao: {percentual_abstencao:.2f}%"
+                        )
+                
+                        registrar_log(
+                            f"CONSULTA: Estatistica exibida ({total_votos}/{total_eleitores})"
+                        )
+
+                    else:
+                        print("Erro ao gerar estatisticas.")
             case 3:
                 # Query para somar os votos agrupando por legenda partidária
                 comando = """
