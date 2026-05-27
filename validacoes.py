@@ -89,22 +89,6 @@ def validar_cpf(cpf):
         return False
     
 def pedir_cpf():
-    """
-    Interface de captura contínua e garantia de entrada para o CPF do eleitor.
-
-    Mantém um loop de repetição no terminal até que o usuário forneça um 
-    documento de CPF que atenda com sucesso a todos os critérios de 
-    validação da função matemática interna.
-
-    Requisitos Atendidos:
-        - RF001.01: Solicitação obrigatória do documento de identificação (CPF).
-
-    Args:
-        None
-
-    Returns:
-        cpf (str): O número de CPF validado contendo exatamente 11 dígitos numéricos.
-    """
      valido = False
      while not valido:
         cpf = input("Digite seu CPF:")
@@ -192,18 +176,6 @@ def sequencia_crescente(texto):
     return True
 
 def validar_titulo(titulo_eleitor):
-    """
-    Executa a validação estrutural, geográfica e matemática do Título de Eleitor.
-
-    Requisitos Atendidos:
-        - RF001.02: Validação obrigatória e verificação da validade matemática do Título de Eleitor (Anexo A).
-
-    Args:
-        titulo_eleitor (str): O número do título fornecido pelo usuário.
-
-    Returns:
-        titulo_eleitor(str): O número do Título de Eleitor validado e confirmado pelo sistema.
-    """
  # Variável de controle do loop
  titulo_valido = False
  # Loop que só para quando o título for válido
