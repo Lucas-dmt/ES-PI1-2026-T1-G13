@@ -429,8 +429,12 @@ def menu_resultados():
                 """
                 # comando busca completa
                 resultado = buscar_tudo(comando, [])
+
+                comando2 = """ SELECT COUNT(*) FROM votos WHERE voto_nulo = 1 """
+                votos_nulos = buscar(comando2, [])[0]
                 
                 print("\n=== BOLETIM DE URNA ===")
+                print(f"Total de votos nulos: {votos_nulos}")
                 print("-" * 50)
                 
                 vencedor_nome = None
