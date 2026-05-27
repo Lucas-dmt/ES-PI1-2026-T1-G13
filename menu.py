@@ -736,8 +736,6 @@ def menu_votacao():
                             print("Chave incorreta. Tente novamente.")
                     parte_final = 0
                     while parte_final == 0:
-                         escolha = int(input("Digite 1 para votar em um candidato e 2 para voto em nulo :"))
-                         if escolha == 1:
                             numero_candidatoB = int(input("Digite o número do candidato:"))
                             comando = """
                             SELECT c.candidato, p.partido, p.sigla
@@ -768,29 +766,20 @@ def menu_votacao():
                                 elif confirmacao == "2":
                                     print("Voto cancelado. Você pode escolher outro candidato.")
                                     registrar_log("ALERTA: Voto para candidato foi cancelado.")
-                                else:
-                                    print("Opção inválida. Tente novamente.")
                             else:
-                                print("\n[!] Erro: Eleitor não cadastrado.")
-                         elif escolha == 2:
-                            confirmacao = input("Deseja confirmar seu voto em nulo? (1 para Sim/2 para Não):")
-                            if confirmacao == "1":
-                                comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
-                                valores = [cpf]
-                                executar(comando, valores)
-                                protocolo = gerar_protocolo("NULO")
-                                protocolo_cifrado = criptografar_hill(protocolo)
-                                horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                                comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto, protocolo_votacao_cifrado) VALUES (1, %s, %s)"
-                                executar(comando_2, [horario_voto, protocolo_cifrado])
-                                print("Voto nulo registrado com sucesso!")
-                                parte_final = 1
-                                registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
-                            elif confirmacao == "2":
-                                print("Voto nulo cancelado. Você pode escolher um candidato.")
-                                registrar_log("ALERTA: Voto nulo foi cancelado.")
-                            else:
-                                print("Opção inválida. Tente novamente.")
+                                confirmacao = input("Candidato nao encontrado, deseja votar nulo? (1 para Sim/2 para Não):")
+                                if confirmacao == "1":
+                                    comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
+                                    valores = [cpf]
+                                    executar(comando, valores)
+                                    protocolo = gerar_protocolo("NULO")
+                                    protocolo_cifrado = criptografar_hill(protocolo)
+                                    horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                    comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto, protocolo_votacao_cifrado) VALUES (1, %s, %s)"
+                                    executar(comando_2, [horario_voto, protocolo_cifrado])
+                                    print("Voto nulo registrado com sucesso!")
+                                    parte_final = 1
+                                    registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
                 else:
                     print("A urna esta fechada, tente novamente mais tarde")
             case 2:
