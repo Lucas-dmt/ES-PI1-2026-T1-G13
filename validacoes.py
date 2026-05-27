@@ -1,5 +1,24 @@
 ### VALIDAÇÃO DO CPF ###
 def validar_cpf(cpf):
+    """
+    Executa a validação estrutural e matemática de um número de CPF.
+
+    A função valida a string de entrada verificando se ela possui exatamente 
+    11 dígitos numéricos, descarta sequências de números repetidos e calcula 
+    os dois dígitos verificadores (DV) por meio de somatórios ponderados e 
+    operação de resto de divisão por 11 (Módulo 11).
+
+    Requisitos Atendidos:
+        - RF001.02: Validação matemática do CPF aceitando apenas números reais.
+
+    Args:
+        cpf : Cadeia de caracteres contendo o CPF a ser validado.
+
+    Returns:
+        bool: True se o CPF for matematicamente válido, False caso contrário.
+        0 ou first verify: decide o primeiro dígito verificador
+        0 ou second_verify: decide o segundo dígito verificador
+    """
     cont = 0
     # aqui ele verifica se todos os caracteres são números, 11 dígitos
     for k in range(len(cpf)):
@@ -70,6 +89,22 @@ def validar_cpf(cpf):
         return False
     
 def pedir_cpf():
+    """
+    Interface de captura contínua e garantia de entrada para o CPF do eleitor.
+
+    Mantém um loop de repetição no terminal até que o usuário forneça um 
+    documento de CPF que atenda com sucesso a todos os critérios de 
+    validação da função matemática interna.
+
+    Requisitos Atendidos:
+        - RF001.01: Solicitação obrigatória do documento de identificação (CPF).
+
+    Args:
+        None
+
+    Returns:
+        cpf (str): O número de CPF validado contendo exatamente 11 dígitos numéricos.
+    """
      valido = False
      while not valido:
         cpf = input("Digite seu CPF:")
@@ -80,31 +115,95 @@ def pedir_cpf():
 # ==== VALIDAÇÃO DO TÍTULO ====
 # Função que verifica se o campo está vazio ou só tem espaço
 def campo_vazio(texto):
-                    if texto == "":
-                        return True
-                    for c in texto:
-                        if c != " ":
-                            return False
-                    return True
+    
+    """
+    Verifica se a string informada está vazia ou contém apenas espaços.
+
+    Requisitos Atendidos:
+        - Regra de Negócio Geral (Módulo Gerenciamento): Validação e consistência 
+          de dados para impedir o salvamento de campos nulos no terminal.
+
+    Args:
+        texto (str): A cadeia de caracteres a ser analisada.
+
+    Returns:
+        bool: True se estiver vazia ou com apenas espaços, False caso contrário.
+    """
+    if texto == "":
+        return True
+    for c in texto:
+        if c != " ":
+            return False
+    return True
                 # Função que verifica se todos os caracteres são números
 def apenas_numeros(texto):
-                    for c in texto:
-                        if c < "0" or c > "9":
-                            return False
-                    return True
+    """
+    Verifica se a string é composta exclusivamente por caracteres numéricos.
+
+    Requisitos Atendidos:
+        - RF001.02: Validação de CPF e Título aceitando apenas números reais.
+
+    Args:
+        texto (str): A cadeia de caracteres a ser analisada.
+
+    Returns:
+        bool: True se contiver apenas dígitos de 0 a 9, False caso contrário.
+    """
+    for c in texto:
+        if c < "0" or c > "9":
+            return False
+    return True
                 # Função que verifica se todos os dígitos são iguais (ex: 111111111111)
 def todos_iguais(texto):
-                    if texto == "":
-                        return False
-                    return all(c == texto[0] for c in texto)
+    """
+    Identifica se todos os caracteres da string são idênticos entre si.
+
+    Requisitos Atendidos:
+        - Regra de Negócio Geral (Módulo Gerenciamento): Detecção de fraudes ou 
+          padrões inválidos em preenchimentos sequenciais idênticos (ex: 111111).
+
+    Args:
+        texto (str): A cadeia de caracteres a ser analisada.
+
+    Returns:
+        bool: True se todos os caracteres forem repetidos, False caso contrário.
+    """
+    if texto == "":
+        return False
+    return all(c == texto[0] for c in texto)
                 # Função que verifica se é uma sequência crescente (ex: 123456...)  
 def sequencia_crescente(texto):
+    """
+    Verifica se os dígitos da string formam uma sequência matemática estritamente crescente.
+
+    Requisitos Atendidos:
+        - Regra de Negócio Geral (Módulo Gerenciamento): Bloqueio de inserções estruturais 
+          falsas no terminal (ex: sequências óbvias como 123456).
+
+    Args:
+        texto (str): A cadeia de caracteres numéricos a ser analisada.
+
+    Returns:
+        bool: True se for uma sequência consecutiva, False caso contrário.
+    """
     for i in range(len(texto) - 1):
         if int(texto[i]) + 1 != int(texto[i + 1]):
             return False
     return True
 
 def validar_titulo(titulo_eleitor):
+    """
+    Executa a validação estrutural, geográfica e matemática do Título de Eleitor.
+
+    Requisitos Atendidos:
+        - RF001.02: Validação obrigatória e verificação da validade matemática do Título de Eleitor (Anexo A).
+
+    Args:
+        titulo_eleitor (str): O número do título fornecido pelo usuário.
+
+    Returns:
+        titulo_eleitor(str): O número do Título de Eleitor validado e confirmado pelo sistema.
+    """
  # Variável de controle do loop
  titulo_valido = False
  # Loop que só para quando o título for válido
@@ -160,6 +259,18 @@ def validar_titulo(titulo_eleitor):
         
 # === VERIFICAÇÃO DO NOME COMPLETO ===
 def verificar_nome(nome_completo):
+    """
+    Valida se a entrada de texto corresponde a um nome completo estruturado.
+
+    Requisitos Atendidos:
+        - RF001.01: Cadastramento de novos eleitores, solicitando obrigatoriamente o nome completo.
+
+    Args:
+        nome_completo (str): A string do nome digitada no terminal.
+
+    Returns:
+        None
+    """
     valido = False
 
     while not valido:
