@@ -427,7 +427,7 @@ def menu_resultados():
                 GROUP BY c.id_candidato, c.candidato, c.numero_votacao, p.sigla
                 ORDER BY c.candidato ASC;
                 """
- 
+                # comando busca completa
                 resultado = buscar_tudo(comando, [])
                 
                 print("\n=== BOLETIM DE URNA ===")
@@ -442,7 +442,7 @@ def menu_resultados():
                 if resultado:
 
                     for linha in resultado:
-                        nome_cand, num_cand, sigla_part, qtd_votos = linha[:4]
+                        nome_cand, num_cand, sigla_part, qtd_votos = linha[:4] 
                         print(f"Candidato: {nome_cand:<25} | Número: {num_cand:<5} | Partido: {sigla_part:<6} | Votos: {qtd_votos}")
                         
                         if qtd_votos > max_votos:
@@ -459,7 +459,7 @@ def menu_resultados():
                     if max_votos == 0:
                         print("Eleição encerrada sem votos computados para candidatos.")
                     elif empate:
-                        print(f"Empate técnico! Mais de um candidato obteve {max_votos} votos.")
+                        print(f"Empate! Mais de um candidato obteve {max_votos} votos.")
                     else:
                         print("=== VENCEDOR DA ELEIÇÃO ===")
                         time.sleep(5)
@@ -471,7 +471,7 @@ def menu_resultados():
                     print("Nenhum candidato cadastrado no sistema.")
                 print("-" * 50)
             case 2:
-                def print_suspense(texto, velocidade=0.03): # Dica: 0.10 pode ser meio lento para textos longos, 0.03 fica perfeito!
+                def print_suspense(texto, velocidade=0.03): 
                     for letra in texto: 
                         print(letra, end="")
                         time.sleep(velocidade) 
@@ -494,7 +494,6 @@ def menu_resultados():
                 print("\n=== ESTATISTICA DE COMPARECIMENTO ===")
                 print("-" * 50)
             
-                # QUERIES CORRIGIDAS: Apontando para as colunas reais do seu banco
                 comando = """
                 SELECT
                     (SELECT COUNT(*) FROM eleitores) AS total_eleitores,
@@ -568,14 +567,10 @@ def menu_resultados():
                     print_suspense(f"Percentual de abstencao..........: {percentual_abstencao:.2f}%")
                     print("-" * 50)
             
-                    # OBS: Se você não tiver a função registrar_log implementada ainda, 
-                    # pode deixar essa linha comentada com um '#' na frente para não dar erro.
-                    # registrar_log(f"CONSULTA: Estatistica exibida ({total_votos}/{total_eleitores})")
 
                 else:
                     print("Erro ao gerar estatisticas.")
             case 3:
-                # Query para somar os votos agrupando por legenda partidária
                 comando = """
                 SELECT 
                     p.partido, 
@@ -617,7 +612,7 @@ def menu_resultados():
                 comando = "SELECT COUNT(*) FROM eleitores WHERE ja_votou = 1"
                 total_ja_votou = buscar(comando, ())[0]
             
-                # 4. Votos com candidato inexistente (Query corrigida e associada corretamente)
+                # 4. Votos com candidato inexistente 
                 comando = """
                 SELECT COUNT(*)
                 FROM votos v
@@ -805,8 +800,8 @@ def menu_votacao():
 
                     chave_cifrada = criptografar_hill(chave)
 
-                    comando = """ SELECT * FROM eleitores WHERE titulo_eleitor = %s AND prefixo_cpf = %s AND mesario = 1"""
-                    valores = [titulo, prefixo_cpf]
+                    comando = """ SELECT * FROM eleitores WHERE chave_acesso_cifrada = %s AND prefixo_cpf = %s AND titulo_eleitor = %s AND mesario = 1"""
+                    valores = [chave_cifrada, prefixo_cpf, titulo]
                     resultado = buscar(comando, valores)
                     if resultado:
                         if resultado[6] == chave_cifrada:
@@ -816,7 +811,6 @@ def menu_votacao():
                             
                             votos = resultado_votos[0]
                             
-                            print("=== ZEREZIMA ===")
                             print(f"Total de votos registrados:{votos}")
                             
                             if votos > 0:
