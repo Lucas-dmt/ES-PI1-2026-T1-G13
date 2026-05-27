@@ -727,7 +727,7 @@ def menu_votacao():
 
                                 opcao = 0
                                 while opcao != 2:
-                                    print("=== Votacao ===")
+                                    print("\n=== Votacao ===")
                                     print("1 - Votar")
                                     print("2 - Encerrar votacao")
                                     try:
@@ -742,10 +742,10 @@ def menu_votacao():
                                 
                         else:
                             print("Chave incorreta")
-                            registrar_log( "ALERTA: Tentativa de abertura da urna com chave inválida.")
+                            registrar_log( "Tentativa de Acesso Negado")
                     else:
                         print("Mesário não autorizado")
-                        registrar_log("ALERTA: Tentativa de abertura da urna por usuário sem permissão.")
+                        registrar_log("Tentativa de Acesso Negado")
             case 2:
                 menu_auditoria()
 
@@ -765,10 +765,10 @@ def votar():
             comando = "SELECT nome, ja_votou FROM eleitores WHERE prefixo_cpf = %s"
             resultado = buscar(comando, [cpf])
             if resultado == None:
-                registrar_log("ALERTA: Tentativa de acesso com CPF não cadastrado.")
+                registrar_log("ALERTA: Tentativa de Acesso Negado")
                 print("CPF não encontrado. Tente novamente.")
             elif resultado[1] == 1:
-                registrar_log(f"ALERTA: Tentativa de voto duplo do eleitor {resultado[0]}")
+                registrar_log("ALERTA: Tentativa de voto duplo")
                 print(f"Eleitor {resultado[0]} já votou. Você não pode votar novamente.")
             else:
                 print(f"CPF válido!")
@@ -783,7 +783,7 @@ def votar():
                 verificar_titulo = 1
             else:
                 print("Título de Eleitor inválido. Tente novamente.")
-                registrar_log("ALERTA: Tentativa de acesso negado por chave inválida.")
+                registrar_log("ALERTA: Tentativa de Acesso Negado")
         verificar_chave = 0
         while verificar_chave == 0:
             chave = input("Digite sua chave de acesso: ")
@@ -792,10 +792,10 @@ def votar():
             resultado = buscar(comando, [chave_cifrada])
             if resultado[1] == chave_cifrada:
                 print(f"Chave correta! Você pode votar, bem vindo {resultado[0]}!")
-                registrar_log("SUCESSO: Chave de acesso válida para o inicio da votaçao.")
                 verificar_chave = 1
             else:
                 print("Chave incorreta. Tente novamente.")
+                registrar_log("ALERTA: Tentativa de Acesso Negado")
         parte_final = 0
         while parte_final == 0:
                 numero_candidatoB = int(input("Digite o número do candidato:"))
@@ -823,11 +823,11 @@ def votar():
                         comando_2 = "INSERT INTO votos (id_candidato, datetime_voto, protocolo_votacao_cifrado) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s), %s, %s)"
                         executar(comando_2, [numero_candidatoB, horario_voto, protocolo_cifrado]) 
                         print(f"Voto registrado no candidato: {resultado[0]} com sucesso!")
-                        registrar_log(f"SUCESSO: Voto realizado com sucesso para candidato {resultado[0]}")
+                        registrar_log(f"SUCESSO: Voto realizado com sucesso")
+                        print(f"Protocolo de votação: {protocolo}")
                         parte_final = 1
                     elif confirmacao == "2":
                         print("Voto cancelado. Você pode escolher outro candidato.")
-                        registrar_log("ALERTA: Voto para candidato foi cancelado.")
                 else:
                     confirmacao = input("Candidato nao encontrado, deseja votar nulo? (1 para Sim/2 para Não):")
                     if confirmacao == "1":
@@ -842,6 +842,7 @@ def votar():
                         print("Voto nulo registrado com sucesso!")
                         parte_final = 1
                         registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
+                        print(f"Protocolo de votação: {protocolo}")
 def menu_principal():
     opcao = 0
     while opcao != 3:
