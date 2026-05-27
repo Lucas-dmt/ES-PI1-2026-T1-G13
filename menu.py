@@ -681,12 +681,13 @@ def menu_votacao():
     """
     urna_aberta = False
     opcao = 0
-    while opcao != 4:
+    while opcao != 5:
         print("\n=== MENU VOTACAO ===")
         print("1 - Votar")
         print("2 - Abrir sistema de votacao")
-        print("3 - Auditoria da votacao")
-        print("4 - Voltar")
+        print("3 - Fechar sistema de votacao")
+        print("4 - Auditoria da votacao")
+        print("5 - Voltar")
 
         try:
             opcao = int(input("Escolha uma opcao: "))
@@ -820,9 +821,12 @@ def menu_votacao():
                         print("Mesário não autorizado")
                         registrar_log("ALERTA: Tentativa de abertura da urna por usuário sem permissão.")
             case 3:
-                menu_auditoria()
+                menu_encerramento(urna_aberta)
 
             case 4:
+                menu_auditoria()
+
+            case 5:
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
