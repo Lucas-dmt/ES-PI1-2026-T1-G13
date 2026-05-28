@@ -10,7 +10,7 @@ from conexaobd import buscar   #importa a funcao buscar de conexaobd
 from conexaobd import buscar_tudo
 from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
 from chave_protocolo import gerar_protocolo #importa a funcao de geracao de geracao de protocolo em protocolo.py
-from auditoria import mostrar_logs, mostrar_protocolos, validar_protocolo, registrar_log, salvar_protocolo
+from auditoria import mostrar_logs, mostrar_protocolos, registrar_log, salvar_protocolo
 from criptografia import criptografar_hill
 from datetime import datetime
 
@@ -347,15 +347,13 @@ def menu_auditoria():
     """
     opcao = 0
 
-    while opcao != 5:
+    while opcao != 3:
 
         print("\n=== AUDITORIA DA VOTACAO ===")
 
         print("1 - Exibir logs")
         print("2 - Exibir protocolos")
-        print("3 - Validar protocolos") 
-        print("4 - Resultado votação")
-        print("5 - Voltar")
+        print("3 - Voltar")
 
         opcao = int(input("\nEscolha uma opcao: "))
 
@@ -369,15 +367,10 @@ def menu_auditoria():
                 mostrar_protocolos()
                 
             case 3:
-        
-                validar_protocolo()
-
-            case 4:
-
-                menu_resultados()
-
-            case 5:
                 print("\nVoltando ao menu de votacao...")
+            
+            case _:
+                print("\n Opçao invalida")
                 
 def menu_resultados():
     """
@@ -686,7 +679,7 @@ def menu_votacao():
         print("1 - Abrir sistema de votacao")
         print("2 - Auditoria da votacao")
         print("3 - Resultado da votacao")
-        print("5 - Voltar")
+        print("4 - Voltar")
 
         try:
             opcao = int(input("Escolha uma opcao: "))

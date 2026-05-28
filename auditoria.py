@@ -1,173 +1,101 @@
 from datetime import datetime
 import time
-
-
+from conexaobd import buscar
+from criptografia import descriptografar_hill
 auditoria = []
+protocolos = []
 
-arquivo_log = "auditoria_log.txt"
-arquivo_protocolos = "protocolos.txt"
-
-
-# ========= SALVAR PROTOCOLO =========
-
+#========= SALVAR PROTOCOLO =========
 def salvar_protocolo(protocolo):
 
-    with open(arquivo_protocolos, "a", encoding="utf-8") as arquivo:
-
-        arquivo.write(protocolo + "\n")
+    protocolos.append(protocolo)
 
 
-# ========= MOSTRAR PROTOCOLOS =========
-
+#========= MOSTRAR PROTOCOLOS =========
 def mostrar_protocolos():
 
     print("\nVerificando protocolos oficiais...")
 
-    time.sleep(3) #espera 3 segundos 
- 
+    comando = "SELECT protocolo_votacao_cifrado FROM votos"
+    resultados = buscar(comando, [])  # Busca os protocolos cifrados no banco de dados
+
+    if resultados is not None:
+        for resultado in resultados:
+            protocolo_cifrado = resultado[0]
+            protocolo_decifrado = descriptografar_hill(protocolo_cifrado)  # Decifra o protocolo usando a chave inversa
+            print(f"Protocolo encontrado: {protocolo_decifrado}")
+    else:
+        print("Nenhum protocolo encontrado")
+
+
+    time.sleep(2)
+
     print("\n===== PROTOCOLOS DE VOTACAO =====\n")
 
-    try:
+    if protocolos == []:
 
-        with open(arquivo_protocolos, "r", encoding="utf-8") as arquivo:
+        print("Nenhum protocolo registrado.")
 
-            protocolos = arquivo.readlines() # le todas as linhas do arquivo
+    else:
 
-            if protocolos == []:
+        protocolos_ordenados = sorted(protocolos)
 
-                print("Nenhum protocolo encontrado.")
+        print("Protocolos registrados oficialmente:\n")
 
-            else:
+        for protocolo in protocolos_ordenados:
 
-                protocolos.sort() # ordena em ordem alfabetica 
+            print(protocolo)
 
-                print("Protocolos registrados oficialmente:\n")
-
-                for protocolo in protocolos: # percorre cada item da lista do protocolo
-
-                    print(protocolo.replace("\n", "")) # substitui o valor da string
-
-                print("\nAuditoria concluida com sucesso.")
-
-    except FileNotFoundError:
-
-        print("Arquivo oficial de protocolos nao encontrado.")
+        print("\nAuditoria concluida com sucesso.")
 
 
-# ========= REGISTRAR LOG =========
-
+#========= REGISTRAR LOG =========
 def registrar_log(mensagem):
 
     horario = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    with open(arquivo_log, "a", encoding="utf-8") as arquivo:
+    log = f"[{horario}] {mensagem}"
 
-        arquivo.write(f"[{horario}] {mensagem}\n")
-
-    auditoria.append(f"[{horario}] {mensagem}")
+    auditoria.append(log)
 
 
-# ========= MOSTRAR LOGS =========
-
+#========= MOSTRAR LOGS =========
 def mostrar_logs():
 
     print("\nAtualizando registros atuais...")
 
-    time.sleep(3)
+    time.sleep(2)
 
     print("\n===== LOGS =====\n")
 
-    try:
+    if auditoria == []:
 
-        with open(arquivo_log, "r", encoding="utf-8") as arquivo:
+        print("Nenhum log encontrado.")
 
-            logs = arquivo.read()
+    else:
 
-            if logs == "":
+        for log in auditoria:
 
-                print("Nenhum log encontrado.")
-
-            else:
-
-                print(logs)
-
-    except FileNotFoundError:
-
-        print("Arquivo de logs nao encontrado.")
+            print(log)
 
 
-#============== VALIDAR PROTOCOLO ========= 
-
-def validar_protocolo(): # verifica se o protocolo esta certo ou nao
-
-    print("\n===== VALIDACAO DE PROTOCOLO =====")
-
-    protocolo_digitado = input("\nDigite o protocolo: ")
-
-    try:
-
-        with open(arquivo_protocolos, "r", encoding="utf-8") as arquivo:
-
-            protocolos = arquivo.readlines() 
-          
-            encontrados = 0
-
-            for protocolo in protocolos: 
-              
-                protocolo = protocolo.replace("\n", "")
-
-                if protocolo == protocolo_digitado:
-
-                    encontrados += 1
-
-            if encontrados == 1:
-
-                print("\nPROTOCOLO VALIDO")
-                print("Nenhuma fraude encontrada.")
-
-                registrar_log(
-                    "AUDITORIA: Protocolo validado com sucesso."
-                )
-
-            elif encontrados > 1: # quando o protocolo apresentar duplicidade ou fraude 
-
-                print("\nALERTA DE FRAUDE")
-                print("Protocolo duplicado encontrado.")
-
-                registrar_log(
-                    "ALERTA: Possivel fraude por protocolo duplicado."
-                )
-
-            else:
-
-                print("\nPROTOCOLO INVALIDO")
-                print("O protocolo nao existe na base oficial.")
-
-                registrar_log(
-                    "ALERTA: Tentativa de validacao de protocolo falso."
-                )
-
-    except FileNotFoundError:
-
-        print("\nArquivo de protocolos nao encontrado.")
-
-
-# ========= MENU AUDITORIA =========
-
+#========= MENU AUDITORIA =========
 def menu_auditoria():
 
     opcao = 0
 
-    while opcao != 4:
+    while opcao != 3:
 
         print("\n=== AUDITORIA DA VOTACAO ===")
 
         print("1 - Exibir logs")
         print("2 - Exibir protocolos")
-        print("3 - Validar protocolos") 
-        print("4 - Voltar")
+        print("3 - Voltar")
 
-        opcao = int(input("\nEscolha uma opcao: "))
+        try:
+            opcao = int(input("\nEscolha uma opcao: "))
+        except ValueError:
+            opcao = 0
 
         if opcao == 1:
 
@@ -179,11 +107,8 @@ def menu_auditoria():
 
         elif opcao == 3:
 
-            validar_protocolo()
-
-        elif opcao == 4:
-
             print("\nVoltando ao menu de votacao...")
 
         else:
-            print("\n Opçao invalida")
+
+            print("\nOpcao invalida")
