@@ -22,7 +22,7 @@ def validar_cpf(cpf):
     cont = 0
     # aqui ele verifica se todos os caracteres são números, 11 dígitos
     for k in range(len(cpf)):
-        if cpf[k] >= "0" and cpf[k] <= "9":
+        if cpf[k].isdigit():
             cont += 1
 
     if len(cpf) != 11 and cont < len(cpf):
@@ -44,6 +44,21 @@ def validar_cpf(cpf):
             print("CPF inválido: números repetidos")
             return False
     def dv1_cpf(cpf):
+     """Calcula o primeiro dígito verificador do CPF.
+    
+        Parte integrante do requisito de validação matemática do sistema. Multiplica 
+        os 9 primeiros dígitos por pesos decrescentes de 10 a 2, soma os resultados 
+        e aplica a operação de resto da divisão por 11.
+    
+        Args:
+            cpf: String contendo os dígitos do CPF.
+    
+        Returns:
+            O valor inteiro do primeiro dígito verificador - first_verify(int), ou o valor 0(int).
+            
+        Atende ao requisito:
+            RF001.02 (Validação matemática do CPF via Anexo B).
+        """
         soma1 = 0
         multiplicacao1 = 10
         for i in range(9):
@@ -61,6 +76,22 @@ def validar_cpf(cpf):
                 return first_verify
     
     def dv2_cpf(cpf, first_verify):
+    """Calcula o segundo dígito verificador do CPF.
+
+    Parte integrante do requisito de validação matemática do sistema. Multiplica 
+    os 9 primeiros dígitos por pesos decrescentes de 11 a 3, soma ao produto do 
+    primeiro dígito verificador por 2 e aplica o módulo 11.
+
+    Args:
+        cpf: String contendo os dígitos do CPF é transformada em int.
+        first_verify (int): O primeiro dígito verificador já calculado.
+
+    Returns:
+        O valor inteiro do segundo dígito verificador, first_verify (int), ou o valor 0 (int).
+        
+    Atende ao requisito:
+        RF001.02 (Validação matemática do CPF via Anexo B).
+    """
         soma2 = 0
         multiplicacao2 = 11
         for i in range(9):
@@ -89,6 +120,23 @@ def validar_cpf(cpf):
         return False
     
 def pedir_cpf():
+     """
+    Interface de entrada de dados para captura e validação contínua do CPF.
+
+    A função inicia um laço de repetição (while) que solicita ao usuário a 
+    digitação do CPF via terminal. O laço só é interrompido quando a função 
+    'validar_cpf' retorna True, garantindo que o programa avance apenas 
+    com um dado válido.
+
+    Requisitos Atendidos:
+        - RF001.01: Captura de dados cadastrais via entrada padrão.
+
+    Args:
+        None
+        
+    Returns:
+        cpf (str): Cadeia de caracteres contendo o CPF validado (apenas números).
+    """
      valido = False
      while not valido:
         cpf = input("Digite seu CPF:")
@@ -106,6 +154,7 @@ def campo_vazio(texto):
     Requisitos Atendidos:
         - Regra de Negócio Geral (Módulo Gerenciamento): Validação e consistência 
           de dados para impedir o salvamento de campos nulos no terminal.
+        - RF003.01: Validação geral de preenchimento obrigatório de campos.
 
     Args:
         texto (str): A cadeia de caracteres a ser analisada.
@@ -145,7 +194,7 @@ def todos_iguais(texto):
     Requisitos Atendidos:
         - Regra de Negócio Geral (Módulo Gerenciamento): Detecção de fraudes ou 
           padrões inválidos em preenchimentos sequenciais idênticos (ex: 111111).
-
+        - RF003.02: Validação geral contra sequências de caracteres repetidos.
     Args:
         texto (str): A cadeia de caracteres a ser analisada.
 
@@ -163,7 +212,7 @@ def sequencia_crescente(texto):
     Requisitos Atendidos:
         - Regra de Negócio Geral (Módulo Gerenciamento): Bloqueio de inserções estruturais 
           falsas no terminal (ex: sequências óbvias como 123456).
-
+         - RF003.03: Validação geral contra preenchimentos em sequência consecutiva linear.
     Args:
         texto (str): A cadeia de caracteres numéricos a ser analisada.
 
@@ -176,6 +225,24 @@ def sequencia_crescente(texto):
     return True
 
 def validar_titulo(titulo_eleitor):
+    """
+    Executa a validação estrutural e matemática de um número de Título de Eleitor.
+
+    A função valida a string de entrada verificando se ela cumpre as etapas de 
+    consistência do formulário (vazio, tipo de dado, tamanho e UF) em um laço contínuo. 
+    Se aprovada nas validações, realiza o cálculo dos dois dígitos verificadores (DV) 
+    por meio de somatórios ponderados e operação de resto de divisão por 11.
+
+    Requisitos Atendidos:
+        - RF002.01: Interface de entrada e consistência de dados do Título.
+        - RF002.02: Validação matemática do Título de Eleitor.
+
+    Args:
+        titulo_eleitor (str): Cadeia de caracteres contendo o título a ser validado.
+
+    Returns:
+        titulo_eleitor (str): O número do Título de Eleitor validado e confirmado pelo sistema.
+    """
  # Variável de controle do loop
  titulo_valido = False
  # Loop que só para quando o título for válido
