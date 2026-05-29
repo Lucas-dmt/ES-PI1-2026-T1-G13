@@ -227,14 +227,12 @@ def menu_gerenciamento():
                             resultado = buscar(comando, valores)
                             print(resultado)
                         case 2:    
-                            if resultado:
-                                nome_eleitor = resultado[1]
+                          
                                 id_eleitor=int(input("id:"))                           
                                 comando = "DELETE FROM eleitores WHERE id_eleitor = %s"
                                 valores = [id_eleitor]
                                 executar (comando, valores )
-                                registrar_log(f"REMOCAO: Eleitor '{nome_eleitor}' removido do sistema.")
-                                print("Eleitor removido com sucesso!")
+                                
                         case 3:
                             print("voltando ao menu principal")
                         case _:
