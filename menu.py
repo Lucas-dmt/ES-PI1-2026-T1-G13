@@ -471,6 +471,25 @@ def menu_resultados():
                 print("-" * 50)
             case 2:
                 def print_suspense(texto, velocidade=0.03): 
+                    """
+                        Exibe uma cadeia de caracteres caractere por caractere com atraso temporizado.
+                    
+                        Parte integrante do critério de identidade visual e interface do sistema. 
+                        Itera sobre a string aplicando uma pausa via biblioteca de tempo para simular 
+                        um efeito de suspense no terminal.
+                    
+                        Requisitos Atendidos:
+                            - Regra de Negócio Geral (Módulo Gerenciamento): Customização da interface 
+                              de exibição de dados para melhor legibilidade no terminal.
+                            - RF003.04: Utilitário de formatação e efeito visual de saída de dados.
+                    
+                        Args:
+                            texto (str): O texto a ser exibido caractere por caractere.
+                            velocidade (float): O intervalo de tempo em segundos entre cada letra.
+                    
+                        Returns:
+                            None
+                        """
                     for letra in texto: 
                         print(letra, end="")
                         time.sleep(velocidade) 
@@ -753,6 +772,25 @@ def menu_votacao():
                 print("Opcao invalida.")
 
 def votar():
+    """
+    Executa o fluxo completo de votação e autenticação multifator do eleitor.
+
+    A função valida o acesso em etapas sequenciais consultando o banco de dados: 
+    prefixo do CPF (com trava de voto duplo), Título de Eleitor e validação de 
+    assinatura criptográfica (Cifra de Hill). Após a liberação, realiza a consulta 
+    do candidato, confirmação de voto (nominal ou nulo), gravação dos dados, 
+    registro de logs e emissão do protocolo.
+
+    args:
+        None
+    
+    Requisitos Atendidos:
+        - RF004.01: Autenticação multifator do eleitor (CPF, Título, Chave Cifrada).
+        - RF004.02: Computação, persistência de voto e emissão de protocolo seguro.
+
+    Returns:
+        None
+    """
         print("\n === VOTAR ===")
         verificar_cpf = 0
         while verificar_cpf == 0:
@@ -839,6 +877,19 @@ def votar():
                         registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
                         print(f"Protocolo de votação: {protocolo}")
 def menu_principal():
+     """
+    Provê o painel de navegação raiz da aplicação via console.
+
+    Gerencia o fluxo de controle de telas direcionando o usuário para os submenus 
+    de Gerenciamento, Terminal de Votação ou encerramento seguro do script.
+
+    Requisitos Atendidos:
+        - RF000.01: Painel principal de controle e navegação do sistema.
+    args:
+        None
+    Returns:
+        None
+    """
     opcao = 0
     while opcao != 3:
         print("\n=== SISTEMA LAD.PY ===")
