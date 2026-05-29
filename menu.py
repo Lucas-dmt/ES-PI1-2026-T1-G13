@@ -1,16 +1,19 @@
 import os
-from unittest import case
-os.system('cls' if os.name == 'nt' else 'clear')
-from conexaobd import executar  #importa a função de execução da conexaobd
 import time
+# validações de entrada do usuário
 from validacoes import validar_titulo
 from validacoes import pedir_cpf
 from validacoes import verificar_nome
-from conexaobd import buscar   #importa a funcao buscar de conexaobd
+# importações de módulos do sistema
+from conexaobd import buscar   
 from conexaobd import buscar_tudo
-from chave import gerar_chave #importa a funcao de geracao de chave de chave.py
+from conexaobd import executar  
+# geração de dados de segurança
+from chave import gerar_chave 
 from chave_protocolo import gerar_protocolo #importa a funcao de geracao de geracao de protocolo em protocolo.py
-from auditoria import mostrar_logs, mostrar_protocolos, registrar_log, salvar_protocolo
+# auditoria e logs do sistema
+from auditoria import mostrar_logs, mostrar_protocolos, registrar_log
+#criptografia dos dados sensíveis (cpf, chave etc.)
 from criptografia import criptografar_hill
 from datetime import datetime
 
@@ -58,11 +61,13 @@ def menu_gerenciamento():
         #a partir daqui o programa verifica qual numero foi escolhido   
         match opcao:
             case 1:
+                #coleta e validação de dados do eleitor
                 nome_completo = input("Digite seu nome completo:")
                 verificar_nome(nome_completo)
                 titulo_eleitor = input("Digite o Título de Eleitor:")
                 validar_titulo(titulo_eleitor)
                 cpf = pedir_cpf()
+                #cpf é criptografado antes de ir pro banco
                 cpf_cifrado = criptografar_hill(cpf)
                 prefixo_cpf = cpf[:4] #pega os 4 primeiros dígitos
                 # ==== MESÁRIO ====
@@ -71,9 +76,11 @@ def menu_gerenciamento():
                     mesario = 1
                 else:
                     mesario = 0
+                    #geração de chave de acesso do eleitor
                 chave = gerar_chave(nome_completo)
                 chave_acesso_cifrada = criptografar_hill(chave)
                              # A partir daqui até o print, o CPF é validado antes de ser salvado
+                #Inserção de dados no banco
                 comando = "INSERT INTO eleitores (nome, titulo_eleitor, prefixo_cpf, cpf, mesario, chave_acesso_cifrada, ja_votou) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 valores = [nome_completo,titulo_eleitor, prefixo_cpf, cpf_cifrado, mesario, chave_acesso_cifrada, 0]
                 executar(comando,valores)
@@ -85,6 +92,7 @@ def menu_gerenciamento():
                 comando = "SELECT * FROM eleitores WHERE cpf = %s"
                 valores = (cpf_cifrado,)
                 eleitor = buscar(comando, valores)
+                #Exibe dados se encontrado
                 if eleitor:
                     print("\n--- ELEITOR ENCONTRADO ---")
                     print(f"Nome: {eleitor[1]}")
@@ -228,7 +236,8 @@ def menu_gerenciamento():
                             print(resultado)
                         case 2:    
                           
-                                id_eleitor=int(input("id:"))                           
+                                id_eleitor=int(input("id:"))       
+                                #DELETE no banco remove eleitor permanentemente                    
                                 comando = "DELETE FROM eleitores WHERE id_eleitor = %s"
                                 valores = [id_eleitor]
                                 executar (comando, valores )
@@ -261,46 +270,69 @@ def menu_encerramento(urna_aberta):
         urna_aberta (bool): O estado atualizado da urna após a execução da função (False se for 
         encerrada com sucesso, ou o estado original caso falhe ou seja cancelada).
     """
+    # Se a urna ja estiver fechada, nao faz sentido continuar
     if  urna_aberta == False:
         print("\nA urna já está fechada ou não foi aberta.")
         return urna_aberta
-    
+    #controle do loop do menu de encerramento
     executando = True
+
     while executando == True:
         print("\n=== MENU DE ENCERRAMENTO ===")
         print("1 - Iniciar Protocolo de Fechamento")
         print("2 - Voltar")
+        # tratamento de erro para entrada inválida
         try:
             opcao=int(input("digite 1 ou 2: "))
         except ValueError:
             print("Opção inválida. Voltando para o menu de votação...")
             return urna_aberta
-    
+    # estrutura principal de decisão do menu
         match opcao:
             case 1:
                 try:
+                    # ===================================
+                    # VALIDAÇÃO DO MESÁRIO
+                    # ===================================   
                     titulo = input("digite o título:")
                     prefixo_cpf = input("insira os 4 primeiros dígitos dpo cpf:")
                     chave = input("chave de acesso:")
 
+                    #criptografa a chave para comparar com o banco
                     chave_cifrada = criptografar_hill(chave)
 
+                    #busca no banco apenas mesários autorizados
                     comando = "SELECT chave_acesso_cifrada FROM eleitores WHERE titulo_eleitor = %s AND prefixo_cpf = %s AND mesario = 1 "           
                     valores = [titulo, prefixo_cpf]
                     resultado = buscar(comando, valores)
 
+                    # verifica se encontrou um mesário
                     if resultado != None:
+                        #confere se a chave informada está correta
                         if resultado[0] == chave_cifrada: 
                             print("Chave correta!")
+                            # ==============================
+                            # DUPLA CONFIRMAÇÃO DE SEGURANÇA
+                            # ==============================
+
                             confirmação = input("Deseja realmente encerrar a votação? (1 para sim/2 para não)")
                             if confirmação =='1':
+
+                                # Segunda validação da chave(segurança extra)
                                 segunda_chave = input("digite a chave novamente:")  
                                 segunda_chave_cifrada = criptografar_hill(segunda_chave)                      
                                 if resultado[0] == segunda_chave_cifrada:
+                                    # ================================
+                                    # ENCERRAMENTO DA URNA
+                                    # ================================
                                     print("URNA ENCERRADA")
+                                    # Registra evento no log do sistema
                                     registrar_log("ENCERRAMENTO: Votação finalizada com sucesso.")
+
+                                    #atualiza estado da urna
                                     urna_aberta=False
                                     executando = False
+                                    #exibe resultados finais automaticamente
                                     menu_resultados()
                                     return urna_aberta
                                 else:
@@ -319,14 +351,18 @@ def menu_encerramento(urna_aberta):
 
                 except ValueError:
                      print(f"Erro: Digite apenas números para Título e CPF.")
+                #Encerra o loop após tentativa (mesmo que falhe)
                 executando = False
             case 2:
+                #Usuário desistiu de encerrar a urna
                 print("Voltando para o menu de votação...")
                 executando = False
 
             case _:
+                #opçao inválida no menu
                 print("Opção inválida")
                 executando = False
+    # Retorna o estado final da urna (aberta ou fechada)
     return urna_aberta
     
 def menu_auditoria():
@@ -347,31 +383,35 @@ def menu_auditoria():
     Returns:
         None
     """
+    # opção inicial do menu
     opcao = 0
-
+    # Loop do menu: continua até o usuário escolher "3 - voltar"
     while opcao != 3:
 
         print("\n=== AUDITORIA DA VOTACAO ===")
 
+        #opções disponíveis no módulo de auditoria
         print("1 - Exibir logs")
         print("2 - Exibir protocolos")
         print("3 - Voltar")
-
+        #entrada do usuário 
         opcao = int(input("\nEscolha uma opcao: "))
 
         match opcao:
             case 1:
-
+                #exibe o histórico de eventos do sistema (tentivas, votos, erros, etc)
                 mostrar_logs()
         
             case 2:
-
+                #exibe os protocolos gerados durante as votações
                 mostrar_protocolos()
                 
             case 3:
+                #Sai do menu auditoria e volta ao menu anterior
                 print("\nVoltando ao menu de votacao...")
             
             case _:
+                
                 print("\n Opçao invalida")
                 
 def menu_resultados():
@@ -471,25 +511,6 @@ def menu_resultados():
                 print("-" * 50)
             case 2:
                 def print_suspense(texto, velocidade=0.03): 
-                    """
-                        Exibe uma cadeia de caracteres caractere por caractere com atraso temporizado.
-                    
-                        Parte integrante do critério de identidade visual e interface do sistema. 
-                        Itera sobre a string aplicando uma pausa via biblioteca de tempo para simular 
-                        um efeito de suspense no terminal.
-                    
-                        Requisitos Atendidos:
-                            - Regra de Negócio Geral (Módulo Gerenciamento): Customização da interface 
-                              de exibição de dados para melhor legibilidade no terminal.
-                            - RF003.04: Utilitário de formatação e efeito visual de saída de dados.
-                    
-                        Args:
-                            texto (str): O texto a ser exibido caractere por caractere.
-                            velocidade (float): O intervalo de tempo em segundos entre cada letra.
-                    
-                        Returns:
-                            None
-                        """
                     for letra in texto: 
                         print(letra, end="")
                         time.sleep(velocidade) 
@@ -767,30 +788,12 @@ def menu_votacao():
                 menu_resultados()
 
             case 4:
+                menu_principal()
                 print("Voltando ao menu principal...")
             case _:
                 print("Opcao invalida.")
 
 def votar():
-    """
-    Executa o fluxo completo de votação e autenticação multifator do eleitor.
-
-    A função valida o acesso em etapas sequenciais consultando o banco de dados: 
-    prefixo do CPF (com trava de voto duplo), Título de Eleitor e validação de 
-    assinatura criptográfica (Cifra de Hill). Após a liberação, realiza a consulta 
-    do candidato, confirmação de voto (nominal ou nulo), gravação dos dados, 
-    registro de logs e emissão do protocolo.
-
-    args:
-        None
-    
-    Requisitos Atendidos:
-        - RF004.01: Autenticação multifator do eleitor (CPF, Título, Chave Cifrada).
-        - RF004.02: Computação, persistência de voto e emissão de protocolo seguro.
-
-    Returns:
-        None
-    """
         print("\n === VOTAR ===")
         verificar_cpf = 0
         while verificar_cpf == 0:
@@ -877,19 +880,6 @@ def votar():
                         registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
                         print(f"Protocolo de votação: {protocolo}")
 def menu_principal():
-     """
-    Provê o painel de navegação raiz da aplicação via console.
-
-    Gerencia o fluxo de controle de telas direcionando o usuário para os submenus 
-    de Gerenciamento, Terminal de Votação ou encerramento seguro do script.
-
-    Requisitos Atendidos:
-        - RF000.01: Painel principal de controle e navegação do sistema.
-    args:
-        None
-    Returns:
-        None
-    """
     opcao = 0
     while opcao != 3:
         print("\n=== SISTEMA LAD.PY ===")
