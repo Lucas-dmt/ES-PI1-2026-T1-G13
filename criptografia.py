@@ -11,6 +11,21 @@ ki21 = 7
 ki22 = 8
 
 def converter_texto_numero(texto):
+     """
+    Converte uma cadeia de caracteres em uma lista de índices numéricos baseados no alfabeto definido.
+
+    Parte integrante do processo de preparação de dados para operações matemáticas. 
+    Trata os caracteres em caixa alta e filtra apenas as entradas contidas no conjunto permitido.
+
+    Requisitos Atendidos:
+        - RF005.01: Módulo Criptográfico - Codificação de caracteres em índices numéricos.
+
+    Args:
+        texto (str): O texto ou sequência a ser convertida.
+
+    Returns:
+        numeros (list): Lista de inteiros representando as posições dos caracteres no conjunto.
+    """
     numeros = []
     for letra in texto:
         letra = letra.upper()
@@ -19,12 +34,43 @@ def converter_texto_numero(texto):
     return numeros
 
 def converter_numero_texto(numeros):
+    """
+    Reverte uma lista de índices numéricos de volta para uma cadeia de caracteres de texto.
+
+    Aplica a operação aritmética de módulo com base no tamanho do alfabeto para garantir 
+    que o índice calculado mapeie corretamente um caractere válido do conjunto.
+
+    Requisitos Atendidos:
+        - RF005.02: Módulo Criptográfico - Decodificação de índices numéricos para texto.
+
+    Args:
+        numeros (list): Lista de inteiros contendo os índices a serem decodificados.
+
+    Returns:
+        texto (str): Cadeia de caracteres gerada a partir dos índices numéricos.
+    """
     texto = ""
     for numero in numeros:
         texto += conjunto[numero % len(conjunto)]
     return texto
 
 def criptografar_hill(texto):
+     """
+    Aplica o algoritmo da Cifra de Hill para criptografar uma string de texto puro.
+
+    Converte o texto em blocos numéricos pareados (tamanho 2) e realiza a multiplicação 
+    vetorial-matriz utilizando os coeficientes de criptografia estabelecidos (k11, k12, k21, k22) 
+    sob aritmética modular de base 36. Caso a cadeia possua comprimento ímpar, realiza o ajuste (padding).
+
+    Requisitos Atendidos:
+        - RF005.03: Módulo Criptográfico - Ofuscação de dados e segurança da informação.
+
+    Args:
+        texto (str): O texto original a ser cifrado.
+
+    Returns:
+        "converter_numero_texto(resultado)" (str): Texto cifrado resultante da transformação matricial.
+    """
     numeros = converter_texto_numero(texto)
     if len(numeros) % 2 != 0:
         numeros.append(0)
@@ -44,6 +90,22 @@ def criptografar_hill(texto):
 
 
 def descriptografar_hill(texto_criptografado):
+    """
+    Reverte a Cifra de Hill aplicando a matriz inversa para restaurar o texto original.
+
+    Consome o texto cifrado e aplica a multiplicação matricial sobre os blocos numéricos 
+    utilizando os coeficientes inversos pré-calculados (ki11, ki12, ki21, ki22) sob 
+    aritmética modular de base 36 para descriptografar os dados de forma precisa.
+
+    Requisitos Atendidos:
+        - RF005.04: Módulo Criptográfico - Engenharia reversa autorizada e decifração de dados.
+
+    Args:
+        texto_criptografado (str): O texto cifrado que será revertido.
+
+    Returns:
+        "converter_numero_texto(resultado)" (str): O texto original recuperado.
+    """
     numeros = converter_texto_numero(texto_criptografado)
     
     resultado = []
