@@ -7,12 +7,37 @@ protocolos = []
 
 #========= SALVAR PROTOCOLO =========
 def salvar_protocolo(protocolo):
+    """
+    Armazena temporariamente um protocolo de votação na lista de controle em memória.
+
+    Requisitos Atendidos:
+        - RF007.01: Módulo Auditoria - Registro de sessões de protocolos gerados.
+
+    Args:
+        protocolo (str): Código identificador do protocolo a ser armazenado.
+
+    Returns:
+        None
+    """
 
     protocolos.append(protocolo)
 
 
 #========= MOSTRAR PROTOCOLOS =========
 def mostrar_protocolos():
+    """
+    Recupera, decifra e exibe todos os protocolos oficiais armazenados na base de dados.
+
+    A função consome os dados do banco de dados, decodifica cada registro 
+    criptografado via Cifra de Hill inversa e realiza uma listagem complementar 
+    ordenada dos protocolos retidos em memória ativa.
+
+    Requisitos Atendidos:
+        - RF007.02: Módulo Auditoria - Descriptografia e conciliação de protocolos.
+
+    Returns:
+        None
+    """
 
     print("\nVerificando protocolos oficiais...")
 
@@ -51,6 +76,18 @@ def mostrar_protocolos():
 
 #========= REGISTRAR LOG =========
 def registrar_log(mensagem):
+     """
+    Gera e insere uma entrada de dados com data e hora na lista de auditoria.
+
+    Requisitos Atendidos:
+        - RF007.03: Módulo Auditoria - Captura cronológica de eventos críticos do sistema.
+
+    Args:
+        mensagem (str): Descrição do evento ou alerta a ser registrado.
+
+    Returns:
+        None
+    """
 
     horario = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -61,6 +98,15 @@ def registrar_log(mensagem):
 
 #========= MOSTRAR LOGS =========
 def mostrar_logs():
+    """
+    Exibe em ordem cronológica todos os eventos de log capturados em memória.
+
+    Requisitos Atendidos:
+        - RF007.04: Módulo Auditoria - Interface de inspeção visual de rastros e alertas.
+
+    Returns:
+        None
+    """
 
     print("\nAtualizando registros atuais...")
 
@@ -81,6 +127,18 @@ def mostrar_logs():
 
 #========= MENU AUDITORIA =========
 def menu_auditoria():
+    """
+    É o painel de navegação secundário para operação do módulo de auditoria.
+
+    Gerencia o fluxo de telas permitindo que o operador inspecione logs de acesso 
+    ou faça o batimento de protocolos oficiais antes de retornar ao menu anterior.
+
+    Requisitos Atendidos:
+        - RF007.05: Módulo Auditoria - Painel de controle de rotinas de auditoria.
+
+    Returns:
+        None
+    """
 
     opcao = 0
 
