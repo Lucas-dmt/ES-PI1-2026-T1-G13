@@ -794,92 +794,123 @@ def menu_votacao():
                 print("Opcao invalida.")
 
 def votar():
-        print("\n === VOTAR ===")
-        verificar_cpf = 0
-        while verificar_cpf == 0:
-            cpf =input("Seu primeiros 4 digitos do CPF: ")
-            comando = "SELECT nome, ja_votou FROM eleitores WHERE prefixo_cpf = %s"
-            resultado = buscar(comando, [cpf])
-            if resultado == None:
-                registrar_log("ALERTA: Tentativa de Acesso Negado")
-                print("CPF não encontrado. Tente novamente.")
-            elif resultado[1] == 1:
-                registrar_log("ALERTA: Tentativa de voto duplo")
-                print(f"Eleitor {resultado[0]} já votou. Você não pode votar novamente.")
-            else:
-                print(f"CPF válido!")
-                verificar_cpf = 1
-        verificar_titulo = 0
-        while verificar_titulo == 0:
-            titulo_eleitor = input("Digite o Título de Eleitor: ")
-            comando = "SELECT nome FROM eleitores WHERE prefixo_cpf = %s AND titulo_eleitor = %s"
-            resultado = buscar(comando, [cpf, titulo_eleitor])
-            if resultado:
-                print(f"Título de Eleitor válido!")
-                verificar_titulo = 1
-            else:
-                print("Título de Eleitor inválido. Tente novamente.")
-                registrar_log("ALERTA: Tentativa de Acesso Negado")
-        verificar_chave = 0
-        while verificar_chave == 0:
-            chave = input("Digite sua chave de acesso: ")
-            chave_cifrada = criptografar_hill(chave)    
-            comando = "SELECT nome, chave_acesso_cifrada FROM eleitores WHERE chave_acesso_cifrada = %s"
-            resultado = buscar(comando, [chave_cifrada])
-            if resultado[1] == chave_cifrada:
-                print(f"Chave correta! Você pode votar, bem vindo {resultado[0]}!")
-                verificar_chave = 1
-            else:
-                print("Chave incorreta. Tente novamente.")
-                registrar_log("ALERTA: Tentativa de Acesso Negado")
-        parte_final = 0
-        while parte_final == 0:
-                numero_candidatoB = int(input("Digite o número do candidato:"))
-                comando = """
-                SELECT c.candidato, p.partido, p.sigla
-                FROM candidatos c
-                JOIN partidos p ON c.id_partido = p.id_partido
-                WHERE c.numero_votacao = %s
-                """
-                valores = [numero_candidatoB]
-                resultado = buscar(comando, valores)
-                if resultado:
-                    print("\n--- INFORMAÇÕES DO CANDIDATO ---")
-                    print(f"Nome: {resultado[0]}")
-                    print(f"Partido: {resultado[1]}")
-                    print(f"Sigla: {resultado[2]}")
-                    confirmacao = input("Deseja confirmar seu voto para este candidato? (1 para Sim/2 para Não)")
-                    if confirmacao == "1":
-                        comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
-                        valores = [cpf]
-                        executar(comando, valores)
-                        protocolo = gerar_protocolo(numero_candidatoB)
-                        protocolo_cifrado = criptografar_hill(protocolo)
-                        horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        comando_2 = "INSERT INTO votos (id_candidato, datetime_voto, protocolo_votacao_cifrado) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s), %s, %s)"
-                        executar(comando_2, [numero_candidatoB, horario_voto, protocolo_cifrado]) 
-                        print(f"Voto registrado no candidato: {resultado[0]} com sucesso!")
-                        registrar_log(f"SUCESSO: Voto realizado com sucesso")
-                        print(f"Protocolo de votação: {protocolo}")
-                        parte_final = 1
-                    elif confirmacao == "2":
-                        print("Voto cancelado. Você pode escolher outro candidato.")
-                else:
-                    confirmacao = input("Candidato nao encontrado, deseja votar nulo? (1 para Sim/2 para Não):")
-                    if confirmacao == "1":
-                        comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
-                        valores = [cpf]
-                        executar(comando, valores)
-                        protocolo = gerar_protocolo("NULO")
-                        protocolo_cifrado = criptografar_hill(protocolo)
-                        horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto, protocolo_votacao_cifrado) VALUES (1, %s, %s)"
-                        executar(comando_2, [horario_voto, protocolo_cifrado])
-                        print("Voto nulo registrado com sucesso!")
-                        parte_final = 1
-                        registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
-                        print(f"Protocolo de votação: {protocolo}")
+    """
+    Executa o fluxo completo de votação e autenticação multifator do eleitor.
+
+    A função valida o acesso em etapas sequenciais consultando o banco de dados: 
+    prefixo do CPF (com trava de voto duplo), Título de Eleitor e validação de 
+    assinatura criptográfica (Cifra de Hill). Após a liberação, realiza a consulta 
+    do candidato, confirmação de voto (nominal ou nulo), gravação dos dados, 
+    registro de logs e emissão do protocolo.
+
+    Requisitos Atendidos:
+        - RF004.01: Autenticação multifator do eleitor (CPF, Título, Chave Cifrada).
+        - RF004.02: Computação, persistência de voto e emissão de protocolo seguro.
+
+    Returns:
+        None
+    """
+    print("\n === VOTAR ===")
+    verificar_cpf = 0
+    while verificar_cpf == 0:
+        cpf =input("Seu primeiros 4 digitos do CPF: ")
+        comando = "SELECT nome, ja_votou FROM eleitores WHERE prefixo_cpf = %s"
+        resultado = buscar(comando, [cpf])
+        if resultado == None:
+            registrar_log("ALERTA: Tentativa de Acesso Negado")
+            print("CPF não encontrado. Tente novamente.")
+        elif resultado[1] == 1:
+            registrar_log("ALERTA: Tentativa de voto duplo")
+            print(f"Eleitor {resultado[0]} já votou. Você não pode votar novamente.")
+        else:
+            print(f"CPF válido!")
+            verificar_cpf = 1
+            
+    verificar_titulo = 0
+    while verificar_titulo == 0:
+        titulo_eleitor = input("Digite o Título de Eleitor: ")
+        comando = "SELECT nome FROM eleitores WHERE prefixo_cpf = %s AND titulo_eleitor = %s"
+        resultado = buscar(comando, [cpf, titulo_eleitor])
+        if resultado:
+            print(f"Título de Eleitor válido!")
+            verificar_titulo = 1
+        else:
+            print("Título de Eleitor inválido. Tente novamente.")
+            registrar_log("ALERTA: Tentativa de Acesso Negado")
+            
+    verificar_chave = 0
+    while verificar_chave == 0:
+        chave = input("Digite sua chave de acesso: ")
+        chave_cifrada = criptografar_hill(chave)    
+        comando = "SELECT nome, chave_acesso_cifrada FROM eleitores WHERE chave_acesso_cifrada = %s"
+        resultado = buscar(comando, [chave_cifrada])
+        if resultado[1] == chave_cifrada:
+            print(f"Chave correta! Você pode votar, bem vindo {resultado[0]}!")
+            verificar_chave = 1
+        else:
+            print("Chave incorreta. Tente novamente.")
+            registrar_log("ALERTA: Tentativa de Acesso Negado")
+            
+    parte_final = 0
+    while parte_final == 0:
+        numero_candidatoB = int(input("Digite o número do candidato:"))
+        comando = """
+        SELECT c.candidato, p.partido, p.sigla
+        FROM candidatos c
+        JOIN partidos p ON c.id_partido = p.id_partido
+        WHERE c.numero_votacao = %s
+        """
+        valores = [numero_candidatoB]
+        resultado = buscar(comando, valores)
+        if resultado:
+            print("\n--- INFORMAÇÕES DO CANDIDATO ---")
+            print(f"Nome: {resultado[0]}")
+            print(f"Partido: {resultado[1]}")
+            print(f"Sigla: {resultado[2]}")
+            confirmacao = input("Deseja confirmar seu voto para este candidato? (1 para Sim/2 para Não)")
+            if confirmacao == "1":
+                comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
+                valores = [cpf]
+                executar(comando, valores)
+                protocolo = gerar_protocolo(numero_candidatoB)
+                protocolo_cifrado = criptografar_hill(protocolo)
+                horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                comando_2 = "INSERT INTO votos (id_candidato, datetime_voto, protocolo_votacao_cifrado) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s), %s, %s)"
+                executar(comando_2, [numero_candidatoB, horario_voto, protocolo_cifrado]) 
+                print(f"Voto registrado no candidato: {resultado[0]} com sucesso!")
+                registrar_log(f"SUCESSO: Voto realizado com sucesso")
+                print(f"Protocolo de votação: {protocolo}")
+                parte_final = 1
+            elif confirmacao == "2":
+                print("Voto cancelado. Você pode escolher outro candidato.")
+        else:
+            confirmacao = input("Candidato nao encontrado, deseja votar nulo? (1 para Sim/2 para Não):")
+            if confirmacao == "1":
+                comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
+                valores = [cpf]
+                executar(comando, valores)
+                protocolo = gerar_protocolo("NULO")
+                protocolo_cifrado = criptografar_hill(protocolo)
+                horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto, protocolo_votacao_cifrado) VALUES (1, %s, %s)"
+                executar(comando_2, [horario_voto, protocolo_cifrado])
+                print("Voto nulo registrado com sucesso!")
+                parte_final = 1
+                registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
+                print(f"Protocolo de votação: {protocolo}")
 def menu_principal():
+    """
+    é o painel de navegação principal.
+
+    Gerencia o fluxo de controle de telas direcionando o usuário para os submenus 
+    de gerenciamento e votação.
+
+    Requisitos Atendidos:
+        - RF000.01: Painel principal de controle e navegação do sistema.
+
+    Returns:
+        None
+    """
     opcao = 0
     while opcao != 3:
         print("\n=== SISTEMA LAD.PY ===")
