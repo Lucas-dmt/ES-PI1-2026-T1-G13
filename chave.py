@@ -2,7 +2,22 @@ import time
 import random
 
 def gerar_chave(nome):
-    
+    """
+    Gera uma chave de acesso alfanumérica única baseada no nome do eleitor.
+
+    A função extrai as primeiras letras do nome e sobrenome, converte para caixa alta 
+    e concatena com um sufixo numérico aleatório de quatro dígitos. Na sequência, 
+    fornece uma interface de redirecionamento para os módulos de votação ou gerenciamento.
+
+    Requisitos Atendidos:
+        - RF008.01: Módulo de Acesso - Geração de credencial de identificação.
+
+    Args:
+        nome (str): O nome completo do eleitor cadastrado.
+
+    Returns:
+        str: A chave de acesso gerada pelo sistema.
+    """
 
     print("\nCadastro de título e CPF registrado")
     print("Estamos gerando sua chave...")
@@ -39,7 +54,25 @@ def gerar_chave(nome):
     return chave
 
 def menu_votacao():
+     """
+    É onde fica o painel de navegação e as opções do terminal de votação do eleitor.
+
+    Requisitos Atendidos:
+        - RF008.02: Módulo de Acesso - Interface do menu de votação.
+
+    Returns:
+        None
+    """
     print("Menu votação")
 
 def menu_gerenciamento():
+    """
+    Provê o painel de navegação e as opções de administração e gerenciamento do sistema.
+
+    Requisitos Atendidos:
+        - RF008.03: Módulo de Acesso - Interface do menu de gerenciamento.
+
+    Returns:
+        None
+    """
     print("Menu gerenciamento")
