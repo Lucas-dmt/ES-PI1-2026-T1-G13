@@ -1,4 +1,4 @@
-import os
+
 import time
 # validações de entrada do usuário
 from validacoes import validar_titulo
@@ -165,43 +165,75 @@ def menu_gerenciamento():
                     except ValueError:
                         opcao = 0
                     match opcao:
+
+                        #=============================================
+                        # VISUALIZAR TÍTULO DE ELEITOR
+                        #=============================================
+
                         case 1:
+                            # Solicita o CPF do eleitor
                             cpf=pedir_cpf()
+                            # Criptografia para buscar no banco
                             cpf_cifrado = criptografar_hill(cpf)
                             comando = "SELECT titulo_eleitor FROM eleitores WHERE cpf = %s"                            
                             valores = [cpf_cifrado,]
                             resultado = buscar(comando, valores)
+                            #Exibe o título encontrado
                             print(f"\n\nTitulo do Eleitor: {resultado[0]}")
-                        
+
+                        #============================================
+                        # ALTERAR O NOME DO ELEITOR
+                        #============================================
                         case 2:
+                            # Utiliza o título para localizar o eleitor
                             id_eleitor = input("Titulo do Eleitor:")
+
+                            # Novo nome
                             nome_completo=input("nome:")
                             comando="UPDATE eleitores SET nome = %s WHERE titulo_eleitor = %s"
                             valores = [nome_completo, id_eleitor]
                             executar(comando, valores)
                             print("Nome atualizado com sucesso.")
-                                   
+
+                        #============================================
+                        # ALTERAR CPF DO ELEITOR
+                        #============================================
                         case 3:
                             id_eleitor = input("Titulo do Eleitor:") 
+                            # Solicita novo CPF
                             cpf=pedir_cpf()
+                            #Atualiza também o prefixo utilizado no sistema
                             prefixo_cpf = cpf[:4]
+                            #Criptografa o novo CPF
                             cpf_cifrado = criptografar_hill(cpf)
                             comando="UPDATE eleitores SET cpf = %s and prefixo_cpf = %s WHERE titulo_eleitor = %s"
                             valores = [cpf_cifrado, prefixo_cpf, id_eleitor]
                             executar(comando, valores)
                             print("CPF atualizado com sucesso.")
+                        #============================================
+                        # ALTERAR TÍTULO DE ELEITOR
+                        #============================================
                                                         
                         case 4:
+                            # Solicita novo título
                             titulo_eleitor = input("Digite o Título de Eleitor:")
+                            # Valida o formato do título
                             validar_titulo(titulo_eleitor)
+
+                            # Comando que atualiza o titulo de eleitor
                             comando = "UPDATE eleitores SET titulo_eleitor = %s WHERE titulo_eleitor = %s"
                             valores = [titulo_eleitor]
                             executar(comando,valores)
-                            print("Título atualizado com sucesso.")    
+                            print("Título atualizado com sucesso.")  
 
+                        #=============================================
+                        # ALTERAR STATUS DE MESÁRIO
+                        #=============================================
                         case 5:
                             id_eleitor = input("Titulo do Eleitor:") 
+                            # Define se o eleitor é mesário ou não
                             mesario = input("Mesário s/n:").lower()
+
                             if mesario == "s":
                                 mesario = 1
                             else:
@@ -210,7 +242,10 @@ def menu_gerenciamento():
                             valores = [mesario, id_eleitor]
                             executar(comando, valores)
                             print("Eleitor atualizado com sucesso.")
-                            
+
+                        #============================================
+                        # VOLTAR AO MENU PRINCIPAL
+                        #============================================
                         case 6:
                             print("voltando ao menu principal")
                                
@@ -727,43 +762,81 @@ def menu_votacao():
         print("2 - Auditoria da votacao")
         print("3 - Resultado da votacao")
         print("4 - Voltar")
-
+        # Tenta converter a opção digitada para inteiro
         try:
             opcao = int(input("Escolha uma opcao: "))
+        # Verificação qual opção foi escolhida 
         except ValueError:
             opcao = 0
 
         match opcao:
+
             case 1:
+
+                #Impede que a urna seja aberta duas vezes
                 if urna_aberta:
                     print("A urna ja está aberta.")
+
                 else: 
+            #==================================================
+            # AUTENTICAÇÃO DO MESÁRIO
+            #==================================================
+
                     titulo = input("Digite o titulo:")
+
+                    #valida formato do título
                     validar_titulo(titulo)
+
+                    #solicita os 4 primeiros dígitos do cpf
                     prefixo_cpf = input("Insira os 4 primeiros digitos do cpf:")
+
+                    #solicita a chave de acesso do mesário
                     chave = input("Digite sua chave de acesso:")
 
+                    #Criptografa a chave para comparação segura
                     chave_cifrada = criptografar_hill(chave)
 
+                    #Busca um mesário que possua todos os dados informados
                     comando = """ SELECT * FROM eleitores WHERE chave_acesso_cifrada = %s AND prefixo_cpf = %s AND titulo_eleitor = %s AND mesario = 1"""
                     valores = [chave_cifrada, prefixo_cpf, titulo]
                     resultado = buscar(comando, valores)
+
+                    #verifica se encontrou um mesário válido
                     if resultado:
+                        
+                        #Confirma se a chave armazenada é igual à informada
                         if resultado[6] == chave_cifrada:
                             print("mesário autorizado")
+
+                            #======================================================
+                            # VERIFICAÇÃO DE INTEGRIDADE
+                            #======================================================
+
+                            #Conta quantos eleitores já estão marcados como votantes
                             comando = """ SELECT COUNT(*) FROM eleitores WHERE  ja_votou = 1 """
                             resultado_votos = buscar(comando, [])
                             
                             votos = resultado_votos[0]
+
                             
                             print(f"Total de votos registrados:{votos}")
+
                             
                             if votos > 0:
                                 print("\nHouve uma anomalia no sistema, a urna não pode ser aberta.")
                             else:
+
+                                #==================================================
+                                # ABERTURA OFICIAL DA URNA
+                                #==================================================
+
                                 urna_aberta = True
                                 registrar_log("ABERTURA: Votação iniciada com sucesso. Total de votos zerado.")
                                 print("\nUrna liberada para votação.")
+
+                                #==================================================
+                                # MENU INTERNO DA URNA
+                                # =================================================
 
                                 opcao = 0
                                 while opcao != 2:
@@ -776,14 +849,18 @@ def menu_votacao():
                                         opcao = 0
                                     match opcao:
                                         case 1:
+                                            # Inicia o processo completo de votação
                                             votar()
                                         case 2:
+                                            # Inicia protocolo de encerramento
                                             menu_encerramento(urna_aberta)
                                 
                         else:
+                            #Chave não corresponde à armazenada
                             print("Chave incorreta")
                             registrar_log( "Tentativa de Acesso Negado")
                     else:
+                        #Nenhum mesário foi encontrado com os dados informados
                         print("Mesário não autorizado")
                         registrar_log("Tentativa de Acesso Negado")
             case 2:
@@ -816,90 +893,167 @@ def votar():
         None
     """
     print("\n === VOTAR ===")
+    #==============================================
+    # VALIDAÇÃO DO CPF DO ELEITOR
+    #==============================================
     verificar_cpf = 0
+
+    #continua pedindo o CPF enquanto não encontrar nenhum eleitor válido
     while verificar_cpf == 0:
         cpf =input("Seu primeiros 4 digitos do CPF: ")
+        #Busca o eleitor pelo prefixo do CPF
         comando = "SELECT nome, ja_votou FROM eleitores WHERE prefixo_cpf = %s"
         resultado = buscar(comando, [cpf])
+
+        #Caso não encontre o CPF
         if resultado == None:
             registrar_log("ALERTA: Tentativa de Acesso Negado")
             print("CPF não encontrado. Tente novamente.")
+
+        #Caso o eleitor já tenha votado
         elif resultado[1] == 1:
             registrar_log("ALERTA: Tentativa de voto duplo")
             print(f"Eleitor {resultado[0]} já votou. Você não pode votar novamente.")
+        
+        #CPF válido e eleitor apto pra votar
         else:
             print(f"CPF válido!")
             verificar_cpf = 1
             
+    #===============================================
+    # VALIDAÇÃO DO TÍTULO DE ELEITOR
+    #===============================================
+
     verificar_titulo = 0
+
+    #Continua solicitando o título até encontrar um correspondente
     while verificar_titulo == 0:
+
         titulo_eleitor = input("Digite o Título de Eleitor: ")
+
+        #Verifica se o título pertence ao CPF informado anteriormente
         comando = "SELECT nome FROM eleitores WHERE prefixo_cpf = %s AND titulo_eleitor = %s"
         resultado = buscar(comando, [cpf, titulo_eleitor])
+
         if resultado:
             print(f"Título de Eleitor válido!")
             verificar_titulo = 1
+
         else:
             print("Título de Eleitor inválido. Tente novamente.")
             registrar_log("ALERTA: Tentativa de Acesso Negado")
+
+    #=================================================
+    # VALIDAÇÃO DA CHAVE DE ACESSO
+    #=================================================
             
     verificar_chave = 0
+
+    #Continua solicitando a chave até que ela seja validada
     while verificar_chave == 0:
+
         chave = input("Digite sua chave de acesso: ")
-        chave_cifrada = criptografar_hill(chave)    
+
+        #Criptografia da chave digitada para comparar com o banco
+        chave_cifrada = criptografar_hill(chave)  
+
         comando = "SELECT nome, chave_acesso_cifrada FROM eleitores WHERE chave_acesso_cifrada = %s"
         resultado = buscar(comando, [chave_cifrada])
+
+        #Confirma se a chave existe no banco
         if resultado[1] == chave_cifrada:
             print(f"Chave correta! Você pode votar, bem vindo {resultado[0]}!")
             verificar_chave = 1
         else:
             print("Chave incorreta. Tente novamente.")
             registrar_log("ALERTA: Tentativa de Acesso Negado")
+
+    #================================
+    # PROCESSO DE VOTAÇÃO
+    #================================
             
     parte_final = 0
+
+    #Continua até que o voto seja registrado
     while parte_final == 0:
         numero_candidatoB = int(input("Digite o número do candidato:"))
+
+        #Busca informações do candidato digitado
         comando = """
         SELECT c.candidato, p.partido, p.sigla
         FROM candidatos c
         JOIN partidos p ON c.id_partido = p.id_partido
         WHERE c.numero_votacao = %s
         """
+
         valores = [numero_candidatoB]
         resultado = buscar(comando, valores)
+
+    #======================================
+    # CANDIDATO ENCONTRADO
+    #======================================
         if resultado:
             print("\n--- INFORMAÇÕES DO CANDIDATO ---")
             print(f"Nome: {resultado[0]}")
             print(f"Partido: {resultado[1]}")
             print(f"Sigla: {resultado[2]}")
+
+            #Confirmação do voto
             confirmacao = input("Deseja confirmar seu voto para este candidato? (1 para Sim/2 para Não)")
+
             if confirmacao == "1":
+
+                #Marca o eleitor como já votou
                 comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
                 valores = [cpf]
                 executar(comando, valores)
+
+                #Gera o protocolo único de votação
                 protocolo = gerar_protocolo(numero_candidatoB)
+                #Criptografa o protocolo antes de armazenar
                 protocolo_cifrado = criptografar_hill(protocolo)
+                #Obtém data e hora atual do voto
                 horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+                #Registra o voto no banco
                 comando_2 = "INSERT INTO votos (id_candidato, datetime_voto, protocolo_votacao_cifrado) VALUES ((SELECT id_candidato FROM candidatos WHERE numero_votacao = %s), %s, %s)"
                 executar(comando_2, [numero_candidatoB, horario_voto, protocolo_cifrado]) 
                 print(f"Voto registrado no candidato: {resultado[0]} com sucesso!")
+
+                #Registra o evento na auditoria
                 registrar_log(f"SUCESSO: Voto realizado com sucesso")
+                #Exibe o protocolo ao eleitor
                 print(f"Protocolo de votação: {protocolo}")
+
                 parte_final = 1
             elif confirmacao == "2":
                 print("Voto cancelado. Você pode escolher outro candidato.")
+        #=====================
+        # VOTO NULO
+        #=====================
+
         else:
+
             confirmacao = input("Candidato nao encontrado, deseja votar nulo? (1 para Sim/2 para Não):")
+
             if confirmacao == "1":
+
+                #Marca o eleitor como votante 
                 comando = "UPDATE eleitores SET ja_votou = 1 WHERE prefixo_cpf = %s"
                 valores = [cpf]
                 executar(comando, valores)
+
+                #Gera o protocolo para voto nulo
                 protocolo = gerar_protocolo("NULO")
                 protocolo_cifrado = criptografar_hill(protocolo)
+
                 horario_voto = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+                #Salva o voto nulo
                 comando_2 = "INSERT INTO votos (voto_nulo, datetime_voto, protocolo_votacao_cifrado) VALUES (1, %s, %s)"
                 executar(comando_2, [horario_voto, protocolo_cifrado])
                 print("Voto nulo registrado com sucesso!")
+
                 parte_final = 1
                 registrar_log("SUCESSO: Voto nulo registrado com sucesso.")
                 print(f"Protocolo de votação: {protocolo}")
@@ -937,3 +1091,5 @@ def menu_principal():
             case _:
                 print("Opcao invalida.")
 menu_principal()
+
+    
