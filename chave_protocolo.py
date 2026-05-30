@@ -18,26 +18,37 @@ def gerar_protocolo(candidato):
     Returns:
         protocolo(str): O código de protocolo gerado pelo sistema.
     """
-
+    #Conjunto de letras que serão usadas na geração aleatória
     letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+    #Todo o protocolo começa com a letra V(votação)
     protocolo = "V"
 
+    #Adiciona duas letras aleatórias ao protoclo
     for i in range(2):
         protocolo += letras[random.randint(0, 25)]
 
+    #Adiciona o ano dde eleição (2026 -> "26")
     protocolo += "26"
 
+    #Verifica se o voto foi NULO    
     if candidato == "NULO":
+        #Votos nulos recebem código "00"
         protocolo += "00"
-    else:
-        candidato = str(candidato)
 
+    else:
+        #Converte o número do candidato para texto
+        candidato = str(candidato)
+        #Garante que o número tenha 2 dígitos 
+        #Exemplo: 5 -> 05
         if len(candidato) == 1:
             protocolo += "0" + candidato
         else:
             protocolo += candidato
 
+    #Adiciona um número aleatório de 5 dígitos
+    #Para aumentar a unicidade do protocolo
     protocolo += str(random.randint(10000, 99999))
 
+    # retorna o protocolo completo
     return protocolo
