@@ -61,6 +61,22 @@ def executar(comando,valores):
     cursor.close() #fecha o cursor após executar as operações no banco
 
 def buscar(comando, valores):
+     """
+     Executa uma consulta SQL projetada para extrair apenas um único registro (linha) do banco.
+
+     Estabelece o canal de comunicação, alimenta os parâmetros e utiliza o método fetchone 
+     para recuperar a primeira ocorrência compatível, fechando todos os recursos na sequência.
+
+     Requisitos Atendidos:
+         - RF006.03: Módulo de Banco de Dados - Consulta pontual e verificação de registro único.
+
+     Args:
+         comando (str): Instrução SQL de consulta (SELECT).
+         valores (list/tuple): Parâmetros para os filtros da cláusula WHERE.
+
+     Returns:
+         resultado: Uma tupla contendo as colunas recuperadas ou None se nada for localizado.
+     """
      conexao = mysql.connector.connect(
             host="localhost", #sua hospedagem de rede (localhost ou 127.0.0.1 por padrão)
             user="root", #seu usuario no mysql server (root é o padrão por maquina, se nunca utilizou mysql server antes, deixe do jeito que está)
