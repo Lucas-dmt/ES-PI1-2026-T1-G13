@@ -153,59 +153,63 @@ def menu_gerenciamento():
                 
                 opcao = 0
                 while opcao != 6:
-                    print("1 - vizualizar id do eleitor")
-                    print("2 - alterar nome")
-                    print("3 - alterar cpf")
-                    print("4 - alterar título")
-                    print("5 - mesário")
-                    print("6 - voltar")
+                    print("1 - Visualizar id do eleitor")
+                    print("2 - Alterar nome")
+                    print("3 - Alterar cpf")
+                    print("4 - Alterar título")
+                    print("5 - Mesário")
+                    print("6 - Voltar")
                 
                     try:
-                        opcao=int(input("digite um número de 1 a 5:"))
+                        opcao=int(input("Digite um número de 1 a 5:"))
                     except ValueError:
                         opcao = 0
                     match opcao:
                         case 1:
                             cpf=pedir_cpf()
                             cpf_cifrado = criptografar_hill(cpf)
-                            titulo_eleitor = input("Digite o Título de Eleitor:")
-                            comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
-                            valores = [cpf_cifrado, titulo_eleitor]
-                            executar(comando, valores)
+                            comando = "SELECT titulo_eleitor FROM eleitores WHERE cpf = %s"                            
+                            valores = [cpf_cifrado,]
+                            resultado = buscar(comando, valores)
+                            print(f"\n\nTitulo do Eleitor: {resultado[0]}")
                         
                         case 2:
-                            id_eleitor = input("id do eleitor:")
+                            id_eleitor = input("Titulo do Eleitor:")
                             nome_completo=input("nome:")
-                            comando="UPDATE eleitores SET nome = %s WHERE id_eleitor = %s"
+                            comando="UPDATE eleitores SET nome = %s WHERE titulo_eleitor = %s"
                             valores = [nome_completo, id_eleitor]
                             executar(comando, valores)
+                            print("Nome atualizado com sucesso.")
                                    
                         case 3:
-                            id_eleitor = input("id do eleitor:") 
+                            id_eleitor = input("Titulo do Eleitor:") 
                             cpf=pedir_cpf()
+                            prefixo_cpf = cpf[:4]
                             cpf_cifrado = criptografar_hill(cpf)
-                            comando="UPDATE eleitores SET cpf = %s WHERE id_eleitor = %s"
-                            valores = [cpf_cifrado, id_eleitor]
+                            comando="UPDATE eleitores SET cpf = %s and prefixo_cpf = %s WHERE titulo_eleitor = %s"
+                            valores = [cpf_cifrado, prefixo_cpf, id_eleitor]
                             executar(comando, valores)
+                            print("CPF atualizado com sucesso.")
                                                         
                         case 4:
-                            id_eleitor = input("id do eleitor:") 
                             titulo_eleitor = input("Digite o Título de Eleitor:")
                             validar_titulo(titulo_eleitor)
-                            comando = "UPDATE eleitores SET titulo_eleitor = %s WHERE id_eleitor = %s"
-                            valores = [titulo_eleitor, id_eleitor]
+                            comando = "UPDATE eleitores SET titulo_eleitor = %s WHERE titulo_eleitor = %s"
+                            valores = [titulo_eleitor]
                             executar(comando,valores)
+                            print("Título atualizado com sucesso.")    
 
                         case 5:
-                            id_eleitor = input("id do eleitor:") 
+                            id_eleitor = input("Titulo do Eleitor:") 
                             mesario = input("Mesário s/n:").lower()
                             if mesario == "s":
                                 mesario = 1
                             else:
                                 mesario = 0
-                            comando="UPDATE eleitores SET mesario = %s WHERE id_eleitor = %s"
+                            comando="UPDATE eleitores SET mesario = %s WHERE titulo_eleitor = %s"
                             valores = [mesario, id_eleitor]
                             executar(comando, valores)
+                            print("Eleitor atualizado com sucesso.")
                             
                         case 6:
                             print("voltando ao menu principal")
@@ -216,9 +220,9 @@ def menu_gerenciamento():
                #=== REMOVER ELEITOR===  
                 opcao = 0
                 while opcao != 3:
-                    print("1 - vizuallizar id do eleitor")
-                    print("2 - remover eleitor")
-                    print("3 - voltar")
+                    print("1 - Visualizar id do eleitor")
+                    print("2 - Remover eleitor")
+                    print("3 - Voltar")
                     try:
                         opcao=int(input("digite a opção:"))
                         
@@ -229,18 +233,19 @@ def menu_gerenciamento():
                         case 1: 
                             cpf=pedir_cpf()
                             cpf_cifrado = criptografar_hill(cpf)
-                            titulo_eleitor = input("Digite o Título de Eleitor:")
-                            comando = "SELECT * FROM eleitores WHERE cpf = %s and titulo_eleitor = %s"                            
-                            valores = [cpf_cifrado, titulo_eleitor]
+                            comando = "SELECT titulo_eleitor FROM eleitores WHERE cpf = %s"                            
+                            valores = [cpf_cifrado,]
                             resultado = buscar(comando, valores)
-                            print(resultado)
+                            print(f"\n\nTitulo do Eleitor: {resultado[0]}")
                         case 2:    
                           
-                                id_eleitor=int(input("id:"))       
+                                id_eleitor=input("Titulo do Eleitor:")
+                                validar_titulo(id_eleitor)      
                                 #DELETE no banco remove eleitor permanentemente                    
-                                comando = "DELETE FROM eleitores WHERE id_eleitor = %s"
+                                comando = "DELETE FROM eleitores WHERE titulo_eleitor = %s"
                                 valores = [id_eleitor]
                                 executar (comando, valores )
+                                print("Eleitor removido com sucesso.")
                                 
                         case 3:
                             print("voltando ao menu principal")

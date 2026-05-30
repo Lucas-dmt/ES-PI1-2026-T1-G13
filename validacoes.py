@@ -44,21 +44,6 @@ def validar_cpf(cpf):
             print("CPF inválido: números repetidos")
             return False
     def dv1_cpf(cpf):
-     """Calcula o primeiro dígito verificador do CPF.
-    
-        Parte integrante do requisito de validação matemática do sistema. Multiplica 
-        os 9 primeiros dígitos por pesos decrescentes de 10 a 2, soma os resultados 
-        e aplica a operação de resto da divisão por 11.
-    
-        Args:
-            cpf: String contendo os dígitos do CPF.
-    
-        Returns:
-            O valor inteiro do primeiro dígito verificador - first_verify(int), ou o valor 0(int).
-            
-        Atende ao requisito:
-            RF001.02 (Validação matemática do CPF via Anexo B).
-        """
         soma1 = 0
         multiplicacao1 = 10
         for i in range(9):
@@ -76,22 +61,7 @@ def validar_cpf(cpf):
                 return first_verify
     
     def dv2_cpf(cpf, first_verify):
-    """Calcula o segundo dígito verificador do CPF.
-
-    Parte integrante do requisito de validação matemática do sistema. Multiplica 
-    os 9 primeiros dígitos por pesos decrescentes de 11 a 3, soma ao produto do 
-    primeiro dígito verificador por 2 e aplica o módulo 11.
-
-    Args:
-        cpf: String contendo os dígitos do CPF é transformada em int.
-        first_verify (int): O primeiro dígito verificador já calculado.
-
-    Returns:
-        O valor inteiro do segundo dígito verificador, first_verify (int), ou o valor 0 (int).
-        
-    Atende ao requisito:
-        RF001.02 (Validação matemática do CPF via Anexo B).
-    """
+    
         soma2 = 0
         multiplicacao2 = 11
         for i in range(9):
@@ -225,24 +195,6 @@ def sequencia_crescente(texto):
     return True
 
 def validar_titulo(titulo_eleitor):
-    """
-    Executa a validação estrutural e matemática de um número de Título de Eleitor.
-
-    A função valida a string de entrada verificando se ela cumpre as etapas de 
-    consistência do formulário (vazio, tipo de dado, tamanho e UF) em um laço contínuo. 
-    Se aprovada nas validações, realiza o cálculo dos dois dígitos verificadores (DV) 
-    por meio de somatórios ponderados e operação de resto de divisão por 11.
-
-    Requisitos Atendidos:
-        - RF002.01: Interface de entrada e consistência de dados do Título.
-        - RF002.02: Validação matemática do Título de Eleitor.
-
-    Args:
-        titulo_eleitor (str): Cadeia de caracteres contendo o título a ser validado.
-
-    Returns:
-        titulo_eleitor (str): O número do Título de Eleitor validado e confirmado pelo sistema.
-    """
  # Variável de controle do loop
  titulo_valido = False
  # Loop que só para quando o título for válido

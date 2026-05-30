@@ -54,15 +54,6 @@ def gerar_chave(nome):
     return chave
 
 def menu_votacao():
-     """
-    É onde fica o painel de navegação e as opções do terminal de votação do eleitor.
-
-    Requisitos Atendidos:
-        - RF008.02: Módulo de Acesso - Interface do menu de votação.
-
-    Returns:
-        None
-    """
     print("Menu votação")
 
 def menu_gerenciamento():

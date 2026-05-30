@@ -1,23 +1,6 @@
 import random
 
 def gerar_protocolo(candidato):
-     """
-    Gera um código de protocolo de votação alfanumérico único para o eleitor.
-
-    A função monta uma estrutura de recibo segura combinando o caractere fixo 'V', 
-    duas letras aleatórias em caixa alta, o sufixo numérico do ano corrente, o 
-    número identificador do candidato formatado com dois dígitos (ou '00' para nulo) 
-    e um sufixo numérico aleatório de cinco dígitos.
-
-    Requisitos Atendidos:
-        - RF004.03: Geração de recibo e identificador único de votação.
-
-    Args:
-        candidato (str/int): O número de votação do candidato escolhido ou a string 'NULO'.
-
-    Returns:
-        protocolo(str): O código de protocolo gerado pelo sistema.
-    """
 
     letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
