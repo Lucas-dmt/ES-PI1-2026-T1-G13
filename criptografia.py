@@ -1,10 +1,18 @@
+#Conjunto de caracteres permitidos na criptografia
+#26 letras + 10 números = 36 caracteres
 conjunto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+#Matriz de criptografia
+# | 4 3 |
+# | 1 2 |
 k11 = 4
 k12 = 3
 k21 = 1
 k22 = 2
 
-
+#Matriz inversa utilizada na descriptografia
+# | 22 21 |
+# |  7  8 |
 ki11 = 22
 ki12 = 21
 ki21 = 7
@@ -27,9 +35,13 @@ def converter_texto_numero(texto):
         numeros (list): Lista de inteiros representando as posições dos caracteres no conjunto.
     """
     numeros = []
+    #Percorre cada caractere do texto 
     for letra in texto:
+        #Padroniza para maiúsculo 
         letra = letra.upper()
+        #Verifica se o caractere existe no conjunto permitido
         if letra in conjunto:
+            #Saçva a posição do caractere
             numeros.append(conjunto.index(letra))
     return numeros
 
@@ -50,7 +62,9 @@ def converter_numero_texto(numeros):
         texto (str): Cadeia de caracteres gerada a partir dos índices numéricos.
     """
     texto = ""
+    #Percorre cada número recebido
     for numero in numeros:
+        #Converte o índice novamente para caractere
         texto += conjunto[numero % len(conjunto)]
     return texto
 
@@ -71,22 +85,26 @@ def criptografar_hill(texto):
     Returns:
         "converter_numero_texto(resultado)" (str): Texto cifrado resultante da transformação matricial.
     """
-
+    #Converte texto em números
     numeros = converter_texto_numero(texto)
+    # Se a quantidade de caracteres for ímpar,
+    # adiciona um caractere de preenchimento
     if len(numeros) % 2 != 0:
         numeros.append(0)
 
     resultado = []
+    # Processa os números em blocos de 2
     for i in range (0, len(numeros), 2):
+
         x = numeros[i]
         y = numeros[i + 1]
-
+        # Multiplicação da matriz de criptografia
         novo1 = (k11 * x + k12 * y) % 36
         novo2 = (k21 * x + k22 * y) % 36
  
         resultado.append(novo1)
         resultado.append(novo2)
-
+      # Converte os números criptografados para texto
     return converter_numero_texto(resultado)
 
 
@@ -107,17 +125,21 @@ def descriptografar_hill(texto_criptografado):
     Returns:
         "converter_numero_texto(resultado)" (str): O texto original recuperado.
     """
+    # Converte texto cifrado para números
     numeros = converter_texto_numero(texto_criptografado)
     
     resultado = []
+    # Processa em blocos de 2 caracteres
     for i in range (0, len(numeros), 2):
+
         x = numeros[i]
         y = numeros[i + 1]
-
+        # Multiplicação pela matriz inversa
         original1 = (ki11 * x + ki12 * y) % 36
         original2 = (ki21 * x + ki22 * y) % 36
  
         resultado.append(original1)
         resultado.append(original2)
-
+        
+    # Reconstrói o texto original
     return converter_numero_texto(resultado)
