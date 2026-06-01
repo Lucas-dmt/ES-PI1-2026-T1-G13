@@ -48,7 +48,7 @@ def converter_texto_numero(texto):
         # Só processa o caractere se ele existir no conjunto permitido
         # Caracteres especiais, espaços e acentos são ignorados
         if letra in conjunto:
-            # Obtém a posição do caractere no conjunto (ex: A=0, B=1, 0=26...)
+            # Obtém a posição do caractere no conjunto (ex: A=0, B=1, 0=26...) e adiciona na lista numeros
             numeros.append(conjunto.index(letra))
     return numeros
 
