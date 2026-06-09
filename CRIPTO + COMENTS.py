@@ -1,5 +1,4 @@
-Aqui está o código completo com os comentários explicativos da minha análise:
-python# Conjunto de caracteres permitidos na criptografia
+# Conjunto de caracteres permitidos na criptografia
 # 26 letras + 10 números = 36 caracteres
 # Cada caractere possui um índice: A=0, B=1, ... Z=25, 0=26, ... 9=35
 conjunto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
